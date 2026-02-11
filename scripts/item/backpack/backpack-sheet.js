@@ -1,98 +1,103 @@
-import { SheetMixin } from "../../mixins/sheet-mixin.js";
+import { LitmItemSheet } from "../../sheets/base-item-sheet.js";
 import { confirmDelete, localize as t } from "../../utils.js";
 
-export class BackpackSheet extends SheetMixin(ItemSheet) {
+/**
+ * Backpack sheet for Legend in the Mist
+ * Container for story tags and temporary items
+ */
+export class BackpackSheet extends LitmItemSheet {
 	/** @override */
-	static get defaultOptions() {
-		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["litm", "litm--backpack"],
+	static DEFAULT_OPTIONS = {
+		classes: ["litm", "litm-backpack-sheet"],
+		tag: "form",
+		position: {
+			width: 500,
+			height: "auto",
+		},
+		actions: {
+			addTag: BackpackSheet.#onAddTag,
+			removeTag: BackpackSheet.#onRemoveTag,
+			toggleActive: BackpackSheet.#onToggleActive,
+		},
+		form: {
+			submitOnChange: true,
+			closeOnSubmit: false,
+		},
+		window: {
+			icon: "fa-solid fa-bag-shopping",
+			resizable: true,
+		},
+	};
+
+	/** @override */
+	static PARTS = {
+		form: {
 			template: "systems/litm/templates/item/backpack.html",
-			width: 400,
-			height: 450,
-			resizable: false,
-			scrollY: [".taglist"],
-		});
-	}
+			scrollable: [""],
+		},
+	};
 
-	get system() {
-		return this.item.system;
-	}
+	/* -------------------------------------------- */
+	/*  Rendering                                   */
+	/* -------------------------------------------- */
 
 	/** @override */
-	async getData() {
-		return { backpack: this.system.contents, name: this.item.name };
-	}
+	async _prepareContext(options) {
+		const context = await super._prepareContext(options);
 
-	activateListeners(html) {
-		super.activateListeners(html);
-
-		html.find("[data-click]").on("click", this.#onClick.bind(this));
-		html.find("[data-context]").on("contextmenu", this.#onContext.bind(this));
-	}
-
-	/** @override - This method needs to be overriden to accommodate readonly input fields */
-	_getSubmitData(updateData) {
-		if (!this.form)
-			throw new Error(
-				"The FormApplication subclass has no registered form element",
-			);
-		const fd = new FormDataExtended(this.form, {
-			editors: this.editors,
-			readonly: true,
-			disabled: true,
+		return foundry.utils.mergeObject(context, {
+			backpack: this.system.contents,
+			name: this.document.name,
 		});
-		let data = fd.object;
-		if (updateData)
-			data = foundry.utils.flattenObject(
-				foundry.utils.mergeObject(data, updateData),
-			);
-		return data;
 	}
 
-	#onClick(event) {
-		const button = event.currentTarget;
-		const action = button.dataset.click;
+	/* -------------------------------------------- */
+	/*  Event Handlers & Actions                    */
+	/* -------------------------------------------- */
 
-		switch (action) {
-			case "add-tag":
-				this.#addTag();
-				break;
-		}
-	}
-
-	#onContext(event) {
-		const button = event.currentTarget;
-		const action = button.dataset.context;
-
-		switch (action) {
-			case "remove-tag":
-				this.#removeTag(button);
-				break;
-		}
-	}
-
-	#addTag() {
+	/**
+	 * Add a new tag to the backpack
+	 * @param {Event} event        The triggering event
+	 * @param {HTMLElement} target The target element
+	 * @private
+	 */
+	static async #onAddTag(_event, _target) {
 		const item = {
-			name: t("Litm.ui.name-tag"),
-			isActive: false,
-			isBurnt: false,
+			name: t("LITM.Ui.name_tag"),
+			isActive: true,
+			isScratched: false,
 			type: "backpack",
 			id: foundry.utils.randomID(),
 		};
 
-		const contents = this.system.contents;
-		contents.push(item);
-
-		return this.item.update({ "system.contents": contents });
+		const contents = [...this.system.contents, item];
+		await this.document.update({ "system.contents": contents });
 	}
 
-	async #removeTag(button) {
-		if (!(await confirmDelete("Litm.other.tag"))) return;
+	/**
+	 * Remove a tag from the backpack
+	 * @param {Event} event        The triggering event
+	 * @param {HTMLElement} target The target element
+	 * @private
+	 */
+	static async #onRemoveTag(_event, target) {
+		if (!(await confirmDelete("LITM.Terms.tag"))) return;
 
-		const index = button.dataset.id;
-		const contents = this.system.contents;
-		contents.splice(index, 1);
+		const index = Number(target.dataset.index);
+		const contents = this.system.contents.filter((_, i) => i !== index);
+		await this.document.update({ "system.contents": contents });
+	}
 
-		return this.item.update({ "system.contents": contents });
+	/**
+	 * Toggle a tag's active state
+	 * @param {Event} event        The triggering event
+	 * @param {HTMLElement} target The target element
+	 * @private
+	 */
+	static async #onToggleActive(_event, target) {
+		const index = Number(target.dataset.index);
+		const contents = [...this.system.contents];
+		contents[index].isActive = !contents[index].isActive;
+		await this.document.update({ "system.contents": contents });
 	}
 }

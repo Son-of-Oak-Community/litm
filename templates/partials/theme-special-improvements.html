@@ -1,0 +1,20 @@
+{{#if system.specialImprovements.length}}
+<div class="flexcol" style="gap: 0.25rem;">
+	<ul class="plain special-improvements-list">
+		{{#each system.specialImprovements as |improvement|}}
+		<li class="{{#unless improvement.isActive}}is-inactive{{/unless}}">
+			<img class="litm-tag-check" alt=""
+				src="systems/litm/assets/media/{{#if improvement.isActive}}checkbox-c.svg{{else}}checkbox.svg{{/if}}" />
+			<div>
+				<h5>{{improvement.name}}</h5>
+				{{#if improvement.enrichedDescription}}
+				<div class="enriched-content">{{{improvement.enrichedDescription}}}</div>
+				{{else if improvement.description}}
+				<p>{{improvement.description}}</p>
+				{{/if}}
+			</div>
+		</li>
+		{{/each}}
+	</ul>
+</div>
+{{/if}}

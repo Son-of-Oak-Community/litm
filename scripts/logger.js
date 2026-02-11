@@ -5,10 +5,10 @@
  * @property {string} ERROR - Error color
  */
 const Status = {
-	SUCCESS: "hsl(46.61 81.44% 70%)",
-	INFO: "hsl(225.94 10.66% 41.72%)",
-	WARN: "hsl(45 100% 50%)",
-	ERROR: "hsl(6.5deg 42.05% 70%)",
+	SUCCESS: "hsl(135 40% 45%)",
+	INFO: "hsl(210 30% 50%)",
+	WARN: "hsl(30 75% 50%)",
+	ERROR: "hsl(5 60% 45%)",
 };
 
 /**
@@ -24,7 +24,7 @@ function log(status) {
 		return console.log(
 			`%cLegend in the Mist | %c${args.join("\n")}`,
 			`font-weight: bold; color: ${status};`,
-			"color: hsl(240, 100%, 98%);",
+			"",
 		);
 	};
 }

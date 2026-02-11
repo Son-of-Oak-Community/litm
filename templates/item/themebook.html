@@ -1,0 +1,151 @@
+<section class="standard-form themebook-sheet scrollable">
+	<header class="img-name">
+		<img src="{{document.img}}" data-edit="img" data-action="editImage" data-tooltip="{{localize 'LITM.Ui.edit_image'}}" />
+		<input type="text" id="type" name="name" value="{{document.name}}"
+			placeholder="{{localize 'LITM.Ui.themebook_type'}}" />
+	</header>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.themebook_details"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.envisioningTags"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<div class="form-group">
+			<div class="form-field">
+				<label for="theme_level">{{localize "LITM.Ui.theme_level"}}</label>
+				<select id="theme_level" name="system.theme_level">
+					{{selectOptions levels selected=system.theme_level localize=true}}
+				</select>
+			</div>
+
+			<div class="form-field flexrow gap-sm" style="align-items: center;">
+				<input type="checkbox" id="isFellowship" name="system.isFellowship" {{checked system.isFellowship}}
+					data-dtype="Boolean" style="flex: 0 0 auto; margin: 0;" />
+				<label class="checkbox-label" for="isFellowship" style="flex: 1; margin: 0; cursor: pointer;">
+					{{localize "LITM.Terms.fellowship"}}
+				</label>
+			</div>
+		</div>
+		<label>{{localize "LITM.Ui.themebook_envisioning"}}</label>
+		<ul class="plain">
+			{{#each system.envisioningTags as |tag|}}
+			<li class="form-group">
+				<input class="flex1" type="text" name="system.envisioningTags.{{@index}}" value="{{tag}}"
+					placeholder="{{localize 'LITM.Ui.themebook_tag'}}" />
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.envisioningTags"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.power_tag_questions"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.powerTagQuestions"
+				data-tooltip="{{localize 'LITM.Ui.add_question'}}" aria-label="{{localize 'LITM.Ui.add_question'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each powerTagQuestions as |entry|}}
+			<li class="form-group">
+				<label style="flex:none; min-width: 2rem;">{{entry.label}}</label>
+				<input class="flex1" type="text" name="system.powerTagQuestions.{{entry.index}}"
+					value="{{entry.question}}" placeholder="{{localize 'LITM.Ui.themebook_question'}}" />
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.powerTagQuestions"
+					data-index="{{entry.index}}" data-tooltip="{{localize 'LITM.Ui.remove_question'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.weakness_tag_questions"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.weaknessTagQuestions"
+				data-tooltip="{{localize 'LITM.Ui.add_question'}}" aria-label="{{localize 'LITM.Ui.add_question'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each weaknessTagQuestions as |entry|}}
+			<li class="form-group">
+				<label style="flex:none; min-width: 2rem;">{{entry.label}}</label>
+				<input class="flex1" type="text" name="system.weaknessTagQuestions.{{entry.index}}"
+					value="{{entry.question}}" placeholder="{{localize 'LITM.Ui.themebook_question'}}" />
+				<button type="button" style="flex:none;" data-action="removeEntry"
+					data-path="system.weaknessTagQuestions" data-index="{{entry.index}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_question'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.quest_ideas"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.questIdeas"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.questIdeas as |idea|}}
+			<li class="form-group">
+				<input class="flex1" type="text" name="system.questIdeas.{{@index}}" value="{{idea}}"
+					placeholder="{{localize 'LITM.Ui.themebook_quest_idea'}}" />
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.questIdeas"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.special_improvements"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.specialImprovements"
+				data-tooltip="{{localize 'LITM.Ui.add_improvement'}}"
+				aria-label="{{localize 'LITM.Ui.add_improvement'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.specialImprovements as |improvement|}}
+			<li class="form-group" style="align-items:flex-start;">
+				<div class="flex1 gap-sm" style="display:flex; flex-direction:column;">
+					<input type="text" name="system.specialImprovements.{{@index}}.name" value="{{improvement.name}}"
+						placeholder="{{localize 'LITM.Ui.improvement_name'}}" />
+					<textarea name="system.specialImprovements.{{@index}}.description" rows="2"
+						placeholder="{{localize 'LITM.Ui.improvement_description'}}">{{improvement.description}}</textarea>
+				</div>
+				<button type="button" style="flex:none;" data-action="removeEntry"
+					data-path="system.specialImprovements" data-index="{{@index}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_improvement'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+</section>

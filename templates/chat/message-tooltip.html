@@ -26,29 +26,29 @@
 			</div>
 		</section>
 		{{/each}}
-		{{#each data.burnedTags as |tag|}}
-		{{> section name=tag.name value=3 flavor=(localize 'Litm.tags.isBurnt') flavorClass="burned"}}
+		{{#each data.scratchedTags as |tag|}}
+		{{> section name=tag.name value=3 flavor=(localize 'LITM.Tags.is_burnt') flavorClass="burned"}}
 		{{/each}}
 		{{#each data.powerTags as |tag|}}
-		{{> section name=tag.name value=1 flavor=(ifThen (eq tag.type 'storyTag') (localize "Litm.other.tag") "")
+		{{> section name=tag.name value=1 flavor=(ifThen (eq tag.type 'storyTag') (localize "LITM.Terms.tag") "")
 		flavorClass=(ifThen (eq tag.type "storyTag") "warning" "")}}
 		{{/each}}
 		{{#if data.mitigate}}
-		{{> section name=(localize 'Litm.effects.mitigate.key') value=1}}
+		{{> section name=(localize 'LITM.Effects.mitigate.key') value=1}}
 		{{/if}}
 		{{#each data.weaknessTags as |tag|}}
-		{{> section name=tag.name value=-1 flavor=(ifThen (eq tag.type 'weaknessTag') (localize 'Litm.tags.weakness')
-		(localize 'Litm.other.tag')) flavorClass=(ifThen (eq tag.type 'weaknessTag') "negative" "warning")}}
+		{{> section name=tag.name value=-1 flavor=(ifThen (eq tag.type 'weaknessTag') (localize 'LITM.Tags.weakness')
+		(localize 'LITM.Terms.tag')) flavorClass=(ifThen (eq tag.type 'weaknessTag') "negative" "warning")}}
 		{{/each}}
 		{{#each data.positiveStatuses as |tag|}}
-		{{> section name=tag.name value=tag.value flavor=(localize 'Litm.other.status') flavorClass="positive"}}
+		{{> section name=tag.name value=tag.value flavor=(localize 'LITM.Terms.status') flavorClass="positive"}}
 		{{/each}}
 		{{#each data.negativeStatuses as |tag|}}
-		{{> section name=tag.name value=(concat "-" tag.value) flavor=(localize 'Litm.other.status')
-		flavorClass="positive"}}
+		{{> section name=tag.name value=(concat "-" tag.value) flavor=(localize 'LITM.Terms.status')
+		flavorClass="negative"}}
 		{{/each}}
 		{{#if data.modifier}}
-		{{> section name=(localize 'Litm.ui.modifier') value=data.modifier flavor="" flavorClass=""}}
+		{{> section name=(localize 'LITM.Ui.modifier') value=data.modifier flavor="" flavorClass=""}}
 		{{/if}}
 	</div>
 </div>

@@ -1,66 +1,218 @@
 {{#*inline 'tag' tag }}
 <li>
-	<label class="litm--roll-dialog-tag litm--{{tag.type}}" data-click="toggle-state" for="input-{{tag.id}}"><span
-			class="litm--sro">{{localize "Litm.ui.select"}}</span>
+	<label
+		class="litm--roll-dialog-tag litm--{{tag.type}} {{#if tag.locked}}is-locked{{/if}} {{#if tag.state}}is-selected{{/if}}"
+		for="input-{{tag.id}}" data-tag-type="{{tag.type}}">
+		<span class="litm--sro">{{localize "LITM.Ui.select"}}</span>
 		<litm-super-checkbox name="{{tag.id}}" id="input-{{tag.id}}" value="{{tag.state}}" data-type="{{tag.type}}"
-			states="{{tag.states}}"></litm-super-checkbox>
-		<span>{{tag.name}}{{ifThen tag.value (concat "-" tag.value) ""}}</span>
+			states="{{tag.states}}" {{#if tag.locked}}disabled aria-disabled="true" data-locked="true"
+			{{/if}}></litm-super-checkbox>
+		<span class="litm--roll-dialog-badge litm-{{tag.type}}"
+			data-text="{{tag.displayName}}{{ifThen (eq tag.type 'status') (ifThen tag.value (concat '-' tag.value) '') ''}}">{{tag.displayName}}{{ifThen
+			(eq tag.type "status") (ifThen tag.value (concat "-" tag.value) "") ""}}</span>
 	</label>
 </li>
 {{/inline}}
 
-<form class="{{cssClass}}" autocomplete="off">
+<div class="standard-form litm--roll-dialog-body">
 	<input type="hidden" name="actorId" value="{{actorId}}">
-	<input class="title" type="text" name="title" value="{{title}}" />
-	<div class="litm--roll-dialog-type">
-		<h3 class="litm--sro">{{concat (localize "Litm.other.roll") " " (localize "Type")}}</h3>
-		<div class="litm--roll-dialog-type-choices">{{radioBoxes "type" rollTypes checked=type localize=true}}
+
+	<div class="litm--roll-dialog-content">
+		<!-- Title -->
+		{{#if isOwner}}
+		<input type="text" name="title" value="{{title}}" placeholder="{{localize 'LITM.Ui.roll_title'}}"
+			style="font-size: var(--font-size-18); font-weight: bold;" />
+		{{/if}}
+
+		<!-- Roll Type -->
+		{{#if isOwner}}
+		<fieldset>
+			<legend>{{concat (localize "LITM.Terms.roll") " " (localize "LITM.Terms.type")}}</legend>
+			<div class="form-group">
+				{{radioBoxes "type" rollTypes checked=type localize=true}}
+			</div>
+		</fieldset>
+		{{/if}}
+
+		<!-- Might & Modifier -->
+		{{#if isOwner}}
+		<fieldset>
+			<legend>{{concat (localize "LITM.Terms.might") " & " (localize "LITM.Ui.modifier")}}</legend>
+			<div class="flexrow gap-md">
+				<div class="form-group flex1">
+					<label for="might-select">{{localize "LITM.Terms.might"}}</label>
+					<select id="might-select" name="might" data-update="might">
+						{{selectOptions mightOptions selected=might localize=true}}
+					</select>
+				</div>
+				<div class="form-group flex1">
+					<label for="modifier-input">{{localize "LITM.Ui.modifier"}}</label>
+					<input id="modifier-input" type="number" name="modifier" value="{{modifier}}"
+						data-update="modifier" />
+				</div>
+			</div>
+		</fieldset>
+		{{/if}}
+
+		<!-- Tags Summary -->
+		{{#if isGMViewer}}
+		<!-- GM Viewer: tabbed view per actor -->
+		<nav class="tabs litm--roll-dialog-tabs" data-group="gm-viewer">
+			{{#each gmViewerTabs as |tab|}}
+			<a class="item {{tab.cssClass}}" data-action="tab" data-group="gm-viewer" data-tab="{{tab.id}}">
+				{{#if tab.actorImg}}<img src="{{tab.actorImg}}" alt="{{tab.label}}" />{{/if}}
+				{{#if tab.icon}}<i class="{{tab.icon}}"></i>{{/if}}
+				<span>{{tab.label}}</span>
+			</a>
+			{{/each}}
+		</nav>
+		{{/if}}
+		<fieldset>
+			<legend>{{localize "LITM.Terms.tags"}}</legend>
+
+			{{#if isGMViewer}}
+			{{#each gmViewerTabs as |tab|}}
+			<section class="tab {{tab.cssClass}}" data-group="gm-viewer" data-tab="{{tab.id}}">
+				{{#each tab.groups as |group|}}
+				<div class="litm--roll-dialog-theme-group">
+					{{#if group.themeName}}
+					<p class="litm--roll-dialog-theme-label">{{group.themeName}}</p>
+					{{/if}}
+					<ul class="plain litm--roll-dialog-tags-summary">
+						{{#each group.tags as |tag|}}
+						{{> tag tag=tag}}
+						{{/each}}
+					</ul>
+				</div>
+				{{/each}}
+			</section>
+			{{/each}}
+
+			{{else}}
+			<!-- Character Tags (grouped by theme) -->
+			{{#each characterTagGroups as |group|}}
+			<div class="litm--roll-dialog-theme-group">
+				<p class="litm--roll-dialog-actor-label">
+					{{#if group.themeImg}}
+					<img src="{{group.themeImg}}" alt="{{group.themeName}}" />
+					{{else if group.actorImg}}
+					<img src="{{group.actorImg}}" alt="{{group.themeName}}" />
+					{{/if}}
+					<span>{{group.themeName}}</span>
+				</p>
+				<ul class="plain litm--roll-dialog-tags-summary">
+					{{#each group.tags as |tag|}}
+					{{> tag tag=tag}}
+					{{/each}}
+				</ul>
+			</div>
+			{{/each}}
+
+			<!-- Fellowship Tags (grouped by theme) -->
+			{{#if fellowshipTagGroups.length}}
+			{{#each fellowshipTagGroups as |group|}}
+			<div class="litm--roll-dialog-theme-group"
+				style="{{#if @first}}margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--color-border);{{/if}}">
+				<p class="litm--roll-dialog-actor-label">
+					{{#if group.themeImg}}
+					<img src="{{group.themeImg}}" alt="{{group.themeName}}" />
+					{{else}}
+					<img src="systems/litm/assets/media/icons/fellowship.svg" alt="{{group.themeName}}" />
+					{{/if}}
+					<span>{{group.themeName}}</span>
+				</p>
+				<ul class="plain litm--roll-dialog-tags-summary">
+					{{#each group.tags as |tag|}}
+					{{> tag tag=tag}}
+					{{/each}}
+				</ul>
+			</div>
+			{{/each}}
+			{{/if}}
+
+			<!-- Contributed Tags (from other characters) -->
+			{{#each contributedTagGroups as |contributor|}}
+			<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--color-border);">
+				<p class="litm--roll-dialog-actor-label">
+					{{#if contributor.actorImg}}<img src="{{contributor.actorImg}}"
+						alt="{{contributor.actorName}}" />{{/if}}
+					<span>{{contributor.actorName}}</span>
+				</p>
+				{{#each contributor.themeGroups as |group|}}
+				<div class="litm--roll-dialog-theme-group">
+					<p class="litm--roll-dialog-theme-label">{{group.themeName}}</p>
+					<ul class="plain litm--roll-dialog-tags-summary">
+						{{#each group.tags as |tag|}}
+						{{> tag tag=tag}}
+						{{/each}}
+					</ul>
+				</div>
+				{{/each}}
+			</div>
+			{{/each}}
+
+			<!-- Story Tags & Statuses (grouped by source) -->
+			{{#each storyTagGroups as |group|}}
+			<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--color-border);">
+				{{#if group.actorName}}
+				<p class="litm--roll-dialog-actor-label">
+					<img src="{{group.actorImg}}" alt="{{group.actorName}}" />
+					<span>{{group.actorName}}</span>
+				</p>
+				{{else}}
+				<p class="litm--roll-dialog-actor-label">
+					<i class="fa-solid fa-tags"></i>
+					<span>{{localize "LITM.Tags.story"}}</span>
+				</p>
+				{{/if}}
+				<ul class="plain litm--roll-dialog-tags-summary">
+					{{#each group.tags as |tag|}}
+					{{> tag tag=tag}}
+					{{/each}}
+				</ul>
+			</div>
+			{{/each}}
+
+			<!-- GM Tags (grouped by actor) -->
+			{{#if isGM}}
+			{{#each gmTagGroups as |group|}}
+			<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--color-border);">
+				<p class="litm--roll-dialog-actor-label">
+					<img src="{{group.actorImg}}" alt="{{group.actorName}}" />
+					<span>{{group.actorName}}</span>
+				</p>
+				<ul class="plain litm--roll-dialog-tags-summary">
+					{{#each group.tags as |tag|}}
+					{{> tag tag=tag}}
+					{{/each}}
+				</ul>
+			</div>
+			{{/each}}
+			{{/if}}
+			{{/if}}
+		</fieldset>
+
+	</div>
+
+	<div class="litm--roll-dialog-footer">
+		<!-- Total Power -->
+		<div class="litm--roll-dialog-total-power">
+			<span class="flex1">{{localize "LITM.Ui.total_power"}}</span>
+			<span class="litm--roll-dialog-total-power-value" data-update="totalPower">{{totalPower}}</span>
+		</div>
+
+		<!-- Footer Buttons -->
+		<div class="form-footer flexrow gap-md" style="align-items: center;">
+			{{#if isOwner}}
+			<button type="button" class="flex1" data-action="sendToNarrator">
+				<i class="fa-solid fa-envelope"></i>
+				{{localize "LITM.Ui.send_to_narrator"}}
+			</button>
+			<button type="submit" class="flex1 bright">
+				<i class="fa-solid fa-dice"></i>
+				{{localize "LITM.Ui.roll"}}
+			</button>
+			{{/if}}
 		</div>
 	</div>
-	<div class="litm--roll-dialog-tags-summary">
-		<ul>
-			<!-- Tags selected on Character Sheet -->
-			{{#each characterTags as |tag|}}
-			{{> tag tag=tag}}
-			{{/each}}
-		</ul>
-		<hr />
-		<ul>
-			<!-- Statuses -->
-			{{#each statuses as |status|}}
-			{{> tag tag=status}}
-			{{/each}}
-			<!-- Story Tags -->
-			{{#each tags as |tag|}}
-			{{> tag tag=tag}}
-			{{/each}}
-		</ul>
-		{{#if isGM}}
-		<hr />
-		<ul>
-			<!-- GM Tags -->
-			{{#each gmTags as |tag|}}
-			{{> tag tag=tag}}
-			{{/each}}
-		</ul>
-		{{/if}}
-	</div>
-	<div class="litm--roll-dialog-modifier">
-		<label for="modifier-input">
-			<span>{{localize "Litm.ui.modifier"}}: </span>
-			<input id="modifier-input" type="number" name="modifier" value="{{modifier}}" data-update="modifier" />
-		</label>
-	</div>
-	<div class="litm--tags-summary-total">
-		<span>{{localize "Litm.ui.total-power"}}: </span>
-		<span data-update="totalPower">{{totalPower}}</span>
-	</div>
-	<button type="button" data-click="add-tag">{{localize "Litm.other.add"}} {{localize "Litm.other.tags"}}</button>
-	<div class="litm--roll-dialog-buttons">
-		<label class="litm--roll-dialog-skip-moderation">
-			<span>{{localize "Litm.ui.skip-moderation"}}</span>
-			<input class="litm--checkbox" type="checkbox" name="shouldRoll" {{checked skipModeration}} />
-		</label>
-		<button type="submit">{{localize "Litm.ui.roll"}}</button>
-	</div>
-</form>
+</div>

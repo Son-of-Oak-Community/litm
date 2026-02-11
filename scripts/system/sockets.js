@@ -1,9 +1,10 @@
 export class Sockets {
 	static dispatch(event, data) {
-		if (!game.ready)
+		if (!game.ready) {
 			return console.error(
 				`Tried to dispatch ${event} socket event before the game was ready.`,
 			);
+		}
 
 		const senderIsGM = game.user.isGM;
 		const senderId = game.user.id;
@@ -17,21 +18,33 @@ export class Sockets {
 		});
 	}
 
+	static #handlers = new Map();
+	static #bound = false;
+
 	static on(event, cb) {
+		if (this.#handlers.has(event)) {
+			console.warn(
+				`litm | Sockets.on: handler for "${event}" is being overwritten.`,
+			);
+		}
+		this.#handlers.set(event, cb);
+		if (this.#bound) return;
+		this.#bound = true;
 		game.socket.on("system.litm", (data) => {
 			const { event: e, senderId, ...d } = data;
-			if (e !== event || senderId === game.userId) return;
-			cb(d);
+			if (senderId === game.userId) return;
+			this.#handlers.get(e)?.(d);
 		});
 	}
 
 	static registerListeners() {
 		this.#registerRollUpdateListener();
 		this.#registerRollModerationListeners();
+		this.#registerStoryTagsListeners();
 
-		Hooks.once("ready", () => {
-			if (game.user.isGM) this.#registerGMRollListeners();
-		});
+		if (game.user.isGM) {
+			this.#registerGMRollListeners();
+		}
 	}
 
 	static #registerRollUpdateListener() {
@@ -39,7 +52,14 @@ export class Sockets {
 			const { data } = event;
 			const actor = game.actors.get(data.actorId);
 			if (!actor) return console.warn(`Actor ${data.actorId} not found`);
-			actor.sheet.updateRollDialog(data);
+			actor.sheet?.updateRollDialog(data);
+		});
+
+		Sockets.on("requestRollDialogSync", ({ data: { actorId } }) => {
+			const actor = game.actors.get(actorId);
+			if (!actor?.sheet?.hasRollDialog) return;
+			const dialog = actor.sheet.rollDialogInstance;
+			if (dialog.isOwner) dialog.dispatchSync();
 		});
 	}
 
@@ -51,25 +71,40 @@ export class Sockets {
 
 		Sockets.on("rejectRoll", ({ data: { actorId, name } }) => {
 			ui.notifications.warn(
-				game.i18n.format("Litm.ui.roll-rejected", { name }),
+				game.i18n.format("LITM.Ui.roll_rejected", { name }),
 			);
 			const actor = game.actors.get(actorId);
-			if (!actor) return console.warn(`Actor ${actorId} not found`);
+			if (!actor?.sheet?.rendered) return;
 			actor.sheet.renderRollDialog();
 		});
 
 		Sockets.on("resetRollDialog", ({ data: { actorId } }) => {
 			const actor = game.actors.get(actorId);
-			if (!actor) return console.warn(`Actor ${actorId} not found`);
+			if (!actor?.sheet?.rendered) return;
 			actor.sheet.resetRollDialog();
 		});
 	}
 
-	static #registerGMRollListeners() {
-		Sockets.on("skipModeration", ({ data: { name } }) => {
-			ui.notifications.info(
-				game.i18n.format("Litm.ui.player-skipped-moderation", { name }),
-			);
+	static #registerStoryTagsListeners() {
+		Sockets.on("storyTagsUpdate", ({ data: { component, data } }) => {
+			const sidebar = game.litm.storyTags;
+			if (sidebar?.rendered) sidebar.doUpdate(component, data);
+		});
+
+		Sockets.on("storyTagsRender", () => {
+			const sidebar = game.litm.storyTags;
+			if (sidebar?.rendered) {
+				sidebar.render();
+				sidebar.refreshRollDialogs();
+			} else {
+				game.actors.forEach((actor) => {
+					if (!actor.sheet?.hasRollDialog) return;
+					const dialog = actor.sheet.rollDialogInstance;
+					if (dialog?.rendered) dialog.render();
+				});
+			}
 		});
 	}
+
+	static #registerGMRollListeners() {}
 }

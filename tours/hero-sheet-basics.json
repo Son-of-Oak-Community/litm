@@ -1,0 +1,71 @@
+{
+	"title": "TOURS.HeroSheetBasicsTitle",
+	"description": "TOURS.HeroSheetBasicsDescription",
+	"canBeResumed": false,
+	"display": true,
+	"steps": [
+		{
+			"id": "welcome",
+			"selector": "",
+			"title": "TOURS.HeroSheetBasicsWelcomeTitle",
+			"content": "TOURS.HeroSheetBasicsWelcomeContent"
+		},
+		{
+			"id": "edit-mode-toggle",
+			"selector": "[data-tour='edit-mode-toggle']",
+			"title": "TOURS.HeroSheetBasicsEditModeTitle",
+			"content": "TOURS.HeroSheetBasicsEditModeContent",
+			"action": "openSampleHero"
+		},
+		{
+			"id": "roll-button",
+			"selector": "[data-tour='roll-button']",
+			"title": "TOURS.HeroSheetBasicsRollTitle",
+			"content": "TOURS.HeroSheetBasicsRollContent",
+			"action": "switchToPlayMode"
+		},
+		{
+			"id": "promise-track",
+			"selector": "[data-tour='promise-track']",
+			"title": "TOURS.HeroSheetBasicsPromiseTitle",
+			"content": "TOURS.HeroSheetBasicsPromiseContent"
+		},
+		{
+			"id": "theme-tags",
+			"selector": ".theme-card",
+			"title": "TOURS.HeroSheetBasicsThemeTagsTitle",
+			"content": "TOURS.HeroSheetBasicsThemeTagsContent"
+		},
+		{
+			"id": "sheet-layout",
+			"selector": ".configure-sheet",
+			"title": "TOURS.HeroSheetBasicsLayoutTitle",
+			"content": "TOURS.HeroSheetBasicsLayoutContent"
+		},
+		{
+			"id": "summary",
+			"selector": "",
+			"title": "TOURS.HeroSheetBasicsSummaryTitle",
+			"content": "TOURS.HeroSheetBasicsSummaryContent"
+		}
+	],
+	"suggestedNextTours": ["litm.fellowship"],
+	"localization": {
+		"TOURS.HeroSheetBasicsTitle": "Hero Sheet Basics",
+		"TOURS.HeroSheetBasicsDescription": "Learn the key features of your hero sheet.",
+		"TOURS.HeroSheetBasicsWelcomeTitle": "Hero Sheet Basics",
+		"TOURS.HeroSheetBasicsWelcomeContent": "This tour walks you through the hero sheet. We'll open a sample hero to demonstrate the key features.",
+		"TOURS.HeroSheetBasicsEditModeTitle": "Edit Mode Toggle",
+		"TOURS.HeroSheetBasicsEditModeContent": "This button switches between <strong>Play</strong> and <strong>Edit</strong> modes. Edit mode lets you change themes, tags, and character details.<br/><br/>Keyboard shortcut: <strong>E</strong>",
+		"TOURS.HeroSheetBasicsRollTitle": "Dice Roller",
+		"TOURS.HeroSheetBasicsRollContent": "Click this button to open the roll dialog. Select tags on your sheet first by clicking them, then roll.<br/><br/>Keyboard shortcut: <strong>R</strong>",
+		"TOURS.HeroSheetBasicsPromiseTitle": "Promise Track",
+		"TOURS.HeroSheetBasicsPromiseContent": "The <strong>promise track</strong> measures your hero's progress toward their moment of fulfillment. Click boxes to advance. When you reach 5, you unlock the <strong>Moment of Fulfillment</strong> — a pivotal narrative event in your hero's story.",
+		"TOURS.HeroSheetBasicsThemeTagsTitle": "Themes & Tags",
+		"TOURS.HeroSheetBasicsThemeTagsContent": "Each theme has <strong>power tags</strong> and <strong>weakness tags</strong>. Click power tags to add them to your roll. Weakness tags can be invoked by opponents or the GM.<br/><br/>Themes also have a <strong>quest</strong> and advancement tracks — check these boxes as your theme evolves through play.",
+		"TOURS.HeroSheetBasicsLayoutTitle": "Sheet Layout",
+		"TOURS.HeroSheetBasicsLayoutContent": "Click the <i class=\"fas fa-cog\"></i> cog to open sheet configuration. Here you can switch between <strong>Portrait</strong> (narrow) and <strong>Landscape</strong> (wide) layouts to suit your screen and preference.",
+		"TOURS.HeroSheetBasicsSummaryTitle": "You're Ready!",
+		"TOURS.HeroSheetBasicsSummaryContent": "<strong>E</strong> = toggle edit mode<br/><strong>R</strong> = open dice roller<br/><br/>In play mode, click tags to select them for a roll, then hit the dice button. Explore edit mode to customize your hero's themes, tags, and details."
+	}
+}

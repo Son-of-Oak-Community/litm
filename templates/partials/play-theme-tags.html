@@ -1,0 +1,16 @@
+<div class="theme-card-tags">
+	{{#each system.powerTags as |tag|}}
+	{{#if tag.name}}
+	{{#if tag.isActive}}
+	{{> systems/litm/templates/partials/play-tag.html tag action=../tagAction noBurn=../noBurn}}
+	{{/if}}
+	{{/if}}
+	{{/each}}
+	{{#each system.weaknessTags as |tag|}}
+	{{#if tag.name}}
+	{{#if tag.isActive}}
+	{{> systems/litm/templates/partials/play-tag.html tag action=../tagAction noBurn=../noBurn}}
+	{{/if}}
+	{{/if}}
+	{{/each}}
+</div>

@@ -9,57 +9,41 @@ export class HandlebarsHelpers {
 			return args.reduce((acc, val) => acc + val, 0);
 		});
 
-		Handlebars.registerHelper("includes", (array, value, path) =>
-			Array.isArray(array)
-				? (path && array.some((i) => i[path] === value)) ||
-					array.includes(value)
-				: false,
-		);
-
 		Handlebars.registerHelper(
 			"progress-buttons",
 			function (current, max, block) {
 				let acc = "";
+				const data = Handlebars.createFrame(block.data);
 				for (let i = 0; i < max; ++i) {
-					block.data.index = i;
-					block.data.checked = i < current;
-					acc += block.fn(this);
+					data.index = i;
+					data.checked = i < current;
+					acc += block.fn(this, { data });
 				}
 				return acc;
 			},
 		);
 
-		Handlebars.registerHelper(
-			"titlecase",
-			(string) => string.charAt(0).toUpperCase() + string.slice(1),
-		);
-
-		Handlebars.registerHelper("tagActiveString", (tag, readonly) =>
-			tag.isActive
-				? "Litm.tags.isActive"
-				: readonly
-					? "Litm.tags.isInactive"
-					: "Litm.tags.activate",
-		);
+		Handlebars.registerHelper("toJSON", (obj) => JSON.stringify(obj ?? {}));
 	}
 }
 
 export class HandlebarsPartials {
 	static partials = [
 		"systems/litm/templates/apps/loot-dialog.html",
-		"systems/litm/templates/apps/roll-dialog.html",
-		"systems/litm/templates/apps/story-tags.html",
 		"systems/litm/templates/chat/message.html",
 		"systems/litm/templates/chat/message-tooltip.html",
 		"systems/litm/templates/chat/moderation.html",
-		"systems/litm/templates/item/backpack-ro.html",
-		"systems/litm/templates/item/theme-ro.html",
-		"systems/litm/templates/partials/new-tag.html",
-		"systems/litm/templates/partials/tag.html",
+		"systems/litm/templates/partials/play-tag.html",
+		"systems/litm/templates/partials/play-theme-tags.html",
+		"systems/litm/templates/partials/play-theme-tracks.html",
+		"systems/litm/templates/partials/edit-theme-tags.html",
+		"systems/litm/templates/partials/edit-theme-tags-activatable.html",
+		"systems/litm/templates/partials/edit-theme-tracks.html",
+		"systems/litm/templates/partials/theme-special-improvements.html",
 	];
 
 	static register() {
 		info("Registering Handlebars Partials...");
-		loadTemplates(HandlebarsPartials.partials);
+		foundry.applications.handlebars.loadTemplates(HandlebarsPartials.partials);
 	}
 }

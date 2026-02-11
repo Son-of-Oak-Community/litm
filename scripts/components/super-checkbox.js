@@ -1,129 +1,146 @@
-export class SuperCheckbox extends HTMLElement {
+import { AdoptedStyleSheetMixin } from "./adopted-stylesheet-mixin.js";
+
+export class SuperCheckbox extends AdoptedStyleSheetMixin(HTMLElement) {
 	static formAssociated = true;
-	static observedAttributes = ["value"];
+	static observedAttributes = ["value", "disabled"];
+
+	static css = `
+		#multistate-checkbox {
+			-webkit-appearance: none;
+			flex: none;
+			appearance: none;
+			background-color: transparent;
+			margin: 0;
+			font: inherit;
+			color: currentColor;
+			height: 0.7em;
+			width: 0.7em;
+			border: 0.1em solid currentColor;
+			border-radius: 0.25em;
+			transform: translateY(0.025em);
+			display: grid;
+			place-items: center;
+			grid-template-areas: "content";
+			rotate: 45deg;
+
+			&:is([role="checkbox"]) {
+				cursor: pointer;
+			}
+
+			&:disabled {
+				cursor: auto;
+			}
+
+			&::after {
+				grid-area: content;
+				content: "";
+				width: 0.36em;
+				height: 0.36em;
+				scale: 0;
+				transition: scale 120ms ease-in-out, rotate 120ms ease-in-out;
+				box-shadow: inset 1em 1em var(--litm-color-accent);
+			}
+
+			&::before {
+				grid-area: content;
+				content: "";
+				width: 0.36em;
+				height: 0.36em;
+				scale: 0;
+				transition: scale 120ms ease-in-out;
+				box-shadow: inset 1em 1em var(--litm-color-accent);
+			}
+
+			&[aria-checked="true"] {
+				background-color: currentColor;
+
+				&::after {
+					scale: 1;
+				}
+			}
+
+			&[data-state="negative"] {
+				background-color: transparent;
+				&::after {
+					width: 0.62em;
+					height: 0;
+					border-radius: 0;
+					border-top: 0.12em solid currentColor;
+					background-color: transparent;
+					box-shadow: none;
+					rotate: -45deg;
+					scale: 1;
+				}
+			}
+
+			&[data-state="positive"] {
+				background-color: transparent;
+				&::before {
+					content: "";
+					width: 0.65em;
+					height: 0;
+					border-radius: 0;
+					border-top: 0.12em solid currentColor;
+					background-color: transparent;
+					box-shadow: none;
+					rotate: -45deg;
+					scale: 1;
+				}
+				&::after {
+					content: "";
+					width: 0.65em;
+					height: 0;
+					border-radius: 0;
+					border-top: 0.12em solid currentColor;
+					background-color: transparent;
+					box-shadow: none;
+					rotate: 45deg;
+					scale: 1;
+				}
+			}
+
+			&[data-state="scratched"] {
+				background-color: transparent;
+				&::after {
+					position: relative;
+					top: -0.035em;
+					left: -0.045em;
+					background: url(systems/litm/assets/media/icons/scratch.svg);
+					box-shadow: none;
+					background-size: cover;
+					background-position: center;
+					font-size: 2.6em;
+					rotate: -45deg;
+					filter: var(--litm-scratch-filter, none);
+				}
+			}
+		}
+	`;
 
 	static Register() {
 		customElements.define("litm-super-checkbox", SuperCheckbox);
 	}
 
 	#checkbox;
-	#states = ["", "negative", "positive", "burned"];
+	#states = ["", "positive", "negative", "scratched"];
 	#state = 0;
 	#value = this.#states[this.#state];
 	#internals = this.attachInternals();
 
 	constructor() {
 		super();
-		this.attachShadow({ mode: "open" });
-		this.shadowRoot.innerHTML = `
-		<style>
-			#multistate-checkbox {
-				-webkit-appearance: none;
-				flex: none;
-				appearance: none;
-				background-color: transparent;
-				margin: 0;
-				font: inherit;
-				color: currentColor;
-				height: 0.7em;
-				width: 0.7em;
-				border: 0.1em solid currentColor;
-				border-radius: 0.25em;
-				transform: translateY(0.025em);
-				display: grid;
-				place-items: center;
-				grid-template-areas: "content";
-				rotate: 45deg;
-
-				&:is([role="checkbox"]) {
-					cursor: pointer;
-				}
-
-				&:disabled {
-					cursor: auto;
-				}
-
-				&::after {
-					grid-area: content;
-					content: "";
-					width: 0.36em;
-					height: 0.36em;
-					scale: 0;
-					transition: scale 120ms ease-in-out, rotate 120ms ease-in-out;
-					box-shadow: inset 1em 1em var(--litm-color-accent);
-				}
-
-				&::before {
-					grid-area: content;
-					content: "";
-					width: 0.36em;
-					height: 0.36em;
-					scale: 0;
-					transition: scale 120ms ease-in-out;
-					box-shadow: inset 1em 1em var(--litm-color-accent);
-				}
-
-				&[aria-checked="true"] {
-					background-color: currentColor;
-
-					&::after {
-						scale: 1;
-					}
-				}
-
-				&[data-state="negative"] {
-					&::after {
-						width: 0.62em;
-						height: 0.15em;
-						border-radius: 0.05em;
-						rotate: -45deg;
-						transition: scale 120ms ease-in-out;
-					}
-				}
-
-				&[data-state="positive"] {
-					&::before {
-						content: "";
-						width: 0.65em;
-						height: 0.15em;
-						border-radius: 0.05em;
-						scale: 1;
-						rotate: -45deg;
-					}
-					&::after {
-						content: "";
-						width: 0.65em;
-						height: 0.15em;
-						border-radius: 0.05em;
-						rotate: 45deg;
-					}
-				}
-
-				&[data-state="burned"] {
-					&::after {
-						position: relative;
-						top: -0.035em;
-						left: -0.045em;
-						background: url(systems/litm/assets/media/burn.svg);
-						box-shadow: none;
-						background-size: cover;
-						background-position: center;
-						font-size: 2.6em;
-						rotate: -45deg;
-					}
-				}
-			}
-		</style>
-		<div id="multistate-checkbox" role="checkbox" aria-checked="false" tabindex="0">
-		</div>
-	`;
+		this.shadowRoot.innerHTML = `<div id="multistate-checkbox" role="checkbox" aria-checked="false" tabindex="0"></div>`;
 		this.#checkbox = this.shadowRoot.querySelector("#multistate-checkbox");
-		this.addEventListener("click", this.#onClick.bind(this));
+		this.addEventListener("click", this._onClick.bind(this));
 		this.#checkbox.addEventListener("keydown", (event) => {
 			if (event.key === "Enter" || event.key === " ") {
-				this.#onClick();
+				this._onClick();
 			}
 		});
+	}
+
+	get disabled() {
+		return this.hasAttribute("disabled");
 	}
 
 	get checked() {
@@ -156,6 +173,7 @@ export class SuperCheckbox extends HTMLElement {
 		this.#states = this.getAttribute("states")?.split(",") || this.#states;
 		this.#state = this.#states.indexOf(this.getAttribute("value"));
 		this.#updateState();
+		this.#syncDisabledState();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -164,12 +182,25 @@ export class SuperCheckbox extends HTMLElement {
 			this.#state = this.#states.indexOf(newValue);
 			this.#updateState();
 		}
+		if (name === "disabled") {
+			this.#syncDisabledState();
+		}
 	}
 
-	#onClick() {
+	_onClick() {
+		if (this.disabled) return;
 		this.#state = (this.#state + 1) % this.#states.length;
 		this.#updateState();
 		this.dispatchEvent(new Event("change"));
+	}
+
+	#syncDisabledState() {
+		this.#checkbox.toggleAttribute("disabled", this.disabled);
+		this.#checkbox.tabIndex = this.disabled ? -1 : 0;
+		this.#checkbox.setAttribute(
+			"aria-disabled",
+			this.disabled ? "true" : "false",
+		);
 	}
 
 	#updateState() {

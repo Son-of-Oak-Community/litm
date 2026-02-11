@@ -1,0 +1,46 @@
+{
+	"title": "TOURS.FellowshipTitle",
+	"description": "TOURS.FellowshipDescription",
+	"canBeResumed": false,
+	"display": true,
+	"steps": [
+		{
+			"id": "intro",
+			"selector": "",
+			"title": "TOURS.FellowshipIntroTitle",
+			"content": "TOURS.FellowshipIntroContent"
+		},
+		{
+			"id": "fellowship-sheet",
+			"selector": ".litm-fellowship-sheet",
+			"title": "TOURS.FellowshipSheetTitle",
+			"content": "TOURS.FellowshipSheetContent",
+			"action": "openFellowshipSheet"
+		},
+		{
+			"id": "setup-theme",
+			"selector": "[data-tour='fellowship-cta']",
+			"title": "TOURS.FellowshipSetupTitle",
+			"content": "TOURS.FellowshipSetupContent"
+		},
+		{
+			"id": "syncing",
+			"selector": "",
+			"title": "TOURS.FellowshipSyncTitle",
+			"content": "TOURS.FellowshipSyncContent"
+		}
+	],
+	"suggestedNextTours": ["litm.storyTagSidebar"],
+	"localization": {
+		"TOURS.FellowshipTitle": "Fellowship & Relationships",
+		"TOURS.FellowshipDescription": "Learn how the fellowship connects heroes in a group.",
+		"TOURS.FellowshipIntroTitle": "Fellowship & Relationships",
+		"TOURS.FellowshipIntroContent": "This tour introduces the <strong>fellowship</strong> — a shared actor that binds your heroes together. Every world has one fellowship, and all heroes are automatically linked to it.",
+		"TOURS.FellowshipSheetTitle": "The Fellowship Actor",
+		"TOURS.FellowshipSheetContent": "This is your <strong>fellowship sheet</strong>. Here you'll add a fellowship theme with power tags, a weakness tag, and a quest — just like a hero's themes. You can also add story themes and story tags.",
+		"TOURS.FellowshipSetupTitle": "Setting Up Your Fellowship",
+		"TOURS.FellowshipSetupContent": "To get started, <strong>drop a fellowship themebook</strong> onto this area. This creates your fellowship's theme, where you'll define the group's shared identity, power tags, and quest.",
+		"TOURS.FellowshipSyncTitle": "Shared Across All Heroes",
+		"TOURS.FellowshipSyncContent": "Every hero automatically shares the fellowship's theme and tags. When the GM updates the fellowship — adding tags, advancing the theme, or changing the quest — it updates on every hero's sheet automatically."
+	}
+}

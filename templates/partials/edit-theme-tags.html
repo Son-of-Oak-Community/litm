@@ -1,0 +1,31 @@
+<div class="flexcol gap-md" style="margin-bottom: 0.4rem;">
+	<ul class="plain">
+		{{#each system.powerTags as |tag|}}
+		{{#if tag.name}}
+		<li class="{{#unless tag.isActive}}is-inactive{{/unless}}"
+			style="display: flex; gap: 0.35rem; font-size: var(--font-size-14); line-height: 1.2; align-items: center;">
+			<img class="litm-tag-check" alt=""
+				src="systems/litm/assets/media/{{#if tag.isActive}}checkbox-c.svg{{else}}checkbox.svg{{/if}}" />
+			{{#if tag.isScratched}}
+			<img class="litm-tag-scratch" alt="" src="systems/litm/assets/media/icons/scratch.svg" />
+			{{/if}}
+			<span class="litm-powerTag"
+				style="padding: 0.2em 0.4em; flex-shrink: 0; font-size: var(--font-size-12);">{{tag.name}}</span>
+		</li>
+		{{/if}}
+		{{/each}}
+	</ul>
+	<ul class="plain">
+		{{#each system.weaknessTags as |tag|}}
+		{{#if tag.name}}
+		<li class="{{#unless tag.isActive}}is-inactive{{/unless}}"
+			style="display: flex; gap: 0.35rem; font-size: var(--font-size-14); line-height: 1.2; align-items: center;">
+			<img class="litm-tag-check" alt=""
+				src="systems/litm/assets/media/{{#if tag.isActive}}checkbox-c.svg{{else}}checkbox.svg{{/if}}" />
+			<span class="litm-weaknessTag"
+				style="padding: 0.2em 0.4em; flex-shrink: 0; font-size: var(--font-size-12);">{{tag.name}}</span>
+		</li>
+		{{/if}}
+		{{/each}}
+	</ul>
+</div>

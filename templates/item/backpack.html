@@ -1,16 +1,52 @@
-<form autocomplete="off" class="litm--backpack-wrapper">
-	<img width="380px" class="litm--backpack-img" src="systems/litm/assets/media/backpack.webp"
-		alt="Soft illustration of a rustic backpack" />
-	<img width="270px" class="litm--backpack-bg-frame" src="systems/litm/assets/media/background-frame.webp"
-		aria-hidden="true">
-	<div class="litm--backpack-bg">
-		<div class="meta">{{localize 'Litm.tags.item-tags'}}</div>
-		<input class="title" name="name" value="{{name}}" />
-		<ul class="taglist">
+<section class="standard-form scrollable">
+	<!-- Header -->
+	<header class="img-name">
+		<img class="profile-img noflex" src="{{document.img}}" data-edit="img" data-action="editImage"
+			data-tooltip="{{localize 'LITM.Ui.edit_image'}}" />
+		<input class="flex1" type="text" name="name" value="{{name}}" placeholder="{{localize 'LITM.Ui.backpack_name'}}" />
+	</header>
+
+	<!-- Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Tags.contents"}}</span>
+			<button type="button" class="noflex" data-action="addTag" data-tooltip="{{localize 'LITM.Ui.add_tag'}}"
+				aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		{{#if backpack.length}}
+		<ul class="plain">
 			{{#each backpack as |tag|}}
-				{{> systems/litm/templates/partials/tag.html tag=tag key=@key path="system.contents" readonly=false remove=true}}
+			<li class="form-group {{#unless tag.isActive}}inactive{{/unless}}">
+				<input type="checkbox" name="system.contents.{{@index}}.isActive" {{checked tag.isActive}}
+					data-dtype="Boolean" />
+
+				<input class="flex1" type="text" name="system.contents.{{@index}}.name" value="{{tag.name}}"
+					placeholder="{{localize 'LITM.Ui.tag_name'}}" />
+
+				{{!-- <label class="checkbox noflex" data-tooltip="{{localize 'LITM.Tags.burnt'}}">
+					<input type="checkbox" name="system.contents.{{@index}}.isScratched" {{checked tag.isScratched}}
+						data-dtype="Boolean" />
+					<i class="fa-solid fa-fire"></i>
+				</label> --}}
+
+				<button style="flex:none;" type="button" data-action="removeTag" data-index="{{@index}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_tag'}}" aria-label="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash" aria-hidden="true"></i>
+				</button>
+
+				<!-- Hidden fields for validation -->
+				<input type="hidden" name="system.contents.{{@index}}.type" value="{{tag.type}}" />
+				<input type="hidden" name="system.contents.{{@index}}.id" value="{{tag.id}}" />
+			</li>
 			{{/each}}
 		</ul>
-		<button type="button" data-click="add-tag">{{localize "Litm.ui.add-tag"}}</button>
-	</div>
-</form>
+		{{else}}
+		<div style="text-align: center; padding: 2rem;">
+			<i class="fa-solid fa-bag-shopping icon-xl"></i>
+			<p class="hint">{{localize "LITM.Ui.no_items"}}</p>
+		</div>
+		{{/if}}
+	</fieldset>
+</section>

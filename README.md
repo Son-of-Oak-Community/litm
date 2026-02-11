@@ -1,9 +1,6 @@
-> [!WARNING]
-> This system will eventually be removed from Foundry. Please use: https://github.com/taragnor/city-of-mist
-
 <div align="center"><img src="./assets/media/litm_splash.webp" /></div>
-<h1 align="center">⚜️<a href="https://www.kickstarter.com/projects/sonofoak/legend-in-the-mist-rpg" rel="noreferrer" target="_blank">Legend in the Mist Demo</a>⚜</h1>
-<div align="center"><strong><em>For Foundry Virtual Tabletop</em></strong></div>
+<h1 align="center">⚜️<a href="https://www.kickstarter.com/projects/sonofoak/legend-in-the-mist-rpg" rel="noreferrer" target="_blank">Legend in the Mist</a>⚜</h1>
+<div align="center"><strong><em>Unofficial Community System for Foundry Virtual Tabletop</em></strong></div>
 <div align="center"><img width="30px" src="https://foundryvtt.com/static/assets/icons/fvtt.png" /></div>
 
 <br />
@@ -12,19 +9,19 @@
 
 ## Welcome to Legend in the Mist
 
-This is a system for playing the game **Legend in the Mist** in Foundry Virtual Tabletop.
+This is an unofficial, community-made system for playing **Legend in the Mist** in Foundry Virtual Tabletop. It is not affiliated with or endorsed by Son of Oak Game Studio.
 
 ## Installation
 
-Thank you for wanting to try out this system! It is not under development anymore. https://github.com/taragnor/city-of-mist
+Thank you for wanting to try out this system!
 
 **To install the system in Foundry Virtual Tabletop:**
 
-1. Find the system called "Legend in the Mist" in the systems list in the setup menu.
+1. Find the system called "Legend in the Mist (Unofficial)" in the systems list in the setup menu.
 
-2. Create a new world using the "Legend in the Mist" system.
+2. Create a new world using the "Legend in the Mist (Unofficial)" system.
 
-\*_This system is published with express permission from **Son of Oak**_
+\*_This is a fan-made project. Legend in the Mist is a game by **Son of Oak Game Studio**._
 
 # Special Thanks
 

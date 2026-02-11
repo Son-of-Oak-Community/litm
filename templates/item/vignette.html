@@ -1,0 +1,62 @@
+<section class="standard-form scrollable">
+	<!-- Header -->
+	<header class="img-name">
+		<i class="fa-solid fa-skull-crossbones" style="font-size: var(--font-size-24)" /></i>
+		<input class="flex1" type="text" name="name" value="{{document.name}}" required
+			placeholder="{{localize 'LITM.Ui.vignette_name'}}" />
+	</header>
+
+	<!-- Vignette Description -->
+	<fieldset>
+		<legend>{{localize "LITM.Terms.threat"}}</legend>
+
+		<!-- Consequence Only Toggle -->
+		<div class="form-group" style="margin-bottom: 0.5rem;">
+			<input id="isConsequenceOnly" type="checkbox" name="system.isConsequenceOnly" {{checked isConsequenceOnly}}
+				data-dtype="Boolean" />
+			<label for="isConsequenceOnly">{{localize "LITM.Ui.consequences_only"}}</label>
+			<p class="hint">{{localize "LITM.Ui.consequences_only_hint"}}</p>
+		</div>
+		{{#unless isConsequenceOnly}}
+		<textarea name="system.threat" rows="3" placeholder="{{localize 'LITM.Ui.vignette_description_placeholder'}}"
+			style="resize: vertical;">{{system.threat}}</textarea>
+		{{else}}
+		<input type="hidden" name="system.threat" value="{{system.threat}}" />
+		{{/unless}}
+	</fieldset>
+
+	<!-- Consequences -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Terms.consequences"}}</span>
+			<button type="button" class="noflex" data-action="addConsequence"
+				data-tooltip="{{localize 'LITM.Ui.add_consequence'}}" aria-label="{{localize 'LITM.Ui.add_consequence'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		{{#if consequences.length}}
+		<ul class="plain">
+			{{#each consequences as |consequence|}}
+			<li class="form-group gap-sm" style="align-items: flex-start;">
+				<textarea name="system.consequences.{{@index}}" rows="2" placeholder="{{localize 'LITM.Ui.name_consequence'}}"
+					style="resize: vertical;">{{consequence}}</textarea>
+
+				<button type="button" style="flex:none;" data-action="removeConsequence" data-index="{{@index}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_consequence'}}"
+					aria-label="{{localize 'LITM.Ui.remove_consequence'}}">
+					<i class="fa-solid fa-trash" aria-hidden="true"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.no_consequences"}}</p>
+		{{/if}}
+		{{#if effects.length}}
+		<p class="hint gap-sm" style="display: flex; align-items: center;">
+			<i class="fa-solid fa-info-circle"></i>
+			{{localize "LITM.Ui.vignette_generates"}} {{effects.length}} {{localize "LITM.Ui.tags_statuses"}}
+		</p>
+		{{/if}}
+	</fieldset>
+</section>

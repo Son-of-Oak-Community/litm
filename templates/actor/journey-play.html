@@ -1,0 +1,77 @@
+<section class="journey-play-mode standard-form scrollable">
+	<!-- Header -->
+	<div class="flexrow gap-md journey-play-header">
+		{{#if hasCustomImage}}
+		<img class="profile-img noflex" src="{{document.img}}" data-action="showPortraitArtwork"
+			data-tooltip="{{localize 'LITM.Ui.view_image'}}" />
+		{{/if}}
+
+		<div class="flex1 flexcol gap-sm">
+			<h1>{{document.name}}</h1>
+			{{#if source.system.category}}
+			<span class="category">{{source.system.category}}</span>
+			{{/if}}
+		</div>
+	</div>
+
+	<!-- Description + Tags -->
+	{{#if (or enriched.description storyTags.length)}}
+	<div>
+		{{#if enriched.description}}
+		<div class="enriched-content" data-field="system.description">{{{enriched.description}}}</div>
+		{{/if}} {{#if storyTags.length}}
+		<div class="litm--play-tags">
+			{{#each storyTags as |tag|}} {{#if (eq tag.type "status")}}
+			<span class="litm-status{{#if tag.hidden}} litm--tag-hidden{{/if}}" draggable="true"
+				data-text="{{tag.name}}-{{tag.value}}">{{tag.name}}-{{tag.value}}</span>{{#unless @last}}<span
+				class="litm-tag-separator">,</span>{{/unless}}
+			{{else}}
+			<span class="litm-tag{{#if tag.hidden}} litm--tag-hidden{{/if}}" draggable="true"
+				data-text="{{tag.name}}">{{tag.name}}</span>{{#unless @last}}<span
+				class="litm-tag-separator">,</span>{{/unless}}
+			{{/if}} {{/each}}
+		</div>
+		{{/if}}
+	</div>
+	{{/if}}
+
+	<!-- General Consequences -->
+	{{#if generalConsequence}}
+	<fieldset>
+		<legend class="litm-banner vignette-card-label">
+			{{localize "LITM.Terms.general_consequences"}}
+		</legend>
+		<ul class="consequences-list">
+			{{#each generalConsequence.system.consequences as |consequence|}}
+			<li class="consequence-item">{{{consequence}}}</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+	{{/if}}
+
+	<!-- Vignettes -->
+	{{#if displayVignettes.length}}
+	<div class="grid-2col">
+		{{#each displayVignettes as |vignette|}}
+		<fieldset class="vignette-card item" data-item-id="{{vignette._id}}">
+			<legend class="litm-banner vignette-card-label">{{vignette.name}}</legend>
+			{{#if vignette.system.isConsequenceOnly}} {{#if vignette.system.consequences.length}}
+			<ul class="consequences-list">
+				{{#each vignette.system.consequences as |consequence|}}
+				<li class="consequence-item">{{{consequence}}}</li>
+				{{/each}}
+			</ul>
+			{{/if}} {{else}} {{#if vignette.system.threat}}
+			<div class="threat-text">{{{vignette.system.threat}}}</div>
+			{{/if}} {{#if vignette.system.consequences.length}}
+			<ul class="consequences-list">
+				{{#each vignette.system.consequences as |consequence|}}
+				<li class="consequence-item">{{{consequence}}}</li>
+				{{/each}}
+			</ul>
+			{{/if}} {{/if}}
+		</fieldset>
+		{{/each}}
+	</div>
+	{{/if}}
+</section>

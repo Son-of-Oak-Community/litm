@@ -1,0 +1,78 @@
+{
+	"title": "TOURS.StoryTagSidebarTitle",
+	"description": "TOURS.StoryTagSidebarDescription",
+	"canBeResumed": false,
+	"display": true,
+	"steps": [
+		{
+			"id": "intro",
+			"selector": "",
+			"title": "TOURS.StoryTagSidebarIntroTitle",
+			"content": "TOURS.StoryTagSidebarIntroContent"
+		},
+		{
+			"id": "sidebar-tab",
+			"selector": "#sidebar-tabs [data-tab='combat']",
+			"title": "TOURS.StoryTagSidebarTabTitle",
+			"content": "TOURS.StoryTagSidebarTabContent",
+			"action": "activateSidebar:combat"
+		},
+		{
+			"id": "story-section",
+			"selector": "[data-context='remove-all-tags']",
+			"title": "TOURS.StoryTagSidebarStorySectionTitle",
+			"content": "TOURS.StoryTagSidebarStorySectionContent",
+			"action": "ensureSampleTags"
+		},
+		{
+			"id": "add-buttons",
+			"selector": "[data-action='add-tag'][data-id='story']",
+			"title": "TOURS.StoryTagSidebarAddButtonsTitle",
+			"content": "TOURS.StoryTagSidebarAddButtonsContent"
+		},
+		{
+			"id": "tag-item",
+			"selector": ".litm--tag-item.litm--tag",
+			"title": "TOURS.StoryTagSidebarTagItemTitle",
+			"content": "TOURS.StoryTagSidebarTagItemContent"
+		},
+		{
+			"id": "status-item",
+			"selector": ".litm--tag-item.litm--status",
+			"title": "TOURS.StoryTagSidebarStatusItemTitle",
+			"content": "TOURS.StoryTagSidebarStatusItemContent"
+		},
+		{
+			"id": "add-actor",
+			"selector": ".litm--add-actor-btn",
+			"title": "TOURS.StoryTagSidebarAddActorTitle",
+			"content": "TOURS.StoryTagSidebarAddActorContent"
+		},
+		{
+			"id": "summary",
+			"selector": "",
+			"title": "TOURS.StoryTagSidebarSummaryTitle",
+			"content": "TOURS.StoryTagSidebarSummaryContent"
+		}
+	],
+	"localization": {
+		"TOURS.StoryTagSidebarTitle": "Story Tag Sidebar",
+		"TOURS.StoryTagSidebarDescription": "Learn how to manage story tags and status cards.",
+		"TOURS.StoryTagSidebarIntroTitle": "Story Tag Sidebar",
+		"TOURS.StoryTagSidebarIntroContent": "The <strong>Story Tag Sidebar</strong> replaces the combat tracker with a shared space for managing story tags and status cards. It's the central place to track narrative elements during play.",
+		"TOURS.StoryTagSidebarTabTitle": "Finding the Sidebar",
+		"TOURS.StoryTagSidebarTabContent": "The story tag sidebar lives here, in the <strong>tags tab</strong> of the sidebar. Click this icon to open it at any time.<br/><br/><strong>Tip:</strong> <strong>Right-click</strong> this icon to pop the sidebar out into its own window — handy for keeping tags visible alongside other panels.<br/><br/>Keyboard shortcut: <strong>T</strong> (pops out / closes the sidebar window)",
+		"TOURS.StoryTagSidebarStorySectionTitle": "Story Tags Section",
+		"TOURS.StoryTagSidebarStorySectionContent": "The top section holds <strong>story tags</strong> — shared narrative tags visible to everyone. These represent things in the fiction that any character might interact with.",
+		"TOURS.StoryTagSidebarAddButtonsTitle": "Adding Tags & Statuses",
+		"TOURS.StoryTagSidebarAddButtonsContent": "Use <i class=\"fa-solid fa-tag\"></i> to add a <strong>story tag</strong> (a simple narrative fact) or <i class=\"fa-solid fa-heart\"></i> to add a <strong>status card</strong> (a tracked condition with tiers).",
+		"TOURS.StoryTagSidebarTagItemTitle": "Story Tags",
+		"TOURS.StoryTagSidebarTagItemContent": "A <strong>story tag</strong> is a narrative fact — e.g. \"Dark Alley\" or \"Raining\". Click the name to edit it. The <i class=\"fa-solid fa-hourglass-half\"></i> hourglass marks a tag as <strong>single-use</strong>, meaning it burns after one use.",
+		"TOURS.StoryTagSidebarStatusItemTitle": "Status Cards",
+		"TOURS.StoryTagSidebarStatusItemContent": "A <strong>status card</strong> tracks a condition with up to 6 tiers. Check boxes to raise the tier. Statuses work like tags in rolls but carry escalating weight.",
+		"TOURS.StoryTagSidebarAddActorTitle": "Adding Actors",
+		"TOURS.StoryTagSidebarAddActorContent": "Drag actors from the sidebar or click <strong>Add Actor</strong> to track per-character tags and statuses. Each actor gets their own section with the same tag and status tools.",
+		"TOURS.StoryTagSidebarSummaryTitle": "You're Ready!",
+		"TOURS.StoryTagSidebarSummaryContent": "Use story tags and statuses to track the evolving fiction. Players can <strong>drag tags</strong> from here onto their roll dialog to include them.<br/><br/><strong>Right-click</strong> any tag for options like burn, convert, or remove.<br/><br/><strong>T</strong> = pop out / close the sidebar window"
+	}
+}

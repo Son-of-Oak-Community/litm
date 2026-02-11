@@ -1,0 +1,86 @@
+<div class="litm--welcome-overlay__wizard standard-form">
+	<div class="litm--welcome-overlay__wizard-header">
+		<h2>{{localize "LITM.Ui.hero_creation_customize_themes"}}</h2>
+		<hr />
+	</div>
+	<div class="litm--welcome-overlay__wizard-body">
+		<section class="hero-creation__themes-grid">
+			<p class="hint">{{localize "LITM.Ui.hero_creation_hint_broad_vs_specific"}}</p>
+			<div class="themes-container">
+				{{#each tropeThemeChoices}}
+				<fieldset class="theme-card {{#if isComplete}}theme-card--complete{{/if}}">
+					<legend class="theme-card__book">
+						{{#if kitThemebook}}{{kitThemebook}}{{else}}{{localize (concat "LITM.Terms." kitLevel)}}{{/if}}
+						{{#if isComplete}}<i class="fa-solid fa-circle-check theme-card__check"></i>{{/if}}
+					</legend>
+					<div class="theme-card-header">
+						<div class="flexrow noflex gap-sm">
+							<img class="noflex icon-md" src="systems/litm/assets/media/icons/{{kitLevel}}.svg"
+								data-tooltip="{{localize (concat 'LITM.Terms.' kitLevel)}}" />
+							<span class="litm-tag" data-text="{{kitName}}">{{kitName}}</span>
+						</div>
+					</div>
+
+					<div class="tag-section power-tags">
+						<p class="tag-section__label">{{localize "LITM.Tags.power_tags"}} ({{powerTagCount}}/2)</p>
+						{{#if powerTagQuestions.length}}
+						<ul class="tag-questions">
+							{{#each powerTagQuestions}}<li class="hint">{{this}}</li>{{/each}}
+						</ul>
+						{{/if}}
+						<p class="hint">{{localize "LITM.Ui.hero_creation_hint_power_tags"}}</p>
+						<div class="theme-card-tags">
+							{{#each powerTagOptions}}
+							<label class="tag-checkbox">
+								<input type="checkbox" value="{{name}}" data-action="toggleTropePowerTag"
+									data-index="{{@../index}}" {{#if checked}}checked{{/if}} />
+								<img class="litm-tag-check"
+									src="systems/litm/assets/media/{{#if checked}}checkbox-c{{else}}checkbox{{/if}}.svg" />
+								<span class="litm-powerTag {{#unless checked}}unselected{{/unless}}"
+									data-text="{{name}}">{{name}}</span>
+							</label>
+							{{/each}}
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="tag-section weakness-tags">
+						<p class="tag-section__label">{{localize "LITM.Tags.weakness_tags"}} ({{#if
+							hasWeakness}}1{{else}}0{{/if}}/1)</p>
+						{{#if weaknessTagQuestions.length}}
+						<ul class="tag-questions">
+							{{#each weaknessTagQuestions}}<li class="hint">{{this}}</li>{{/each}}
+						</ul>
+						{{/if}}
+						<p class="hint">{{localize "LITM.Ui.hero_creation_hint_weakness_tags"}}</p>
+						<div class="theme-card-tags">
+							{{#each weaknessTagOptions}}
+							<label class="tag-checkbox">
+								<input type="checkbox" value="{{name}}" data-action="toggleTropeWeaknessTag"
+									data-index="{{@../index}}" {{#if checked}}checked{{/if}} />
+								<img class="litm-tag-check"
+									src="systems/litm/assets/media/{{#if checked}}checkbox-c{{else}}checkbox{{/if}}.svg" />
+								<span class="litm-weaknessTag {{#unless checked}}unselected{{/unless}}"
+									data-text="{{name}}">{{name}}</span>
+							</label>
+							{{/each}}
+						</div>
+					</div>
+				</fieldset>
+				{{/each}}
+			</div>
+		</section>
+	</div>
+	<div class="litm--welcome-overlay__wizard-footer">
+		<button type="button" class="litm--welcome-overlay__btn" data-action="back">
+			{{localize "LITM.Ui.hero_creation_back"}}
+		</button>
+		<div class="litm--welcome-overlay__wizard-footer-actions">
+			<button type="button" class="litm--welcome-overlay__btn litm--welcome-overlay__btn--primary"
+				data-action="next">
+				{{localize "LITM.Ui.hero_creation_next"}}
+			</button>
+		</div>
+	</div>
+</div>

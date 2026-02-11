@@ -1,0 +1,87 @@
+<div class="litm--welcome-overlay__wizard litm--welcome-overlay__wizard--wide standard-form">
+	<div class="litm--welcome-overlay__wizard-header">
+		<h2>{{localize "LITM.Ui.hero_creation_review"}}</h2>
+		<hr />
+	</div>
+	<div class="litm--welcome-overlay__wizard-body">
+		<fieldset>
+			<legend>{{localize "LITM.Ui.hero_creation_review_identity"}}</legend>
+			<div class="flexrow gap-sm">
+				<input type="text" data-bind="actorName" value="{{actorName}}"
+					placeholder="{{localize 'LITM.Ui.hero_name_placeholder'}}" style="flex: 1" />
+				<button type="button" class="litm--welcome-overlay__btn" data-action="suggestHeroName"
+					data-tooltip="{{localize 'LITM.Ui.hero_creation_suggest_name'}}">
+					<i class="fa-solid fa-dice"></i>
+				</button>
+			</div>
+			{{#if tropeName}}
+			<p class="review-trope-subtitle"><em>{{tropeName}}</em></p>
+			{{/if}}
+		</fieldset>
+
+		<hr />
+
+		<div class="grid-2col">
+			{{#each reviewThemes as |theme|}}
+			<fieldset class="theme-card">
+				<legend class="theme-card__book">
+					{{#if theme.themebook}}{{theme.themebook}}{{else}}{{localize (concat
+					"LITM.Terms." theme.level)}}{{/if}}
+					{{#if theme.levelLabel}} <span class="review-level-badge">{{theme.levelLabel}}</span>{{/if}}
+				</legend>
+				<div class="theme-card-header">
+					<div class="flexrow noflex gap-sm">
+						<img class="noflex icon-md" src="systems/litm/assets/media/icons/{{theme.level}}.svg"
+							data-tooltip="{{theme.levelLabel}}" />
+						<span class="litm-tag" data-text="{{theme.name}}">{{theme.name}}</span>
+					</div>
+				</div>
+
+				<div class="theme-card-tags">
+					{{#each theme.powerTags as |tag|}}
+					{{#if tag}}
+					<span class="litm-powerTag" data-text="{{tag}}">{{tag}}</span>
+					{{/if}}
+					{{/each}}
+					{{#if theme.weaknessTag}}
+					<span class="litm-weaknessTag" data-text="{{theme.weaknessTag}}">{{theme.weaknessTag}}</span>
+					{{/if}}
+				</div>
+
+				{{#if theme.quest}}
+				<blockquote style="margin: 0">{{theme.quest}}</blockquote>
+				{{/if}}
+			</fieldset>
+			{{/each}}
+		</div>
+
+		{{#if reviewBackpackChoices.length}}
+		<hr />
+
+		<fieldset>
+			<legend>{{localize "LITM.Terms.backpack"}}</legend>
+			<div class="theme-card-tags">
+				{{#each reviewBackpackChoices as |tag|}}
+				{{#if (eq ../mode "trope")}}
+				<span class="{{#if (eq tag ../../reviewBackpackSelection)}}litm-tag{{else}}litm-backpack{{/if}}"
+					data-text="{{tag}}">{{tag}}</span>
+				{{else}}
+				<span class="litm-tag" data-text="{{tag}}">{{tag}}</span>
+				{{/if}}
+				{{/each}}
+			</div>
+		</fieldset>
+		{{/if}}
+	</div>
+	<div class="litm--welcome-overlay__wizard-footer">
+		<button type="button" class="litm--welcome-overlay__btn" data-action="back">
+			{{localize "LITM.Ui.hero_creation_back"}}
+		</button>
+		<div class="litm--welcome-overlay__wizard-footer-actions">
+			<button type="button" class="litm--welcome-overlay__btn litm--welcome-overlay__btn--primary"
+				data-action="create">
+				{{localize "LITM.Ui.hero_creation_create"}}
+			</button>
+		</div>
+	</div>
+</div>

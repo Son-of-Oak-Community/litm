@@ -1,10 +1,9 @@
-import { localize as t } from "../../utils.js";
 export class ChallengeData extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const fields = foundry.data.fields;
 		return {
 			category: new fields.StringField({
-				initial: () => t("Litm.ui.name-category"),
+				initial: "",
 			}),
 			rating: new fields.NumberField({
 				required: true,
@@ -12,16 +11,27 @@ export class ChallengeData extends foundry.abstract.TypeDataModel {
 				min: 1,
 				max: 5,
 			}),
-			note: new fields.HTMLField(),
-			special: new fields.HTMLField(),
+			description: new fields.HTMLField({ initial: "" }),
+			might: new fields.ArrayField(
+				new fields.SchemaField({
+					level: new fields.StringField({
+						initial: "origin",
+						choices: ["origin", "adventure", "greatness"],
+					}),
+					description: new fields.StringField({ initial: "" }),
+				}),
+			),
+			specialFeatures: new fields.HTMLField({ initial: "" }),
 			limits: new fields.ArrayField(
 				new fields.SchemaField({
-					name: new fields.StringField(),
-					value: new fields.NumberField(),
+					label: new fields.StringField({ initial: "" }),
+					outcome: new fields.StringField({ initial: "" }),
+					max: new fields.StringField({ initial: "3" }),
+					value: new fields.NumberField({ initial: 0, min: 0, integer: true }),
 				}),
 			),
 			tags: new fields.StringField({
-				initial: "[tag] [status-2]",
+				initial: "",
 			}),
 		};
 	}

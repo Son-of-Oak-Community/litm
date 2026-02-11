@@ -1,0 +1,101 @@
+<div class="litm--welcome-overlay__wizard standard-form">
+	<div class="litm--welcome-overlay__wizard-header">
+		<h2>{{localize "LITM.Ui.hero_creation_select_trope"}}</h2>
+		<hr />
+	</div>
+	<div class="litm--welcome-overlay__wizard-body">
+		<section class="hero-creation__split">
+			<div class="hero-creation__list">
+				<div>
+					<input type="search" placeholder="{{localize 'LITM.Ui.hero_creation_search_tropes'}}"
+						data-bind="search.tropes" data-render="true" value="{{search.tropes}}" />
+				</div>
+				<div class="hero-creation__list-body scrollable">
+					{{#unless hasTropes}}
+					<div class="hero-creation__empty-state">
+						<i class="fa-solid fa-triangle-exclamation"></i>
+						<p>{{localize "LITM.Ui.hero_creation_no_tropes"}}</p>
+					</div>
+					{{else}}
+					{{#each tropesByCategory as |group|}}
+					<div class="hero-creation__group">
+						<h4>{{group.name}}</h4>
+						<div class="hero-creation__grid">
+							{{#each group.items as |trope|}}
+							<button type="button"
+								class="hero-creation__trope-button {{#if (eq trope.uuid ../../selectedTropeUuid)}}active{{/if}}"
+								data-action="selectTrope" data-uuid="{{trope.uuid}}">
+								{{trope.name}}
+							</button>
+							{{/each}}
+						</div>
+					</div>
+					{{/each}}
+					{{/unless}}
+				</div>
+			</div>
+
+			<div class="hero-creation__detail scrollable">
+				{{#if selectedTrope}}
+				<h2>{{selectedTrope.name}}</h2>
+				<div>
+					{{{selectedTrope.description}}}
+				</div>
+
+				<fieldset>
+					<legend>{{localize "LITM.Ui.theme_kits_fixed"}}</legend>
+					<ul class="themekit-list">
+						{{#each selectedTrope.fixed as |kit|}}
+						<li {{#if kit.tagTooltip}}data-tooltip="{{kit.tagTooltip}}" {{/if}}><img class="noflex icon-sm"
+								src="{{kit.img}}" /> {{kit.name}}</li>
+						{{/each}}
+					</ul>
+				</fieldset>
+
+				<fieldset>
+					<legend>{{localize "LITM.Ui.theme_kits_optional"}}</legend>
+					<div class="flexcol" style="gap: 0.25rem;">
+						{{#each selectedTrope.optional as |kit|}}
+						<label class="checkbox trope-optional-kit" {{#if kit.tagTooltip}}data-tooltip="{{kit.tagTooltip}}" {{/if}}>
+							<input type="radio" name="tropeOptional" value="{{kit.uuid}}" data-uuid="{{kit.uuid}}" {{#if (or (eq
+								kit.uuid ../state.trope.optionalUuid) (and (not ../state.trope.optionalUuid) @first))}}checked{{/if}} />
+							<span><img class="noflex icon-sm" src="{{kit.img}}" /> {{kit.name}}</span>
+						</label>
+						{{/each}}
+					</div>
+				</fieldset>
+
+				{{#if selectedTrope.backpackChoices.length}}
+				<fieldset>
+					<legend>{{localize "LITM.Terms.backpack"}}</legend>
+					<div class="flexcol" style="gap: 0.25rem;">
+						{{#each selectedTrope.backpackChoices as |choice|}}
+						<label class="checkbox">
+							<input type="radio" name="tropeBackpack" value="{{choice}}" data-action="selectTropeBackpack"
+								data-value="{{choice}}" {{#if (or (eq ../state.trope.backpackChoice choice) (and (not
+								../state.trope.backpackChoice) @first))}}checked{{/if}} />
+							<span class="litm-tag" data-text="{{choice}}">{{choice}}</span>
+						</label>
+						{{/each}}
+					</div>
+				</fieldset>
+				{{/if}}
+				{{else}}
+				<div>
+					{{localize "LITM.Ui.hero_creation_select_trope_hint"}}
+				</div>
+				{{/if}}
+			</div>
+		</section>
+	</div>
+	<div class="litm--welcome-overlay__wizard-footer">
+		<button type="button" class="litm--welcome-overlay__btn" data-action="back">
+			{{localize "LITM.Ui.hero_creation_back"}}
+		</button>
+		<div class="litm--welcome-overlay__wizard-footer-actions">
+			<button type="button" class="litm--welcome-overlay__btn litm--welcome-overlay__btn--primary" data-action="next">
+				{{localize "LITM.Ui.hero_creation_next"}}
+			</button>
+		</div>
+	</div>
+</div>

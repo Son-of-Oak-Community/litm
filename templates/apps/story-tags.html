@@ -1,82 +1,118 @@
-{{#*inline 'tagItem' tag source editable}}
-	<li
-		class="litm--tag-item litm--{{ifThen (eq tag.type 'status') 'status' 'tag'}}"
-		data-context="remove-tag" data-id="{{tag.id}}" data-type="{{source}}"
-		data-tooltip="{{localize (concat 'Litm.other.' tag.type)}}: {{tag.name}}{{#if tag.value}}{{concat '-' tag.value}}{{/if}}">
-		{{#if (eq tag.type "tag")}}
-			<label class="litm--burn-label"><span
-					class="litm--sro">{{localize "Litm.ui.burn-tag"}}</span>
-				<input class="litm--burn" type="checkbox"
-					name="{{source}}.{{tag.id}}.isBurnt"
-					data-tooltip="{{localize (ifThen tag.isBurnt 'Litm.tags.isBurnt' 'Litm.tags.burn')}}" {{disabled
-			(not
-			editable)}} {{checked
-			tag.isBurnt}} />
-			</label>
-		{{/if}} <input class="litm--tag-item-name {{tag.type}}" data-focus="select"
-			name="{{source}}.{{tag.id}}.name" value="{{tag.name}}"
-			{{ifThen editable "" "readonly"}} />
-		<div class="litm--tag-item-status">
-			{{#each tag.values as |status|}} <input
-					name="{{../source}}.{{../tag.id}}.values" type="checkbox"
-					value="{{add @index 1}}" {{disabled (not ../editable)}}
-					{{checked status}} />
-			{{/each}}
-		</div>
-	</li>
-{{/inline}} {{#*inline 'add-button' id}}
-	<button type="button" data-click="add-tag" data-id="{{id}}"
-		data-tooltip="{{localize 'Litm.ui.add-tag'}}">
-		<span class="litm--sro">{{localize "Litm.ui.add-tag"}}</span>
-		<i class="far fa-add"></i>
+{{#*inline 'tagItem' tag source editable isGM}}
+<li
+	class="litm--tag-item litm--{{ifThen (eq tag.type 'status') 'status' 'tag'}}{{#if tag.hidden}} litm--tag-hidden{{/if}}"
+	data-tag-item data-id="{{tag.id}}" data-type="{{source}}" draggable="true"
+	data-tooltip="{{localize (concat 'LITM.Terms.' tag.type)}}: {{tag.name}}{{#if tag.value}}{{concat '-' tag.value}}{{/if}}"
+	data-text="{{tag.name}}{{#if (eq tag.type 'status')}}-{{tag.value}}{{/if}}">
+	{{#if editable}}
+	{{#if (eq source "story")}}
+	<button type="button" class="litm--visibility-toggle" data-action="toggle-visibility" data-id="{{tag.id}}"
+		data-type="tag" data-tooltip="{{localize (ifThen tag.hidden 'LITM.Ui.show' 'LITM.Ui.hide')}}">
+		<i class="fa-solid {{ifThen tag.hidden 'fa-eye-slash' 'fa-eye'}}" aria-hidden="true"></i>
 	</button>
-{{/inline}}
-<form class="{{cssClass}}" autocomplete="off" data-context='menu'>
-	<section>
-		<div class="litm--story-tags-main">
-			<fieldset style="display: contents">
-				<div class="litm--story-tags-section-header"
-					data-context="remove-all-tags"
-					data-tooltip="{{localize 'Litm.ui.context-remove-all-tags'}}">
-					<legend>
-						{{concat (localize "Litm.tags.story") " " (localize "Litm.other.tags")}}
-					</legend>
-					{{> add-button id="story"}}
-				</div>
-				<ul>
-					{{#each tags as |tag|}}
-						{{> tagItem tag=tag source="story" editable=true}} {{/each}}
-				</ul>
-			</fieldset>
-		</div>
-	</section>
-	<hr />
-	<section>
-		{{#each actors as |actor|}}
-			<div data-id="{{actor.id}}" class="litm--story-tags-actor">
-				<fieldset style="display: contents">
-					<div class="litm--story-tags-section-header">
-						<legend aria-label="{{actor.name}} tags" data-click="open-sheet"
-							data-context="remove-actor" data-id="{{actor.id}}"
-							data-tooltip="{{localize 'Litm.ui.click-open-context-remove'}}">
-							<!-- <img src="{{actor.img}}" alt="" aria-hidden="true"> -->
-							{{actor.name}}
-						</legend>
-						{{#if actor.isOwner}} {{> add-button id=actor.id}} {{/if}}
-					</div>
-					<ul>
-						{{#each actor.tags as |tag|}}
-							{{> tagItem tag=tag source=../id editable=actor.isOwner}}
-						{{/each}}
-					</ul>
-				</fieldset>
-			</div>
-		{{else}}
-			<div class="litm--story-tags-no-actors">
-				<p>{{localize "Litm.ui.drop-actors"}}</p>
-				<img src="systems/litm/assets/media/birb.webp" width="75"
-					aria-hidden="true" />
-			</div>
+	{{else}}
+	<button type="button" class="litm--visibility-toggle" data-action="toggle-effect-visibility" data-id="{{tag.id}}"
+		data-actor-id="{{source}}" data-tooltip="{{localize (ifThen tag.hidden 'LITM.Ui.show' 'LITM.Ui.hide')}}">
+		<i class="fa-solid {{ifThen tag.hidden 'fa-eye-slash' 'fa-eye'}}" aria-hidden="true"></i>
+	</button>
+	{{/if}}
+	{{/if}}
+	<input type="hidden" name="{{source}}.{{tag.id}}.tagType" value="{{tag.type}}" />
+	<span class="litm--tag-name-wrapper litm-{{tag.type}}"><input class="litm--tag-item-name" data-focus="select"
+			name="{{source}}.{{tag.id}}.name" value="{{tag.name}}" {{ifThen editable "" "readonly" }} /></span>
+	{{#if (eq tag.type "tag")}}
+	<label class="litm--single-use-label" data-tooltip="{{localize 'LITM.Terms.single_use'}}">
+		<input class="litm--single-use" type="checkbox" name="{{source}}.{{tag.id}}.isSingleUse" {{disabled (not editable)}}
+			{{checked tag.isSingleUse}} />
+		<i class="fa-solid fa-hourglass-half litm--single-use-indicator" aria-hidden="true"></i>
+	</label>
+	{{/if}}
+	{{#if (eq tag.type "status")}}
+	<div class="litm--tag-item-status">
+		{{#each tag.values as |status|}}
+		<label class="litm--tier-label">
+			<input name="{{../source}}.{{../tag.id}}.values" type="checkbox" value="{{add @index 1}}" {{disabled (not
+				../editable)}} {{checked status}} />
+			<img class="litm--tier-box" aria-hidden="true"
+				src="systems/litm/assets/media/checkbox{{ifThen status '-c' ''}}.svg" />
+		</label>
 		{{/each}}
-	</section>
-</form>
+	</div>
+	{{/if}}
+	{{#if editable}}
+	<button type="button" class="litm--tag-action-btn" data-action="remove-tag"
+		data-tooltip="{{localize 'LITM.Tags.burn'}}">
+		<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+	</button>
+	{{/if}}
+</li>
+{{/inline}}
+
+{{#*inline 'add-button' id}}
+<button type="button" data-action="add-tag" data-id="{{id}}" data-tooltip="{{localize 'LITM.Ui.add_tag'}}"
+	aria-label="{{localize 'LITM.Ui.add_tag'}}">
+	<i class="fa-solid fa-tag" aria-hidden="true"></i>
+</button>
+<button type="button" data-action="add-status" data-id="{{id}}" data-tooltip="{{localize 'LITM.Ui.add_status'}}"
+	aria-label="{{localize 'LITM.Ui.add_status'}}">
+	<i class="fa-solid fa-heart" aria-hidden="true"></i>
+</button>
+{{/inline}}
+
+<!--This is a really weird bug where clicking a checkbox will shift the whole container up by it's entire scroll height-->
+<div class="flexcol litm--story-tags-wrapper">
+	<form class="scrollable" style="position: relative;top: 0;">
+		<!-- Story Tags -->
+		<section class="flexcol" data-id="story" data-context="remove-all-tags">
+			<h3 class="divider litm--section-header" data-tooltip="{{localize 'LITM.Ui.context_remove_all_tags'}}">
+				{{concat (localize "LITM.Tags.story") " " (localize "LITM.Terms.tags")}}
+				{{#if isGM}}
+				{{> add-button id="story"}}
+				{{/if}}
+			</h3>
+			<ul class="plain">
+				{{#each tags as |tag|}}
+				{{> tagItem tag=tag source="story" editable=../isGM isGM=../isGM}}
+				{{/each}}
+			</ul>
+		</section>
+
+		<!-- Actor Tags -->
+		{{#each actors as |actor|}}
+		<section class="flexcol {{#if actor.hidden}}litm--actor-hidden{{/if}}" data-id="{{actor.id}}">
+			<h3 class="divider litm--section-header" {{#unless actor.isUserCharacter}}data-context="remove-actor"{{/unless}} data-id="{{actor.id}}">
+				<span data-action="open-sheet" data-id="{{actor.id}}"
+					data-tooltip="{{localize (ifThen actor.isUserCharacter 'LITM.Ui.click_open_user_character' 'LITM.Ui.click_open_context_remove')}}" style="cursor: pointer;">
+					{{actor.name}}
+				</span>
+				{{#if ../isGM}}
+				<button type="button" class="litm--visibility-toggle" data-action="toggle-visibility" data-id="{{actor.id}}"
+					data-type="actor" data-tooltip="{{localize (ifThen actor.hidden 'LITM.Ui.show' 'LITM.Ui.hide')}}">
+					<i class="fa-solid {{ifThen actor.hidden 'fa-eye-slash' 'fa-eye'}}" aria-hidden="true"></i>
+				</button>
+				{{/if}}
+				{{#if actor.isOwner}}
+				{{> add-button id=actor.id}}
+				{{/if}}
+			</h3>
+			<ul class="plain">
+				{{#each actor.tags as |tag|}}
+				{{> tagItem tag=tag source=../id editable=actor.isOwner isGM=../../isGM}}
+				{{/each}}
+			</ul>
+		</section>
+		{{else}}
+		<div style="display: flex; flex-direction: column; align-items: center; margin-top: 2rem;padding: 12px;">
+			<p>{{localize "LITM.Ui.drop_actors"}}</p>
+			<img src="systems/litm/assets/media/birb.webp" width="75" aria-hidden="true"
+				style="margin-top: 1rem; opacity: 0.7;" />
+		</div>
+		{{/each}}
+	</form>
+
+	{{#if isGM}}
+	<button type="button" class="litm--add-actor-btn" data-action="add-actor" data-tooltip="{{localize 'LITM.Ui.add_actor'}}">
+		<i class="fa-solid fa-user-plus" aria-hidden="true"></i> {{localize "LITM.Ui.add_actor"}}
+	</button>
+	{{/if}}
+</div>

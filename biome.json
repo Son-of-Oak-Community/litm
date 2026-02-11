@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/latest/schema.json",
 	"formatter": {
 		"indentWidth": 2
 	},
@@ -10,9 +10,9 @@
 				"noThisInStatic": "off"
 			}
 		},
-		"ignore": ["diff.js"]
+		"includes": ["**", "!**/check-keys.js", "!**/diff.js"]
 	},
 	"files": {
-		"ignore": ["packs", "fvtt", "challenge.css", "threat.css"]
+		"includes": ["**", "!foundry", "!**/*.html"]
 	}
 }

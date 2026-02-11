@@ -1,0 +1,32 @@
+<div class="litm--welcome-overlay__hero-created">
+	<div class="hero-created__flourish">
+		<div class="hero-created__line"></div>
+		<i class="fa-solid fa-sun"></i>
+		<div class="hero-created__line"></div>
+	</div>
+	<h2>{{heroName}}</h2>
+	<p>{{localize "LITM.Ui.hero_created_message"}}</p>
+	<div class="hero-created__flourish">
+		<div class="hero-created__line"></div>
+		<i class="fa-solid fa-sun"></i>
+		<div class="hero-created__line"></div>
+	</div>
+
+	{{#if tours.length}}
+	<div class="hero-created__tours">
+		<h3>{{localize "LITM.Ui.hero_created_tours_prompt"}}</h3>
+		<div class="litm--welcome-overlay__cta-row">
+			{{#each tours}}
+			<button type="button" class="litm--welcome-overlay__tour-btn" data-action="startTour" data-tour-id="{{id}}">
+				<span class="litm--welcome-overlay__tour-title">{{title}}</span>
+				<span class="litm--welcome-overlay__tour-desc">{{description}}</span>
+			</button>
+			{{/each}}
+		</div>
+	</div>
+	{{/if}}
+
+	<button type="button" class="litm--welcome-overlay__dismiss" data-action="dismissHeroCreated">
+		{{localize "LITM.Ui.hero_created_dismiss"}}
+	</button>
+</div>

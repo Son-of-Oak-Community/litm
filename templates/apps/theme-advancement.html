@@ -1,0 +1,102 @@
+<section class="standard-form theme-advancement scrollable">
+	<input type="hidden" name="actorId" value="{{actorId}}" />
+	<input type="hidden" name="themeId" value="{{themeId}}" />
+
+	<header class="img-name">
+		<img src="{{theme.img}}" data-tooltip="{{theme.name}}" />
+		<div class="flexcol" style="gap: 0.25rem;">
+			<h2 style="margin: 0;">{{theme.name}}</h2>
+			{{#if themebookName}}
+			<p class="hint" style="margin: 0;">{{localize "LITM.Terms.themebook"}}: {{themebookName}}</p>
+			{{else}}
+			<p class="hint" style="margin: 0;">{{localize "LITM.Ui.no_themebook"}}</p>
+			{{/if}}
+		</div>
+	</header>
+
+	<fieldset>
+		<legend>{{localize "LITM.Ui.special_improvements"}}</legend>
+		{{#if canSelect}}
+		{{#if specialImprovementOptions.length}}
+		<div class="form-group">
+			<select data-role="special-improvement-select" data-descriptions="{{toJSON specialImprovementDescriptions}}"
+				style="flex: 1;">
+				{{selectOptions specialImprovementOptions blank="—"}}
+			</select>
+			<button type="button" data-action="addSpecialImprovement"
+				data-tooltip="{{localize 'LITM.Ui.add_improvement'}}"
+				aria-label="{{localize 'LITM.Ui.add_improvement'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</div>
+		<p class="hint" data-role="special-improvement-description" style="margin: 0;" hidden></p>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.no_themebook_improvements"}}</p>
+		{{/if}}
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.improve_needed"}}</p>
+		{{/if}}
+	</fieldset>
+
+	<fieldset>
+		<legend>{{localize "LITM.Tags.power_tags"}}</legend>
+		{{#if canSelect}}
+		{{#if inactivePowerTags.length}}
+		<div class="form-group">
+			<select data-role="inactive-power-tag-select" style="flex: 1;">
+				{{selectOptions inactivePowerTags blank="—"}}
+			</select>
+			<button type="button" data-action="activatePowerTag"
+				data-tooltip="{{localize 'LITM.Ui.activate_tag'}}"
+				aria-label="{{localize 'LITM.Ui.activate_tag'}}">
+				<i class="fa-solid fa-check" aria-hidden="true"></i>
+			</button>
+		</div>
+		{{/if}}
+		<div class="form-group">
+			<select data-role="power-tag-question-select" data-questions="{{toJSON powerQuestionTexts}}"
+				style="flex: 0 0 auto; width: fit-content;">
+				{{selectOptions powerQuestionOptions blank="—"}}
+			</select>
+			<input type="text" style="flex: 1;" placeholder="{{localize 'LITM.Ui.name_power'}}" />
+			<button type="button" data-action="addPowerTag" data-tooltip="{{localize 'LITM.Ui.add_tag'}}"
+				aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</div>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.improve_needed"}}</p>
+		{{/if}}
+	</fieldset>
+
+	<fieldset>
+		<legend>{{localize "LITM.Tags.weakness_tags"}}</legend>
+		{{#if canSelect}}
+		{{#if inactiveWeaknessTags.length}}
+		<div class="form-group">
+			<select data-role="inactive-weakness-tag-select" style="flex: 1;">
+				{{selectOptions inactiveWeaknessTags blank="—"}}
+			</select>
+			<button type="button" data-action="activateWeaknessTag"
+				data-tooltip="{{localize 'LITM.Ui.activate_tag'}}"
+				aria-label="{{localize 'LITM.Ui.activate_tag'}}">
+				<i class="fa-solid fa-check" aria-hidden="true"></i>
+			</button>
+		</div>
+		{{/if}}
+		<div class="form-group">
+			<select data-role="weakness-tag-question-select" data-questions="{{toJSON weaknessQuestionTexts}}"
+				style="flex: 0 0 auto; width: fit-content;">
+				{{selectOptions weaknessQuestionOptions blank="—"}}
+			</select>
+			<input type="text" style="flex: 1;" placeholder="{{localize 'LITM.Ui.name_weakness'}}" />
+			<button type="button" data-action="addWeaknessTag"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</div>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.improve_needed"}}</p>
+		{{/if}}
+	</fieldset>
+</section>

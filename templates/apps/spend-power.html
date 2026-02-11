@@ -1,0 +1,90 @@
+<div class="standard-form">
+	<!-- Available Power / Spent summary -->
+	<div class="litm-spend-power__header flexrow gap-sm">
+		<span class="flex1">{{localize "LITM.Ui.remaining_power"}}</span>
+		<span class="litm-spend-power__power-summary">
+			<span class="litm-spend-power__power-remaining">{{power}}</span> {{localize "LITM.Tags.power"}}
+		</span>
+	</div>
+
+	<!-- Options -->
+	<fieldset>
+		<legend>{{localize "LITM.Ui.options"}}</legend>
+		<ul class="litm-spend-power__options">
+			{{#each options as |option|}}
+			<li class="litm-spend-power__option"
+				data-option-id="{{option.id}}"
+				data-cost="{{option.cost}}"
+				data-has-tier="{{option.hasTier}}">
+				<div class="litm-spend-power__option-row">
+					<label class="litm-spend-power__option-label">
+						<input type="checkbox" data-option-check />
+						<span>{{localize option.label}}</span>
+					</label>
+					<span class="litm-spend-power__cost">
+						{{option.cost}} {{localize "LITM.Tags.power"}}{{#if option.hasTier}} / {{localize "LITM.Ui.tier"}}{{/if}}
+					</span>
+				</div>
+				<p class="hint litm-spend-power__hint">{{localize option.description}}</p>
+				{{#if option.scratchedTags}}
+				<div class="litm-spend-power__entries is-hidden" data-picker="true">
+					<ul class="litm-spend-power__tag-chip-list">
+						{{#each option.scratchedTags as |tag|}}
+						<li class="litm-spend-power__tag-chip" data-tag-id="{{tag.id}}" data-tag-name="{{tag.name}}" data-source="{{tag.source}}" data-item-id="{{tag.itemId}}" data-field="{{tag.field}}">
+							<span class="litm-tag" data-text="{{tag.name}}">{{tag.name}}</span>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+				{{else if option.statusCards}}
+				<div class="litm-spend-power__entries is-hidden" data-status-picker="true">
+					<ul class="litm-spend-power__status-list">
+						{{#each option.statusCards as |status|}}
+						<li class="litm-spend-power__status-item" data-effect-id="{{status.id}}" data-status-name="{{status.name}}" data-max-tier="{{status.tier}}">
+							<span class="litm-spend-power__status-name">{{status.name}}-{{status.tier}}</span>
+							<div class="litm-spend-power__status-reduce flexrow">
+								<button type="button" class="litm-spend-power__counter-btn" data-action="counter-dec">
+									<i class="fas fa-minus" aria-hidden="true"></i>
+								</button>
+								<span class="litm-spend-power__counter-value">0</span>
+								<button type="button" class="litm-spend-power__counter-btn" data-action="counter-inc">
+									<i class="fas fa-plus" aria-hidden="true"></i>
+								</button>
+							</div>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+				{{else if option.draggable}}
+				<div class="litm-spend-power__entries is-hidden">
+					<ul class="litm-spend-power__entry-list"></ul>
+					<button type="button" class="litm-spend-power__add-entry" data-action="add-entry">
+						<i class="fas fa-plus" aria-hidden="true"></i>
+						{{#if option.hasTier}}{{localize "LITM.Ui.add_status"}}{{else}}{{localize "LITM.Ui.add_tag"}}{{/if}}
+					</button>
+				</div>
+				{{else if option.hasCounter}}
+				<div class="litm-spend-power__entries is-hidden" data-counter="true">
+					<div class="litm-spend-power__counter flexrow">
+						<button type="button" class="litm-spend-power__counter-btn" data-action="counter-dec">
+							<i class="fas fa-minus" aria-hidden="true"></i>
+						</button>
+						<span class="litm-spend-power__counter-value">1</span>
+						<button type="button" class="litm-spend-power__counter-btn" data-action="counter-inc">
+							<i class="fas fa-plus" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+				{{/if}}
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<!-- Footer -->
+	<div class="form-footer">
+		<button type="submit" class="bright">
+			<i class="fas fa-bolt" aria-hidden="true"></i> {{localize "LITM.Ui.spend"}}
+		</button>
+	</div>
+</div>

@@ -11,84 +11,86 @@ export class LitmConfig {
 		"watcher",
 	];
 
+	vignette_types = ["block", "harm", "stress", "complication", "setback"];
+
 	effects = {
-		"Litm.effects.category-target": {
+		"LITM.Effects.category_target": {
 			attack: {
-				description: "Litm.effects.attack.description",
-				action: "Litm.effects.attack.action",
-				cost: "Litm.effects.attack.cost",
+				description: "LITM.Effects.attack.description",
+				action: "LITM.Effects.attack.action",
+				cost: "LITM.Effects.attack.cost",
 				icon: "fas fa-swords",
 			},
 			disrupt: {
-				description: "Litm.effects.disrupt.description",
-				action: "Litm.effects.disrupt.action",
-				cost: "Litm.effects.disrupt.cost",
+				description: "LITM.Effects.disrupt.description",
+				action: "LITM.Effects.disrupt.action",
+				cost: "LITM.Effects.disrupt.cost",
 				icon: "fas fa-ban",
 			},
 			influence: {
-				description: "Litm.effects.influence.description",
-				action: "Litm.effects.influence.action",
-				cost: "Litm.effects.influence.cost",
+				description: "LITM.Effects.influence.description",
+				action: "LITM.Effects.influence.action",
+				cost: "LITM.Effects.influence.cost",
 				icon: "fas fa-hand-paper",
 			},
 			weaken: {
-				description: "Litm.effects.weaken.description",
-				action: "Litm.effects.weaken.action",
-				cost: "Litm.effects.weaken.cost",
+				description: "LITM.Effects.weaken.description",
+				action: "LITM.Effects.weaken.action",
+				cost: "LITM.Effects.weaken.cost",
 				icon: "fas fa-dizzy",
 			},
 		},
-		"Litm.effects.category-ally": {
+		"LITM.Effects.category_ally": {
 			bestow: {
-				description: "Litm.effects.bestow.description",
-				action: "Litm.effects.bestow.action",
-				cost: "Litm.effects.bestow.cost",
+				description: "LITM.Effects.bestow.description",
+				action: "LITM.Effects.bestow.action",
+				cost: "LITM.Effects.bestow.cost",
 				icon: "fas fa-gift",
 			},
 			enhance: {
-				description: "Litm.effects.enhance.description",
-				action: "Litm.effects.enhance.action",
-				cost: "Litm.effects.enhance.cost",
+				description: "LITM.Effects.enhance.description",
+				action: "LITM.Effects.enhance.action",
+				cost: "LITM.Effects.enhance.cost",
 				icon: "fas fa-bolt",
 			},
 			create: {
-				description: "Litm.effects.create.description",
-				action: "Litm.effects.create.action",
-				cost: "Litm.effects.create.cost",
+				description: "LITM.Effects.create.description",
+				action: "LITM.Effects.create.action",
+				cost: "LITM.Effects.create.cost",
 				icon: "fas fa-tags",
 			},
 			restore: {
-				description: "Litm.effects.restore.description",
-				action: "Litm.effects.restore.action",
-				cost: "Litm.effects.restore.cost",
+				description: "LITM.Effects.restore.description",
+				action: "LITM.Effects.restore.action",
+				cost: "LITM.Effects.restore.cost",
 				icon: "fas fa-heart",
 			},
 		},
-		"Litm.effects.category-process": {
+		"LITM.Effects.category_process": {
 			advance: {
-				description: "Litm.effects.advance.description",
-				action: "Litm.effects.advance.action",
-				cost: "Litm.effects.advance.cost",
+				description: "LITM.Effects.advance.description",
+				action: "LITM.Effects.advance.action",
+				cost: "LITM.Effects.advance.cost",
 				icon: "fas fa-arrow-right",
 			},
 			set_back: {
-				description: "Litm.effects.set_back.description",
-				action: "Litm.effects.set_back.action",
-				cost: "Litm.effects.set_back.cost",
+				description: "LITM.Effects.set_back.description",
+				action: "LITM.Effects.set_back.action",
+				cost: "LITM.Effects.set_back.cost",
 				icon: "fas fa-arrow-left",
 			},
 		},
-		"Litm.effects.category-other": {
+		"LITM.Effects.category_other": {
 			discover: {
-				description: "Litm.effects.discover.description",
-				action: "Litm.effects.discover.action",
-				cost: "Litm.effects.discover.cost",
+				description: "LITM.Effects.discover.description",
+				action: "LITM.Effects.discover.action",
+				cost: "LITM.Effects.discover.cost",
 				icon: "fas fa-search",
 			},
 			extra_feat: {
-				description: "Litm.effects.extra_feat.description",
-				action: "Litm.effects.extra_feat.action",
-				cost: "Litm.effects.extra_feat.cost",
+				description: "LITM.Effects.extra_feat.description",
+				action: "LITM.Effects.extra_feat.action",
+				cost: "LITM.Effects.extra_feat.cost",
 				icon: "fas fa-plus",
 			},
 		},
@@ -134,12 +136,31 @@ export class LitmConfig {
 		],
 	};
 
-	theme_src = {
-		origin: "systems/litm/assets/media/origin",
-		adventure: "systems/litm/assets/media/adventure",
-		greatness: "systems/litm/assets/media/greatness",
-	};
+	static #TAG_STRING_RE_SOURCE =
+		String.raw`(?!\b|\s)(?:\[|\{)([^^\d[\]{}]+?)(?:([-:])(\d+)?)?(?:\}|\])`;
+	static #TAG_STRING_RE_FLAGS = "gi";
 
-	tagStringRe = /(?!\b|\s)(?:\[|\{)([^\d\[\]{}]+)(?:[\s\-\:](\d+))?(?:\}|\])/gi;
-	sceneLinkRe = /@ActivateScene\[([^\]]+)\](?:\{([^\}]+)\})?/gi;
+	get tagStringRe() {
+		return new RegExp(
+			LitmConfig.#TAG_STRING_RE_SOURCE,
+			LitmConfig.#TAG_STRING_RE_FLAGS,
+		);
+	}
+
+	sceneLinkRe = /@ActivateScene\[([^\]]+)\](?:\{([^}]+)\})?/gi;
+
+	assets = {
+		logo: "systems/litm/assets/media/logo.svg",
+		splash: "systems/litm/assets/media/litm_splash.webp",
+		marshal_crest: "systems/litm/assets/media/marshal-crest.webp",
+		icons: {
+			base: "systems/litm/assets/media/icons/",
+			backpack: "backpack.svg",
+			fellowship: "fellowship.svg",
+			trope: "book.svg",
+			vignette: "cracked-skull.svg",
+			default: "icons/svg/item-bag.svg",
+		},
+		preloads: [],
+	};
 }

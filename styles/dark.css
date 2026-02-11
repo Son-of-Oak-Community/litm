@@ -1,9 +1,0 @@
-body.theme-dark {
-	& :not(.litm) {
-		& .litm--tag,
-		& .litm--status,
-		& .litm--limit {
-			color: var(--color-text-primary);
-		}
-	}
-}

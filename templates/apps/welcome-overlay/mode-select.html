@@ -1,0 +1,40 @@
+<div class="litm--welcome-overlay__wizard">
+	<div class="litm--welcome-overlay__wizard-header">
+		<h2>{{localize "LITM.Ui.hero_creation_mode_prompt"}}</h2>
+		<hr />
+	</div>
+	<div class="litm--welcome-overlay__wizard-body">
+		<div class="litm--welcome-overlay__mode-grid">
+			<button type="button" class="litm--welcome-overlay__mode-card {{#if (eq mode 'trope')}}active{{/if}}"
+				data-action="selectMode" data-mode="trope">
+				<div class="mode-card__icon">
+					<i class="fa-solid fa-masks-theater"></i>
+				</div>
+				<h3>{{localize "LITM.Ui.hero_creation_mode_trope"}}</h3>
+				<p>{{localize "LITM.Ui.hero_creation_mode_trope_hint"}}</p>
+				<span class="mode-card__tag">{{localize "LITM.Ui.hero_creation_mode_trope_tag"}}</span>
+			</button>
+
+			<div class="litm--welcome-overlay__mode-divider">
+				<span>{{localize "LITM.Ui.hero_creation_mode_or"}}</span>
+			</div>
+
+			<button type="button" class="litm--welcome-overlay__mode-card {{#if (eq mode 'custom')}}active{{/if}}"
+				data-action="selectMode" data-mode="custom">
+				<div class="mode-card__icon">
+					<i class="fa-solid fa-scroll"></i>
+				</div>
+				<h3>{{localize "LITM.Ui.hero_creation_mode_custom"}}</h3>
+				<p>{{localize "LITM.Ui.hero_creation_mode_custom_hint"}}</p>
+				<span class="mode-card__tag">{{localize "LITM.Ui.hero_creation_mode_custom_tag"}}</span>
+			</button>
+		</div>
+	</div>
+	<div class="litm--welcome-overlay__wizard-footer">
+		<button type="button" class="litm--welcome-overlay__btn" data-action="back">
+			{{localize "LITM.Ui.hero_creation_back"}}
+		</button>
+		<div class="litm--welcome-overlay__wizard-footer-actions">
+		</div>
+	</div>
+</div>

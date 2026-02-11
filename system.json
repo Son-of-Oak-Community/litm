@@ -1,10 +1,10 @@
 {
 	"$schema": "https://json.schemastore.org/foundryvtt-system-manifest.json",
 	"id": "litm",
-	"version": 29,
+	"version": "30.6",
 	"license": "LICENSE",
-	"title": "Legend in the Mist Demo",
-	"description": "A <strong>Rustic Fantasy</strong> Game for Foundry Virtual Tabletop.",
+	"title": "Legend in the Mist (Unofficial)",
+	"description": "An unofficial, community-made system for playing the <strong>Rustic Fantasy</strong> game <em>Legend in the Mist</em> in Foundry Virtual Tabletop.",
 	"authors": [
 		{
 			"name": "Filip Ambrosius",
@@ -13,34 +13,42 @@
 			"ko-fi": "amediocredad"
 		}
 	],
-	"esmodules": [
-		"litm.js"
-	],
-	"styles": [
-		"litm.css"
-	],
+	"esmodules": ["litm.js"],
+	"styles": ["litm.css"],
 	"documentTypes": {
 		"Actor": {
-			"character": {
-				"htmlFields": [
-					"note"
-				]
+			"hero": {
+				"htmlFields": ["description"]
+			},
+			"journey": {
+				"htmlFields": ["description"]
 			},
 			"challenge": {
-				"htmlFields": [
-					"note",
-					"special"
-				]
+				"htmlFields": ["description", "specialFeatures"]
+			},
+			"fellowship": {
+				"htmlFields": ["description"]
 			}
+		},
+		"ActiveEffect": {
+			"story_tag": {},
+			"status_card": {}
 		},
 		"Item": {
 			"backpack": {},
-			"theme": {
-				"htmlFields": [
-					"note"
-				]
+			"story_theme": {
+				"htmlFields": ["description"]
 			},
-			"threat": {}
+			"theme": {
+				"htmlFields": ["description"]
+			},
+			"themebook": {
+				"htmlFields": ["description"]
+			},
+			"trope": {
+				"htmlFields": ["description"]
+			},
+			"vignette": {}
 		}
 	},
 	"languages": [
@@ -72,35 +80,15 @@
 	],
 	"socket": true,
 	"compatibility": {
-		"minimum": 12,
-		"verified": 13,
-		"maximum": 13
+		"minimum": 13,
+		"verified": 14,
+		"maximum": 14
 	},
-	"packs": [
-		{
-			"label": "Tinderbox Demo",
-			"type": "Adventure",
-			"name": "tinderbox-demo",
-			"path": "packs/tinderbox-demo",
-			"system": "litm",
-			"flags": {}
-		}
-	],
+	"packs": [],
 	"flags": {
 		"hotReload": {
-			"extensions": [
-				"css",
-				"html",
-				"js",
-				"json"
-			],
-			"paths": [
-				"styles",
-				"templates",
-				"lang",
-				"litm.css",
-				"litm.js"
-			]
+			"extensions": ["css", "html", "js", "json"],
+			"paths": ["styles", "templates", "lang", "litm.css", "litm.js"]
 		}
 	},
 	"relationships": {
@@ -114,7 +102,7 @@
 	"background": "systems/litm/assets/media/litm_splash.webp",
 	"url": "https://github.com/aMediocreDad/litm",
 	"bugs": "https://github.com/aMediocreDad/litm/issues?q=is:issue+is:open+sort:updated-desc",
-	"manifest": "https://raw.githubusercontent.com/aMediocreDad/litm/main/system.json",
-	"download": "https://github.com/aMediocreDad/litm/archive/refs/tags/v29.zip",
-	"readme": "https://github.com/aMediocreDad/litm/blob/main/README.md"
+	"manifest": "https://raw.githubusercontent.com/aMediocreDad/litm/refs/heads/02-12-feat_v14_resurrection/system.json",
+	"download": "https://github.com/aMediocreDad/litm/archive/refs/heads/02-12-feat_v14_resurrection.zip",
+	"readme": "https://github.com/aMediocreDad/litm/blob/02-12-feat_v14_resurrection/README.md"
 }

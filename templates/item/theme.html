@@ -1,99 +1,148 @@
-<datalist id="litm--themebook">
-	{{#each data.system.themebooks as |themebook|}}
-	<option>{{localize (concat "Litm.themes." themebook)}}</option>
-	{{/each}}
-</datalist>
+<section class="standard-form scrollable">
+	<!-- Theme Title and Status -->
+	<header class="img-name">
+		<img src="{{document.img}}" data-tooltip="{{localize (concat 'LITM.Terms.' system.level)}}" />
+		<input class="datalist" type="text" name="name" id="name" value="{{document.name}}" required
+			placeholder="{{#if themeTagQuestion}}{{themeTagQuestion}}{{else}}{{localize 'LITM.Ui.theme_title'}}{{/if}}" />
+	</header>
 
-<form class="{{cssClass}} {{data.system.level}}" autocomplete="off">
-	<div class="litm--theme-top">
-		<img class="litm--theme-border-top" src="{{themesrc}}-theme-border-top.webp" aria-hidden="true" />
-		<div class="litm--theme-top-bg">
-			<div class="litm--theme-meta" style="--theme-src:url('/{{themesrc}}-theme-alt-bg-top.webp');">
-				<input list="litm--themebook" class="litm--theme-meta-part" type="text" name="system.themebook" data-size-input
-					value="{{data.system.themebook}}" />
-				<select class="litm--theme-meta-part" type="text" name="system.level" value="{{data.system.level}}">
-					{{selectOptions data.system.levels selected=data.system.level}}
-				</select>
-			</div>
-			<div class="litm--theme-legend">
-				<span>{{localize "Litm.tags.power"}}
-					{{localize "Litm.other.tags"}}</span><span>・</span><span>{{localize "Litm.tags.weakness"}}
-					{{localize "Litm.other.tag"}}</span>
-			</div>
-			<div class="litm--theme-title">
-				<!-- isActive checkbox -->
-				<label class="litm--sro" for="name--isActive"
-					aria-label="{{localize (tagActiveString data.system false)}}"></label>
-				<input class="litm--checkbox litm--checkbox-with-bg" type="checkbox" id="name--isActive" name="system.isActive"
-					data-tooltip="{{localize (tagActiveString data.system false)}}" {{checked data.system.isActive}} />
-				<!-- Name input -->
-				<input type="hidden" name="name" id="name" value="{{title}}" required />
-				<span class="litm--theme-name" role="textbox" contenteditable data-input="name">{{title}}</span>
-				<!-- isBurnt checkbox -->
-				<label>
-					<span class="litm--sro">{{localize (ifThen data.system.isBurnt "Litm.tags.isBurnt" "Litm.tags.burn")}}</span>
-					<input class="litm--burn" type="checkbox" name="system.isBurnt"
-						data-tooltip="{{localize (ifThen data.system.isBurnt 'Litm.tags.isBurnt' 'Litm.tags.burn')}}" {{checked
-						data.system.isBurnt}} />
+	<fieldset>
+		<div class="form-group">
+			<div class="form-field flexrow gap-sm" style="align-items: center;">
+				<input type="checkbox" id="isFellowship" name="system.isFellowship" {{checked system.isFellowship}}
+					data-dtype="Boolean" style="flex: 0 0 auto; margin: 0;" />
+				<label class="checkbox-label" for="isFellowship" style="flex: 1; margin: 0; cursor: pointer;">
+					{{localize "LITM.Terms.fellowship"}}
 				</label>
 			</div>
-			<ul class="litm--theme-tags">
-				{{#each data.system.powerTags as |tag|}}
-				{{> systems/litm/templates/partials/tag.html tag=tag key=@key path="system.powerTags"}}
-				{{/each}}
-			</ul>
-			<ul class="litm--weakness">
-				{{#each data.system.weakness as |tag|}}
-				<li>
-					<!-- Name -->
-					<input class="litm--weakness-part" type="text" name="system.weaknessTags.{{@index}}.name" value="{{name}}" />
-					<!-- The way foundry validates data these have to be present else validation fails -->
-					<input type="hidden" name="system.weaknessTags.{{@index}}.type" value="{{type}}" />
-					<input type="hidden" name="system.weaknessTags.{{@index}}.id" value="{{id}}" />
-					<input type="hidden" name="system.weaknessTags.{{@index}}.isBurnt" data-dtype="Boolean" value="{{isBurnt}}" />
-					<input type="hidden" name="system.weaknessTags.{{@index}}.isActive" data-dtype="Boolean"
-						value="{{isActive}}" />
-				</li>
-				{{/each}}
-			</ul>
-			<!-- Add Tag button -->
-			<!-- Might Reimplement later -->
-			<!-- <button type="button" data-click="add-tag">{{localize "Litm.ui.add-tag"}}</button> -->
-			<div class="litm--theme-progression">
-				<!-- Experience buttons -->
-				<div data-click="increase" data-context="decrease" data-id="system.experience"
-					data-tooltip="{{localize 'Litm.ui.inc-dec'}}">
-					{{#progress-buttons data.system.experience 3}}
-					<span class="litm--checkbox litm--checkbox-with-bg {{#if @checked}}checked{{/if}}"></span>
-					{{/progress-buttons}}
-					<input class="litm--sro" id="experience" type="number" name="system.experience"
-						value="{{data.system.experience}}" />
-					<label for="experience">{{localize "Litm.other.experience"}}</label>
-				</div>
-				<!-- Decay buttons -->
-				<div data-click="increase" data-context="decrease" data-id="system.decay"
-					data-tooltip="{{localize 'Litm.ui.inc-dec'}}">
-					{{#progress-buttons data.system.decay 3}}
-					<span class="litm--checkbox litm--checkbox-with-bg {{#if @checked}}checked{{/if}}"></span>
-					{{/progress-buttons}}
-					<input type="number" id="decay" class="litm--sro" name="system.decay" value="{{data.system.decay}}" />
-					<label for="decay">{{localize "Litm.tags.decay"}}</label>
-				</div>
+
+			<div class="form-field">
+				<label for="level">{{localize "LITM.Ui.theme_level"}}</label>
+				<select id="level" name="system.level">
+					{{selectOptions levels selected=system.level localize=true}}
+				</select>
+			</div>
+
+			<div class="form-field">
+				<label for="themebook">{{localize "LITM.Terms.themebook"}}</label>
+				<select id="themebook" name="system.themebook">
+					{{selectOptions themebooks selected=system.themebook blank="—"}}
+				</select>
 			</div>
 		</div>
-	</div>
-	<div class="litm--theme-bottom">
-		<img class="litm--theme-border-bottom" src="{{themesrc}}-theme-border-bottom.webp" aria-hidden="true" />
-		<div class="litm--theme-bottom-bg" style="--theme-src:url('/{{themesrc}}-theme-bg-bottom.webp');">
-			<div class="motivation">
-				<label class="litm--sro" for="motivation">{{localize "Litm.other.motivation"}}</label>
-				<input class="litm--sro" type="text" name="system.motivation" id="motivation" value="{{data.system.motivation}}"
-					required />
-				<span role="textbox" contenteditable data-input="motivation">{{data.system.motivation}}</span>
-			</div>
-			<div class="note">
-				{{editor data.system.note target="system.note" owner=owner button=true editable=true}}
-			</div>
+	</fieldset>
+
+	<!-- Description -->
+	<fieldset>
+		<legend>{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<!-- Power Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Tags.power_tags"}}</span>
+			<button type="button" class="noflex add-control" data-action="addTag" data-type="powerTag"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.powerTags as |tag|}}
+			<li class="form-group {{#unless tag.isActive}}inactive{{/unless}}">
+				<input type="checkbox" name="system.powerTags.{{@index}}.isActive" {{checked tag.isActive}}
+					data-dtype="Boolean" />
+				<div class="gap-sm" style="display: flex; flex: 1;">
+					<select name="system.powerTags.{{@index}}.question" style="flex: 0 0 auto; width: fit-content;">
+						{{selectOptions ../powerQuestionOptions selected=tag.question blank="—"}}
+					</select>
+					<input type="text" name="system.powerTags.{{@index}}.name" value="{{tag.name}}"
+						placeholder="{{lookup ../powerQuestionTexts tag.question}}" />
+				</div>
+				<!-- Hidden fields for validation -->
+				<input type="hidden" name="system.powerTags.{{@index}}.type" value="{{tag.type}}" />
+				<input type="hidden" name="system.powerTags.{{@index}}.id" value="{{tag.id}}" />
+				<button style="flex:none;" type="button" data-action="removeTag" data-type="powerTag" data-index="{{@index}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<!-- Weakness Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Tags.weakness_tags"}}</span>
+			<button type="button" class="noflex add-control" data-action="addTag" data-type="weaknessTag"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each weakness as |tag|}}
+			<li class="form-group">
+				<input type="checkbox" name="system.weaknessTags.{{@index}}.isActive" {{checked tag.isActive}}
+					data-dtype="Boolean" />
+				<div class="gap-sm" style="display: flex; flex: 1;">
+					<select name="system.weaknessTags.{{@index}}.question" style="flex: 0 0 auto; width: fit-content;">
+						{{selectOptions ../weaknessQuestionOptions selected=tag.question blank="—"}}
+					</select>
+					<input type="text" name="system.weaknessTags.{{@index}}.name" value="{{tag.name}}"
+						placeholder="{{lookup ../weaknessQuestionTexts tag.question}}" />
+				</div>
+				<!-- Hidden fields for validation -->
+				<input type="hidden" name="system.weaknessTags.{{@index}}.type" value="{{tag.type}}" />
+				<input type="hidden" name="system.weaknessTags.{{@index}}.id" value="{{tag.id}}" />
+				<input type="hidden" name="system.weaknessTags.{{@index}}.isScratched" data-dtype="Boolean"
+					value="{{tag.isScratched}}" />
+				<button style="flex:none;" type="button" data-action="removeTag" data-type="weaknessTag"
+					data-index="{{@index}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<!-- Quest -->
+	<fieldset>
+		<legend for="quest">{{localize "LITM.Terms.quest"}}</legend>
+		<div class="quest-container">
+			<input type="text" name="system.quest.description" id="quest" value="{{system.quest.description}}"
+				placeholder="{{localize 'LITM.Ui.quest_placeholder'}}" />
 		</div>
-	</div>
-</form>
+	</fieldset>
+
+	<!-- Special Improvements -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.special_improvements"}}</span>
+			<button type="button" class="noflex" data-action="addSpecialImprovement"
+				data-tooltip="{{localize 'LITM.Ui.add_improvement'}}" aria-label="{{localize 'LITM.Ui.add_improvement'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.specialImprovements as |improvement|}}
+			<li class="form-group {{#unless improvement.isActive}}inactive{{/unless}}" style="align-items:flex-start;">
+				<input type="checkbox" name="system.specialImprovements.{{@index}}.isActive"
+					{{checked improvement.isActive}} data-dtype="Boolean" style="flex: 0 0 auto; margin-top: 0.35rem;" />
+				<div class="flex1 gap-sm" style="display:flex; flex-direction:column;">
+					<input type="text" name="system.specialImprovements.{{@index}}.name" value="{{improvement.name}}"
+						placeholder="{{localize 'LITM.Ui.improvement_name'}}" />
+					<textarea name="system.specialImprovements.{{@index}}.description" rows="2"
+						placeholder="{{localize 'LITM.Ui.improvement_description'}}">{{improvement.description}}</textarea>
+				</div>
+				<button type="button" style="flex:none;" data-action="removeSpecialImprovement" data-index="{{@index}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_improvement'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+</section>

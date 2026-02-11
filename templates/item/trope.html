@@ -1,0 +1,103 @@
+<section class="standard-form trope-sheet scrollable">
+	<!-- Header -->
+	<header class="img-name">
+		<img src="{{document.img}}" data-edit="img" data-action="editImage" data-tooltip="{{localize 'LITM.Ui.edit_image'}}" />
+		<input type="text" id="name" name="name" value="{{document.name}}" required
+			placeholder="{{localize 'LITM.Ui.trope_name'}}" />
+	</header>
+
+	<fieldset>
+		<div class="form-group">
+			<div class="form-field">
+				<label for="category">{{localize "LITM.Terms.category"}}</label>
+				<input type="text" id="category" name="system.category" value="{{system.category}}"
+					placeholder="{{localize 'LITM.Ui.trope_category'}}" />
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.theme_kits_fixed"}}</span>
+		</legend>
+		<div class="form-group theme-kit-drop" data-theme-kit-drop data-path="system.themeKits.fixed">
+			<span class="hint">{{localize "LITM.Ui.drop_themekit"}}</span>
+		</div>
+		<ul class="plain">
+			{{#each fixedKits as |kit|}}
+			<li class="form-group">
+				<div class="flex1" style="display:flex; flex-direction:column; gap:0.25rem;">
+					<span>{{#if kit.name}}{{kit.name}}{{else}}{{kit.value}}{{/if}}</span>
+					<span class="hint">
+						{{#if kit.value}}
+						{{#if kit.sourceLabel}}Source: {{kit.sourceLabel}} | {{/if}}UUID: {{kit.value}}
+						{{/if}}
+					</span>
+				</div>
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.themeKits.fixed"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.theme_kits_optional"}}</span>
+		</legend>
+		<div class="form-group theme-kit-drop" data-theme-kit-drop data-path="system.themeKits.optional">
+			<span class="hint">{{localize "LITM.Ui.drop_themekit"}}</span>
+		</div>
+		<ul class="plain">
+			{{#each optionalKits as |kit|}}
+			<li class="form-group">
+				<div class="flex1" style="display:flex; flex-direction:column; gap:0.25rem;">
+					<span>{{#if kit.name}}{{kit.name}}{{else}}{{kit.value}}{{/if}}</span>
+					<span class="hint">
+						{{#if kit.value}}
+						{{#if kit.sourceLabel}}Source: {{kit.sourceLabel}} | {{/if}}UUID: {{kit.value}}
+						{{/if}}
+					</span>
+				</div>
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.themeKits.optional"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Ui.backpack_choices"}}</span>
+			<button type="button" class="noflex" data-action="addEntry" data-path="system.backpackChoices"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.backpackChoices as |choice|}}
+			<li class="form-group">
+				<input class="flex1" type="text" name="system.backpackChoices.{{@index}}" value="{{choice}}"
+					placeholder="{{localize 'LITM.Ui.backpack_choice_placeholder'}}" />
+				<button type="button" style="flex:none;" data-action="removeEntry" data-path="system.backpackChoices"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+</section>

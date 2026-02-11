@@ -1,27 +1,81 @@
-<div class="litm dice-roll expanded" data-roll-id="{{rollId}}" data-action="expandRoll">
-	<div class="dice-flavor">
-		<span class="gmOnly">{{localize 'Litm.ui.moderate-roll-gm'}}</span>
-		<span class="playerOnly">{{localize 'Litm.ui.moderate-roll-player'}}</span>
-	</div>
+<div class="litm dice-roll" data-roll-id="{{rollId}}" data-action="expandRoll">
 	<div class="dice-effect">
 		<p class="gmOnly"><em><a class="content-link" draggable="true" data-link="" data-uuid="Actor.{{id}}"
 					data-id="{{id}}" data-type="Actor" data-tooltip="{{name}}"><i class="fas fa-user"></i>{{name}}</a>
-				{{localize "Litm.ui.moderate-roll-gm-hint"}}
-				{{localize (concat "Litm.ui.roll-" type)}}
-				{{localize "Litm.other.outcome"}}.</em></p>
+				{{localize "LITM.Ui.moderate_roll_gm_hint"}}
+				{{localize (concat "LITM.Ui.roll_" type)}}
+				{{localize "LITM.Terms.outcome"}}.</em></p>
 		<p class="playerOnly">
-			<em>{{localize 'Litm.ui.moderate-roll-player-hint'}}</em>
+			<em>{{localize 'LITM.Ui.moderate_roll_player_hint'}}</em>
 		</p>
 	</div>
 	<div class="dice-result">
-		{{> systems/litm/templates/chat/message-tooltip.html data=tooltipData}}
-		<h4 class="dice-total">{{localize 'Litm.ui.total-power'}}: {{totalPower}}
-		</h4>
-		<button class="gmOnly litm--roll-approve-button" data-click="approve-moderation">{{localize
-			'Litm.ui.approve'}}</button>
-		<button class="gmOnly litm--roll-reject-button" data-click="reject-moderation">{{localize
-			'Litm.ui.reject'}}</button>
-		<button class="playerOnly litm--roll-skip-button" data-click="skip-moderation">{{localize
-			'Litm.ui.skip-moderation'}}</button>
+		{{#if hasTooltipData}}
+		<div class="dice-tooltip">
+			<div class="wrapper">
+				{{#each tooltipData.scratchedTags as |tag|}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{tag.name}}</span>
+						<span class="part-flavor burned">{{localize 'LITM.Tags.is_burnt'}}</span>
+						<span class="part-total">3</span>
+					</header>
+				</section>
+				{{/each}}
+				{{#each tooltipData.powerTags as |tag|}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{tag.name}}</span>
+						<span class="part-total">1</span>
+					</header>
+				</section>
+				{{/each}}
+				{{#each tooltipData.weaknessTags as |tag|}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{tag.name}}</span>
+						<span class="part-flavor negative">{{localize 'LITM.Tags.weakness'}}</span>
+						<span class="part-total">-1</span>
+					</header>
+				</section>
+				{{/each}}
+				{{#each tooltipData.positiveStatuses as |tag|}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{tag.name}}</span>
+						<span class="part-flavor positive">{{localize 'LITM.Terms.status'}}</span>
+						<span class="part-total">{{tag.value}}</span>
+					</header>
+				</section>
+				{{/each}}
+				{{#each tooltipData.negativeStatuses as |tag|}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{tag.name}}</span>
+						<span class="part-flavor negative">{{localize 'LITM.Terms.status'}}</span>
+						<span class="part-total">-{{tag.value}}</span>
+					</header>
+				</section>
+				{{/each}}
+				{{#if tooltipData.modifier}}
+				<section class="tooltip-part">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{localize 'LITM.Ui.modifier'}}</span>
+						<span class="part-total">{{tooltipData.modifier}}</span>
+					</header>
+				</section>
+				{{/if}}
+			</div>
+		</div>
+		{{/if}}
+		<h4 class="dice-total">{{localize 'LITM.Ui.total_power'}}: {{totalPower}}</h4>
+		<footer class="dice-footer flexrow">
+			<button class="gmOnly litm--roll-approve-button" data-click="approve-moderation">
+				<i class="fas fa-check"></i> {{localize 'LITM.Ui.approve'}}
+			</button>
+			<button class="gmOnly litm--roll-reject-button" data-click="reject-moderation">
+				<i class="fas fa-times"></i> {{localize 'LITM.Ui.reject'}}
+			</button>
+		</footer>
 	</div>
 </div>

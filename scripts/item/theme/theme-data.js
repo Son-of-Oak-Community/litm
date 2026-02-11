@@ -5,9 +5,15 @@ export class ThemeData extends foundry.abstract.TypeDataModel {
 		const fields = foundry.data.fields;
 		const abstract = game.litm.data;
 		return {
+			description: new fields.HTMLField({
+				initial: "",
+			}),
+			note: new fields.HTMLField({
+				initial: "",
+			}),
 			themebook: new fields.StringField({
 				trim: true,
-				initial: t("Litm.other.themebook"),
+				initial: "",
 			}),
 			level: new fields.StringField({
 				trim: true,
@@ -15,111 +21,135 @@ export class ThemeData extends foundry.abstract.TypeDataModel {
 				validate: (level) =>
 					Object.keys(CONFIG.litm.theme_levels).includes(level),
 			}),
-			isActive: new fields.BooleanField({
-				initial: true,
+			isScratched: new fields.BooleanField(),
+			isFellowship: new fields.BooleanField({
+				initial: false,
 			}),
-			isBurnt: new fields.BooleanField(),
 			powerTags: new fields.ArrayField(
 				new fields.EmbeddedDataField(abstract.TagData),
 				{
 					initial: () =>
-						Array(10)
+						Array(2)
 							.fill()
 							.map((_, i) => ({
 								id: foundry.utils.randomID(),
-								name: `${i < 2 ? `${t("Litm.ui.name-power")}` : ""}`,
-								type: "powerTag",
+								name: "",
+								question: "",
 								isActive: i < 2,
-								isBurnt: false,
+								isScratched: false,
+								type: "powerTag",
 							})),
-					validate: (tags) => tags.length === 10,
 				},
 			),
 			weaknessTags: new fields.ArrayField(
 				new fields.EmbeddedDataField(abstract.TagData),
 				{
 					initial: () =>
-						Array(2)
+						Array(1)
 							.fill()
 							.map(() => ({
 								id: foundry.utils.randomID(),
-								name: t("Litm.ui.name-weakness"),
+								name: "",
+								question: "",
 								isActive: true,
-								isBurnt: false,
+								isScratched: false,
 								type: "weaknessTag",
 							})),
-					validate: (tags) => tags.length === 2,
 				},
 			),
-			experience: new fields.NumberField({
-				integer: true,
-				min: 0,
-				initial: 0,
-				max: 3,
+			improve: new fields.SchemaField({
+				value: new fields.NumberField({
+					initial: 0,
+					min: 0,
+					max: 3,
+					integer: true,
+				}),
 			}),
-			decay: new fields.NumberField({
-				integer: true,
-				min: 0,
-				initial: 0,
-				max: 3,
+			quest: new fields.SchemaField({
+				description: new fields.StringField({
+					initial: "",
+				}),
+				tracks: new fields.SchemaField({
+					abandon: new fields.SchemaField({
+						value: new fields.NumberField({
+							initial: 0,
+							min: 0,
+							max: 3,
+							integer: true,
+						}),
+					}),
+					milestone: new fields.SchemaField({
+						value: new fields.NumberField({
+							initial: 0,
+							min: 0,
+							max: 3,
+							integer: true,
+						}),
+					}),
+				}),
 			}),
-			motivation: new fields.StringField({
-				initial: t("Litm.ui.name-motivation"),
-			}),
-			note: new fields.HTMLField({
-				initial: t("Litm.ui.name-note"),
-			}),
+			specialImprovements: new fields.ArrayField(
+				new fields.SchemaField({
+					name: new fields.StringField({
+						trim: true,
+						initial: "",
+					}),
+					description: new fields.StringField({
+						trim: true,
+						initial: "",
+					}),
+					isActive: new fields.BooleanField({
+						initial: false,
+					}),
+				}),
+				{
+					initial: () => [],
+				},
+			),
 		};
 	}
 
 	static migrateData(source) {
-		const numPowerTags = source.powerTags.length;
-		if (numPowerTags < 10) {
-			source.powerTags = [
-				...source.powerTags,
-				...Array(10 - numPowerTags)
-					.fill()
-					.map(() => ({
-						id: foundry.utils.randomID(),
-						name: "",
-						type: "powerTag",
-						isActive: false,
-						isBurnt: false,
-					})),
-			];
-		}
-		if (numPowerTags > 10) {
-			source.powerTags = source.powerTags.slice(0, 10);
+		if (
+			source.level === undefined ||
+			!Object.keys(CONFIG.litm.theme_levels).includes(source.level)
+		) {
+			source.level = Object.keys(CONFIG.litm.theme_levels)[0];
 		}
 
-		const numWeaknessTags = source.weaknessTags.length;
-		if (numWeaknessTags < 2) {
-			source.weaknessTags = [
-				...source.weaknessTags,
-				...Array(2 - numWeaknessTags)
-					.fill()
-					.map(() => ({
-						id: foundry.utils.randomID(),
-						name: t("Litm.ui.name-weakness"),
-						isActive: true,
-						isBurnt: false,
-						type: "weaknessTag",
-					})),
-			];
+		if (source.isScratched === undefined && source.isBurnt !== undefined) {
+			source.isScratched = source.isBurnt;
 		}
-		if (numWeaknessTags > 2) {
-			source.weaknessTags = source.weaknessTags.slice(0, 2);
+		if (Array.isArray(source.powerTags)) {
+			for (const tag of source.powerTags) {
+				if (tag.isScratched === undefined && tag.isBurnt !== undefined) {
+					tag.isScratched = tag.isBurnt;
+				}
+			}
 		}
-
+		if (Array.isArray(source.weaknessTags)) {
+			for (const tag of source.weaknessTags) {
+				if (tag.isScratched === undefined && tag.isBurnt !== undefined) {
+					tag.isScratched = tag.isBurnt;
+				}
+			}
+		}
 		return super.migrateData(source);
 	}
 
+	prepareDerivedData() {
+		for (const tag of this.weaknessTags) {
+			tag.isScratched = false;
+		}
+	}
+
 	get themeTag() {
+		const isScratched = this.isScratched ?? false;
 		const item = {
 			id: this.parent._id,
 			name: titleCase(this.parent.name),
-			isActive: this.isActive,
-			isBurnt: this.isBurnt,
+			isActive: true,
+			isScratched,
 			type: "themeTag",
 		};
 		return game.litm.data.TagData.fromSource(item);
@@ -132,7 +162,7 @@ export class ThemeData extends foundry.abstract.TypeDataModel {
 	}
 
 	get availablePowerTags() {
-		return this.activatedPowerTags.filter((tag) => !tag.isBurnt);
+		return this.activatedPowerTags.filter((tag) => !tag.isScratched);
 	}
 
 	get powerTagRatio() {
@@ -147,14 +177,19 @@ export class ThemeData extends foundry.abstract.TypeDataModel {
 		return [...this.weaknessTags, ...this.powerTags, this.themeTag];
 	}
 
+	get levelIcon() {
+		return `systems/litm/assets/media/icons/${this.level}.svg`;
+	}
+
 	get levels() {
-		return Object.keys(CONFIG.litm.theme_levels).reduce((acc, level) => {
-			acc[level] = t(level, "TYPES.Item.theme");
+		const levels = CONFIG.litm.theme_levels || {};
+		return Object.keys(levels).reduce((acc, level) => {
+			acc[level] = t(`LITM.Terms.${level}`);
 			return acc;
 		}, {});
 	}
 
 	get themebooks() {
-		return CONFIG.litm.theme_levels[this.level];
+		return CONFIG.litm.theme_levels?.[this.level] || [];
 	}
 }

@@ -1,0 +1,110 @@
+<section class="fellowship-play-mode standard-form scrollable">
+	<!-- Header -->
+	<div class="flexrow gap-md fellowship-play-header">
+		{{#if hasCustomImage}}
+		<img class="profile-img noflex" src="{{document.img}}" data-action="showPortraitArtwork"
+			data-tooltip="{{localize 'LITM.Ui.view_image'}}" />
+		{{/if}}
+
+		<div class="flex1 flexcol gap-sm">
+			<h1>{{document.name}}</h1>
+		</div>
+	</div>
+
+	<!-- Description -->
+	{{#if enriched.description}}
+	<div class="enriched-content" data-field="system.description">{{{enriched.description}}}</div>
+	{{/if}}
+
+	<!-- Fellowship Theme -->
+	{{#if theme}}
+	<fieldset class="theme-card item" data-id="{{theme._id}}">
+		{{#if theme.system.themebook}}<legend class="litm-banner theme-card__book">{{theme.system.themebook}}</legend>
+		{{/if}}
+		<div class="theme-card-header">
+			<div class="flexrow noflex gap-sm">
+				<img class="noflex icon-md" src="{{theme.img}}"
+					data-tooltip="{{localize (concat 'LITM.Terms.' theme.system.level)}}" />
+				{{> systems/litm/templates/partials/play-tag.html theme.themeTag
+				noBurn=true
+				}}
+			</div>
+		</div>
+
+		{{> systems/litm/templates/partials/play-theme-tags.html theme
+		noBurn=true
+		}}
+
+		{{> systems/litm/templates/partials/theme-special-improvements.html theme}}
+
+		{{> systems/litm/templates/partials/play-theme-tracks.html theme}}
+
+		<div class="flexcol" style="gap: 0.15rem;">
+			<blockquote style="margin: 0;">
+				{{theme.system.quest.description}}
+			</blockquote>
+		</div>
+
+		<div>
+			{{{ theme.system.description }}}
+		</div>
+	</fieldset>
+	{{else}}
+	<div class="empty-state" data-tour="fellowship-cta">
+		<button type="button" class="plain hint" data-action="browseThemes"
+			data-tooltip="{{localize 'LITM.Ui.fellowship_browse_title'}}">
+			<img height="128" width="128" src="systems/litm/assets/media/icons/book.svg" />
+		</button>
+		<p class="hint">{{{localize "LITM.Ui.fellowship_setup_cta"}}}</p>
+	</div>
+	{{/if}}
+
+	<!-- Story Themes -->
+	{{#if storyThemes.length}}
+	<fieldset>
+		<legend>{{localize "LITM.Terms.story_themes"}}</legend>
+
+		<div class="grid-2col">
+			{{#each storyThemes as |theme|}}
+			<div class="theme-card item" data-id="{{theme._id}}">
+				<div class="theme-card-header">
+					<div class="flexrow noflex gap-sm">
+						{{> systems/litm/templates/partials/play-tag.html theme.themeTag
+						noBurn=true
+						}}
+					</div>
+				</div>
+
+				{{> systems/litm/templates/partials/play-theme-tags.html theme
+				noBurn=true
+				}}
+
+				<div>{{{ theme.system.description }}}</div>
+			</div>
+			{{#unless @last}}
+			<hr class="theme-separator" />
+			{{/unless}}
+			{{/each}}
+		</div>
+	</fieldset>
+	{{/if}}
+
+	<!-- Story Tags & Statuses -->
+	{{#if storyTags.length}}
+	<fieldset>
+		<legend>{{localize "LITM.Terms.story_tags_statuses"}}</legend>
+		<div class="litm--play-tags">
+			{{#each storyTags as |tag|}}
+			{{#if (eq tag.type "status")}}
+			<span class="litm-status{{#if tag.hidden}} litm--tag-hidden{{/if}}" data-tag-type="{{tag.type}}"
+				data-tag-id="{{tag.id}}" draggable="true"
+				data-text="{{tag.name}}-{{tag.value}}">{{tag.name}}-{{tag.value}}</span>
+			{{else}}
+			<span class="litm-tag{{#if tag.hidden}} litm--tag-hidden{{/if}}" data-tag-type="{{tag.type}}"
+				data-tag-id="{{tag.id}}" draggable="true" data-text="{{tag.name}}">{{tag.name}}</span>
+			{{/if}}
+			{{/each}}
+		</div>
+	</fieldset>
+	{{/if}}
+</section>

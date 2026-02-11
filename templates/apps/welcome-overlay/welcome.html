@@ -1,0 +1,63 @@
+<div class="litm--welcome-overlay__welcome">
+    <img class="litm--welcome-overlay__logo" src="{{logo}}" alt="Legend in the Mist" />
+    <div class="litm--welcome-overlay__content">
+        {{#if isGM}}
+            <p class="litm--welcome-overlay__message">{{localize "LITM.Ui.gm_welcome_message"}}</p>
+            {{#if playerCanCreate}}
+                <div class="litm--welcome-overlay__enabled-badge">
+                    <i class="fa-solid fa-check"></i> {{localize "LITM.Ui.gm_welcome_creation_enabled"}}
+                </div>
+            {{else}}
+                <div class="litm--welcome-overlay__cta-row">
+                    <button type="button" class="litm--welcome-overlay__btn" data-action="enablePlayerCreation">
+                        <i class="fa-solid fa-users"></i> {{localize "LITM.Ui.gm_welcome_enable_creation"}}
+                    </button>
+                </div>
+            {{/if}}
+            {{#if tours.length}}
+            <div class="hero-created__tours">
+                <h3>{{localize "LITM.Ui.hero_created_tours_prompt"}}</h3>
+                <div class="litm--welcome-overlay__cta-row">
+                    {{#each tours}}
+                    <button type="button" class="litm--welcome-overlay__tour-btn" data-action="startTour" data-tour-id="{{id}}">
+                        <span class="litm--welcome-overlay__tour-title">{{title}}</span>
+                        <span class="litm--welcome-overlay__tour-desc">{{description}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+        {{else}}
+            <p class="litm--welcome-overlay__message">{{localize "LITM.Ui.welcome_player_message"}}</p>
+            {{#if canCreateHero}}
+                <div class="litm--welcome-overlay__cta-row">
+                    <button type="button" class="litm--welcome-overlay__btn litm--welcome-overlay__btn--primary" data-action="createHero">
+                        {{localize "LITM.Ui.welcome_create_hero"}}
+                    </button>
+                </div>
+            {{/if}}
+        {{/if}}
+
+        <div class="litm--welcome-overlay__settings">
+            <h3>{{localize "LITM.Ui.welcome_settings_heading"}}</h3>
+            <label class="litm--welcome-overlay__toggle" data-action="toggleCustomDice">
+                <span class="litm--welcome-overlay__toggle-label">
+                    <i class="fa-solid fa-dice"></i> {{localize "LITM.Ui.welcome_custom_dice"}}
+                </span>
+                <span class="litm--welcome-overlay__toggle-hint">{{localize "LITM.Ui.welcome_custom_dice_hint"}}</span>
+                <span class="litm--welcome-overlay__switch {{#if customDiceEnabled}}active{{/if}}"></span>
+            </label>
+            <label class="litm--welcome-overlay__toggle" data-action="togglePopoutTags">
+                <span class="litm--welcome-overlay__toggle-label">
+                    <i class="fa-solid fa-window-restore"></i> {{localize "LITM.Ui.welcome_popout_tags"}}
+                </span>
+                <span class="litm--welcome-overlay__toggle-hint">{{localize "LITM.Ui.welcome_popout_tags_hint"}}</span>
+                <span class="litm--welcome-overlay__switch {{#if popoutTagsEnabled}}active{{/if}}"></span>
+            </label>
+        </div>
+
+        <button type="button" class="litm--welcome-overlay__dismiss" data-action="dismiss">
+            {{localize "LITM.Ui.welcome_dismiss"}}
+        </button>
+    </div>
+</div>

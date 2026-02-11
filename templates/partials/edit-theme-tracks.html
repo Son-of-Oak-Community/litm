@@ -1,0 +1,19 @@
+<div class="theme-card-tracks">
+	<div class="theme-card-track">
+		<input type="number" data-dtype="Number" name="items.{{_id}}.system.quest.tracks.abandon.value"
+			value="{{system.quest.tracks.abandon.value}}" min="0" max="3" step="1" style="text-align: center; width: 3rem;"
+			onclick="event.stopPropagation();" />
+		<label style="font-size: var(--font-size-12); font-weight: 600;">{{localize "LITM.Themes.abandon"}}</label>
+	</div>
+	<div class="theme-card-track">
+		<input type="number" data-dtype="Number" name="items.{{_id}}.system.improve.value" value="{{system.improve.value}}"
+			min="0" max="3" step="1" style="text-align: center; width: 3rem;" onclick="event.stopPropagation();" />
+		<label style="font-size: var(--font-size-12); font-weight: 600;">{{localize "LITM.Ui.improve"}}</label>
+	</div>
+	<div class="theme-card-track">
+		<input type="number" data-dtype="Number" name="items.{{_id}}.system.quest.tracks.milestone.value"
+			value="{{system.quest.tracks.milestone.value}}" min="0" max="3" step="1" style="text-align: center; width: 3rem;"
+			onclick="event.stopPropagation();" />
+		<label style="font-size: var(--font-size-12); font-weight: 600;">{{localize "LITM.Themes.milestone"}}</label>
+	</div>
+</div>

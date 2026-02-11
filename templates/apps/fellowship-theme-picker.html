@@ -1,0 +1,39 @@
+<form class="standard-form litm--fellowship-theme-picker" autocomplete="off">
+	{{#if themebooks.length}}
+	<fieldset>
+		<legend>{{localize "LITM.Terms.themebooks"}}</legend>
+		<ul class="plain">
+			{{#each themebooks}}
+			<li>
+				<label class="flexrow gap-sm" style="align-items: center; cursor: pointer;">
+					<input class="noflex" type="radio" name="choice" value="{{this.uuid}}" data-type="themebook" {{#if @first}}checked{{/if}} />
+					<img class="noflex icon-sm" src="{{this.img}}" />
+					<span class="flex1">{{this.name}}</span>
+				</label>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+	{{/if}}
+
+	{{#if themekits.length}}
+	<fieldset>
+		<legend>{{localize "LITM.Terms.themekits"}}</legend>
+		<ul class="plain">
+			{{#each themekits}}
+			<li>
+				<label class="flexrow gap-sm" style="align-items: center; cursor: pointer;">
+					<input class="noflex" type="radio" name="choice" value="{{this.uuid}}" data-type="themekit" {{#if this.firstKit}}checked{{/if}} />
+					<img class="noflex icon-sm" src="{{this.img}}" />
+					<span class="flex1">{{this.name}}</span>
+				</label>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+	{{/if}}
+
+	{{#unless hasAny}}
+	<p class="hint">{{localize "LITM.Ui.fellowship_no_options"}}</p>
+	{{/unless}}
+</form>

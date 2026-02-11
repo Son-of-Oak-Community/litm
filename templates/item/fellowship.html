@@ -1,0 +1,87 @@
+<section class="standard-form fellowship-sheet scrollable">
+	<!-- Header -->
+	<header class="img-name">
+		<img class="profile-img noflex" src="{{document.img}}" data-edit="img" data-action="editImage"
+			data-tooltip="{{localize 'LITM.Ui.edit_image'}}" />
+		<input type="text" id="name" name="name" value="{{document.name}}" required
+			placeholder="{{localize 'LITM.Ui.fellowship_name'}}" />
+	</header>
+
+	<!-- Description -->
+	<fieldset>
+		<legend>{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<!-- Power Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Tags.power_tags"}}</span>
+			<button type="button" class="noflex" data-action="addPowerTag" data-type="powerTag"
+				data-tooltip="{{localize 'LITM.Ui.add_power_tag'}}" aria-label="{{localize 'LITM.Ui.add_power_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.theme.powerTags as |tag|}}
+			<li class="form-group {{#unless tag.isActive}}inactive{{/unless}}">
+				<input style="flex:none;" type="checkbox" name="system.theme.powerTags.{{@index}}.isActive" {{checked
+					tag.isActive}} data-dtype="Boolean" />
+				<input class="flex1" type="text" name="system.theme.powerTags.{{@index}}.name" value="{{tag.name}}"
+					placeholder="{{localize 'LITM.Ui.tag_name'}}" />
+				{{!-- <label class="checkbox noflex" data-tooltip="{{localize 'LITM.Tags.burnt'}}">
+					<input type="checkbox" name="system.theme.powerTags.{{@index}}.isScratched" {{checked
+						tag.isScratched}} data-dtype="Boolean" />
+					<i class="fa-solid fa-fire"></i>
+				</label> --}}
+				<input type="hidden" name="system.theme.powerTags.{{@index}}.type" value="{{tag.type}}" />
+				<input type="hidden" name="system.theme.powerTags.{{@index}}.id" value="{{tag.id}}" />
+				<button type="button" style="flex:none;" data-action="removePowerTag" data-type="powerTag"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<!-- Weakness Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Tags.weakness_tags"}}</span>
+			<button type="button" class="noflex" data-action="addPowerTag" data-type="weaknessTag"
+				data-tooltip="{{localize 'LITM.Ui.add_weakness_tag'}}"
+				aria-label="{{localize 'LITM.Ui.add_weakness_tag'}}">
+				<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			</button>
+		</legend>
+		<ul class="plain">
+			{{#each system.theme.weaknessTags as |tag|}}
+			<li class="form-group">
+				<input class="flex1" type="text" name="system.theme.weaknessTags.{{@index}}.name" value="{{tag.name}}"
+					placeholder="{{localize 'LITM.Tags.weakness'}}" />
+				<input type="hidden" name="system.theme.weaknessTags.{{@index}}.type" value="{{tag.type}}" />
+				<input type="hidden" name="system.theme.weaknessTags.{{@index}}.id" value="{{tag.id}}" />
+				<input type="hidden" name="system.theme.weaknessTags.{{@index}}.isScratched" data-dtype="Boolean"
+					value="{{tag.isScratched}}" />
+				<input type="hidden" name="system.theme.weaknessTags.{{@index}}.isActive" data-dtype="Boolean"
+					value="{{tag.isActive}}" />
+				<button type="button" style="flex:none;" data-action="removePowerTag" data-type="weaknessTag"
+					data-index="{{@index}}" data-tooltip="{{localize 'LITM.Ui.remove_tag'}}">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</fieldset>
+
+	<!-- Quest -->
+	<fieldset>
+		<legend for="quest">{{localize "LITM.Terms.quest"}}</legend>
+		<input type="text" name="system.theme.quest" id="quest" value="{{system.theme.quest}}" />
+	</fieldset>
+
+</section>

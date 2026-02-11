@@ -1,15 +1,24 @@
 import { localize as t } from "../utils.js";
 
 function createTag(data, type) {
+	const normalized = data
+		? { ...data }
+		: { name: "", isScratched: false, isActive: false };
+	if (
+		normalized.isScratched === undefined &&
+		normalized.isBurnt !== undefined
+	) {
+		normalized.isScratched = normalized.isBurnt;
+	}
 	return {
-		...(data || { name: "", isBurnt: false, isActive: false }),
+		...normalized,
 		type,
 		id: foundry.utils.randomID(),
 	};
 }
 
 function createStatus(data) {
-	if (typeof data === "string")
+	if (typeof data === "string") {
 		return {
 			name: data,
 			type: "ActiveEffect",
@@ -18,10 +27,11 @@ function createStatus(data) {
 					type: "tag",
 					values: Array(6).fill(null),
 					value: "",
-					isBurnt: false,
+					isScratched: false,
 				},
 			},
 		};
+	}
 
 	const values =
 		data.level?.map((level, i) => (level ? (i + 1).toString() : null)) ||
@@ -30,24 +40,25 @@ function createStatus(data) {
 	const type = value ? "status" : "tag";
 
 	return {
-		name: data.name || t("Litm.other.unnamed"),
+		name: data.name || t("LITM.Terms.unnamed"),
 		type: "ActiveEffect",
 		flags: {
 			litm: {
 				type,
 				values,
 				value,
-				isBurnt: false,
+				isScratched: false,
 			},
 		},
 	};
 }
 
 export async function importCharacter(data) {
-	if (data.compatibility && !["litm", "empty"].includes(data.compatibility))
-		return ui.notifications.warn("Litm.ui.warn-incompatible-data", {
+	if (data.compatibility && !["litm", "empty"].includes(data.compatibility)) {
+		return ui.notifications.warn("LITM.Ui.warn_incompatible_data", {
 			localize: true,
 		});
+	}
 
 	const themeData = Object.entries(data)
 		.filter(
@@ -60,13 +71,15 @@ export async function importCharacter(data) {
 		.map(([_, theme]) => ({
 			name:
 				theme.content.mainTag.name ||
-				t("Litm.other.unnamed", "TYPES.Item.theme"),
+				t("LITM.Terms.unnamed", "TYPES.Item.theme"),
 			type: "theme",
 			system: {
 				themebook: theme.content.themebook,
 				level: theme.content.level?.toLowerCase(),
-				isActive: theme.content.mainTag.isActive,
-				isBurnt: theme.content.mainTag.isBurnt,
+				isScratched:
+					theme.content.mainTag.isScratched ??
+					theme.content.mainTag.isBurnt ??
+					false,
 				powerTags: Array(5)
 					.fill()
 					.map((_, i) => createTag(theme.content.powerTags[i], "powerTag")),
@@ -74,15 +87,19 @@ export async function importCharacter(data) {
 					createTag(
 						{
 							name: theme.content.weaknessTags[0] || "",
-							isBurnt: false,
+							isScratched: false,
 							isActive: true,
 						},
 						"weaknessTag",
 					),
 				],
-				experience: theme.content.experience,
-				decay: theme.content.decay,
-				motivation: theme.content.bio.title?.replace(/['"“”‟]/gm, "") || "",
+				quest: {
+					description:
+						theme.content.bio.title?.replace(
+							/['\u201c\u201d\u201f"""]/gm,
+							"",
+						) || "",
+				},
 				note: theme.content.bio.body,
 			},
 		}));
@@ -103,7 +120,7 @@ export async function importCharacter(data) {
 
 	const actorData = {
 		name: data.name,
-		type: "character",
+		type: "hero",
 		system: {
 			note: "",
 		},
@@ -112,7 +129,7 @@ export async function importCharacter(data) {
 	};
 	const created = await Actor.create(actorData);
 	if (created) {
-		const formatted = game.i18n.format("Litm.ui.info-imported-character", {
+		const formatted = game.i18n.format("LITM.Ui.info_imported_character", {
 			name: created.name,
 		});
 		ui.notifications.info(formatted);

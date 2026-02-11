@@ -1,0 +1,20 @@
+<div class="theme-card-tags">
+	{{#each system.powerTags as |tag|}}
+	{{#if tag.name}}
+	{{> systems/litm/templates/partials/play-tag.html tag
+		action="toggleTagActive"
+		tooltip=(localize "LITM.Ui.click_to_toggle_tag")
+		extraClass=(ifThen tag.isActive "" "is-inactive")
+	}}
+	{{/if}}
+	{{/each}}
+	{{#each system.weaknessTags as |tag|}}
+	{{#if tag.name}}
+	{{> systems/litm/templates/partials/play-tag.html tag
+		action="toggleTagActive"
+		tooltip=(localize "LITM.Ui.click_to_activate_tag")
+		extraClass=(ifThen tag.isActive "" "is-inactive")
+	}}
+	{{/if}}
+	{{/each}}
+</div>

@@ -1,0 +1,551 @@
+{
+	"name": "Gerrin Deerstalker",
+	"type": "hero",
+	"system": {
+		"promise": 0,
+		"description": "<p><span class=\"litm--ingress\">A SPIRITED WOODLAND HUNTSMAN DEDICATED ABOVE ALL TO HIS FAMILY.</span></p><blockquote><p>\"Shhhh.... quiet. Can you hear it?... It's everywhere. The forest. It has its own life, its own breath. Sometimes I sit here alone, like this, and just fall into it. It feels like plunging into a chilly, clear pond. I'm somehow more awake, more... here. I can hear every critter squeak and every reindeer huff. And deeper, the crawling and teeming in every rotten log and every creaking branch. And I can hear the wind, ruffling the leaves like my mother used to ruffle my hair. This forest is alive, and we are nothing but its lucky houseguests.\"</p></blockquote>",
+		"relationships": [],
+		"mof": [],
+		"fellowshipId": "",
+		"limit": {
+			"value": 6,
+			"max": 6
+		}
+	},
+	"items": [
+		{
+			"name": "Deer Stalker",
+			"type": "theme",
+			"img": "systems/litm/assets/media/icons/origin.svg",
+			"system": {
+				"themebook": "Circumstance",
+				"level": "origin",
+				"powerTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Stealthy step",
+						"type": "powerTag",
+						"id": "y93nGj8mVaY0FGZ4",
+						"isScratched": false
+					},
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Keen senses",
+						"type": "powerTag",
+						"id": "DpyX5XgGyU4rqmJ8",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Quiet communion",
+						"type": "powerTag",
+						"id": "VRFAxwE43NDfeBf3",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Trade game and furs",
+						"type": "powerTag",
+						"id": "mbB963rQH7IWeNdU",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Living off the land",
+						"type": "powerTag",
+						"id": "cx4dGGG42OGaJAsh",
+						"isScratched": false
+					}
+				],
+				"weaknessTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Loner",
+						"type": "weaknessTag",
+						"id": "UM7WYAPzEW3uHJww",
+						"isScratched": false
+					}
+				],
+				"improve": {
+					"value": 0
+				},
+				"quest": {
+					"description": "I must safeguard the delicate balance of the forest.",
+					"tracks": {
+						"abandon": {
+							"value": 0
+						},
+						"milestone": {
+							"value": 0
+						}
+					}
+				},
+				"specialImprovements": [
+					{
+						"isActive": false,
+						"name": "Comfort Zone",
+						"description": "When you camp or sojourn in the forest, you may recover one scratched power tag in addition to any other benefits."
+					}
+				],
+				"isScratched": false,
+				"description": "<p>High in the tree-covered mountains of Hartland, deep in the Shady Forest, there lives a young deer stalker named Gerrin. Leading the simple life of a hunter, he sets out every day deep into the woods to hunt and provide for his family. Sometimes he's gone for days at a time, living under the dense canopy in solitary tranquility. For he loves the forest and respects it and guards it as a steward.</p>",
+				"isFellowship": false,
+				"note": ""
+			},
+			"effects": [],
+			"flags": {},
+			"sort": 0
+		},
+		{
+			"name": "Skilled with a Bow",
+			"type": "theme",
+			"img": "systems/litm/assets/media/icons/origin.svg",
+			"system": {
+				"themebook": "Skill or Trade",
+				"level": "origin",
+				"powerTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Father's yew bow",
+						"type": "powerTag",
+						"id": "dGXEz1MgHDr8CRA4",
+						"isScratched": false
+					},
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Rapid second arrow",
+						"type": "powerTag",
+						"id": "idLFzrTs3JbXZM2E",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Close combat",
+						"type": "powerTag",
+						"id": "KvoSCNL0Feyeljib",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Take aim",
+						"type": "powerTag",
+						"id": "t1WgGbLeENpzixYu",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Hobbling shot",
+						"type": "powerTag",
+						"id": "TaDLJ2CilvxLWO7Y",
+						"isScratched": false
+					}
+				],
+				"weaknessTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Swat away attacks",
+						"type": "weaknessTag",
+						"id": "xyH2Gdgq0bea9b0g",
+						"isScratched": false
+					}
+				],
+				"improve": {
+					"value": 0
+				},
+				"quest": {
+					"description": "Every arrow I loose is a choice.",
+					"tracks": {
+						"abandon": {
+							"value": 0
+						},
+						"milestone": {
+							"value": 0
+						}
+					}
+				},
+				"specialImprovements": [
+					{
+						"isActive": false,
+						"name": "Learn from My Mistakes",
+						"description": "Once per scene, when you act using tags from this theme and don't Succeed, mark Improve on this theme."
+					}
+				],
+				"isScratched": false,
+				"description": "<p>Before he left their home on a matter of importance he never explained, Gerrin's father gave him a well-crafted curved bow made out of the boughs of a yew tree, sacred and known for its protective properties. \"It will serve you well, but only if you master it,\" said Father. Since then, Gerrin has practiced without ceasing, honing his archery further and further, and gaining a reputation among the woodland hunters.</p>",
+				"isFellowship": false,
+				"note": ""
+			},
+			"effects": [],
+			"flags": {},
+			"sort": 0
+		},
+		{
+			"name": "Spirited Youth",
+			"type": "theme",
+			"img": "systems/litm/assets/media/icons/origin.svg",
+			"system": {
+				"themebook": "Personality",
+				"level": "origin",
+				"powerTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Untapped fierceness",
+						"type": "powerTag",
+						"id": "NvUhx1cgTHCYGLKn",
+						"isScratched": false
+					},
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Inner compass",
+						"type": "powerTag",
+						"id": "LBhBZJZmB1KdPPZ7",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Tough it out",
+						"type": "powerTag",
+						"id": "6VNJ6UCZeZ0VKVer",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Do something unexpected",
+						"type": "powerTag",
+						"id": "QiEQSkQduVecM1Ki",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Contagious joy of life",
+						"type": "powerTag",
+						"id": "Q2XmlHqyIDRAF80M",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Made of sterner stuff",
+						"type": "powerTag",
+						"id": "Xzvcl3UpPoL3tOso",
+						"isScratched": false
+					}
+				],
+				"weaknessTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Hard-headed",
+						"type": "weaknessTag",
+						"id": "uFOq0owTNlc0JrHu",
+						"isScratched": false
+					}
+				],
+				"improve": {
+					"value": 0
+				},
+				"quest": {
+					"description": "Never surrender to darkness or despair.",
+					"tracks": {
+						"abandon": {
+							"value": 0
+						},
+						"milestone": {
+							"value": 0
+						}
+					}
+				},
+				"specialImprovements": [
+					{
+						"isActive": false,
+						"name": "Unshakeable",
+						"description": "Once per scene, when you react to lessen social or emotional Consequences and get a total result of 7 or above, you may spend all your Power to completely avoid all Consequence Effects."
+					}
+				],
+				"isScratched": false,
+				"description": "<p>Since the day he was born, Gerrin had a special spark to him. His mother told him many times that she's seen it in his eyes as a child and that the local Wise One had always looked at him differently: approvingly, perhaps, but also with a touch of concern. Gerrin grew up to be a fierce boy, unyielding and stubborn, but with a great force of life. Something within him shines through.</p>",
+				"isFellowship": false,
+				"note": ""
+			},
+			"effects": [],
+			"flags": {},
+			"sort": 0
+		},
+		{
+			"name": "Devoted to Family",
+			"type": "theme",
+			"img": "systems/litm/assets/media/icons/origin.svg",
+			"system": {
+				"themebook": "Devotion",
+				"level": "origin",
+				"powerTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Good listener",
+						"type": "powerTag",
+						"id": "87pAzz8dmP8iyquu",
+						"isScratched": false
+					},
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Lend a helping hand",
+						"type": "powerTag",
+						"id": "fWj8Vu3swhJDOThP",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Chippie's little traps",
+						"type": "powerTag",
+						"id": "TJI3QPhkGFDElQgO",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Grandpa's tales of old",
+						"type": "powerTag",
+						"id": "TdOo5WGNUkracuZX",
+						"isScratched": false
+					},
+					{
+						"isActive": false,
+						"question": "",
+						"name": "Family is my soft spot",
+						"type": "powerTag",
+						"id": "Fhp8YDYXsErbOCJS",
+						"isScratched": false
+					}
+				],
+				"weaknessTags": [
+					{
+						"isActive": true,
+						"question": "",
+						"name": "Family is my soft spot",
+						"type": "weaknessTag",
+						"id": "gNmWLpZGq47ghe0U",
+						"isScratched": false
+					}
+				],
+				"improve": {
+					"value": 0
+				},
+				"quest": {
+					"description": "Whatever may come, I'll be there for them.",
+					"tracks": {
+						"abandon": {
+							"value": 0
+						},
+						"milestone": {
+							"value": 0
+						}
+					}
+				},
+				"specialImprovements": [
+					{
+						"isActive": false,
+						"name": "Goes Both Ways",
+						"description": "Once per session, if the object of your Devotion is near, you may gain a story tag representing aid granted by them, such as an item, encouragement, knowledge, or direct help."
+					}
+				],
+				"isScratched": false,
+				"description": "<p>Gerrin lives in a mountainside cabin with his mother, grandfather, and little brother Chippie. Except for his forest forays and for a special annual trip they take to the nearby hamlet of Hartwood, these three are his entire world. His mother's wise advice and knowing looks, his grandfather's ramblings about ancient kingdoms, and Chippie's little pranks and stunts - he cherishes these things above all else.</p>",
+				"isFellowship": false,
+				"note": ""
+			},
+			"effects": [],
+			"flags": {},
+			"sort": 0
+		},
+		{
+			"name": "Backpack",
+			"type": "backpack",
+			"img": "systems/litm/assets/media/icons/backpack.svg",
+			"system": {
+				"contents": [
+					{
+						"name": "Protective charm",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Extra quiver of arrows",
+						"type": "backpack",
+						"isActive": true,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Whistling signal arrow",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Hunter's knife",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Bedroll",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Oilskin cloak",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					},
+					{
+						"name": "Snowshoes",
+						"type": "backpack",
+						"isActive": false,
+						"id": "",
+						"question": "",
+						"isScratched": false
+					}
+				]
+			},
+			"effects": [],
+			"sort": 0,
+			"flags": {}
+		}
+	],
+	"img": "systems/litm/assets/media/gerrin.webp",
+	"prototypeToken": {
+		"name": "Gerrin Deerstalker",
+		"displayName": 0,
+		"actorLink": true,
+		"width": 1,
+		"height": 1,
+		"depth": 1,
+		"texture": {
+			"src": "systems/litm/assets/media/gerrin.webp",
+			"anchorX": 0.5,
+			"anchorY": 0.5,
+			"fit": "contain",
+			"scaleX": 1,
+			"scaleY": 1,
+			"tint": "#ffffff",
+			"alphaThreshold": 0.75
+		},
+		"lockRotation": false,
+		"rotation": 0,
+		"alpha": 1,
+		"disposition": 1,
+		"displayBars": 0,
+		"bar1": {
+			"attribute": null
+		},
+		"bar2": {
+			"attribute": null
+		},
+		"light": {
+			"negative": false,
+			"priority": 0,
+			"alpha": 0.5,
+			"angle": 360,
+			"bright": 0,
+			"color": null,
+			"coloration": 1,
+			"dim": 0,
+			"attenuation": 0.5,
+			"luminosity": 0.5,
+			"saturation": 0,
+			"contrast": 0,
+			"shadows": 0,
+			"animation": {
+				"type": null,
+				"speed": 5,
+				"intensity": 5,
+				"reverse": false
+			},
+			"darkness": {
+				"min": 0,
+				"max": 1
+			}
+		},
+		"sight": {
+			"enabled": true,
+			"range": 0,
+			"angle": 360,
+			"visionMode": "basic",
+			"color": null,
+			"attenuation": 0.1,
+			"brightness": 0,
+			"saturation": 0,
+			"contrast": 0
+		},
+		"detectionModes": {},
+		"occludable": {
+			"radius": 0
+		},
+		"ring": {
+			"enabled": false,
+			"colors": {
+				"ring": null,
+				"background": null
+			},
+			"effects": 1,
+			"subject": {
+				"scale": 1,
+				"texture": null
+			}
+		},
+		"turnMarker": {
+			"mode": 1,
+			"animation": null,
+			"src": null,
+			"disposition": false
+		},
+		"movementAction": null,
+		"flags": {},
+		"randomImg": false,
+		"appendNumber": false,
+		"prependAdjective": false
+	},
+	"effects": [],
+	"flags": {
+		"litm": {
+			"isSampleHero": true
+		}
+	},
+	"ownership": {
+		"default": 1
+	}
+}

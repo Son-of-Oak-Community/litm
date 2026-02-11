@@ -1,0 +1,154 @@
+<section class="standard-form scrollable">
+	<!-- Header -->
+	<header class="img-name">
+		<img src="{{document.img}}" data-edit="img" data-action="editImage" data-tooltip="{{localize 'LITM.Ui.edit_image'}}"
+			style="width: 100px; height: 100px; border-radius: 4px; object-fit: cover;" />
+		<div class="form-group stacked">
+			<input type="text" name="name" id="name" value="{{document.name}}" required />
+			<div class="form-fields">
+				<label for="category">{{localize "LITM.Terms.type"}}</label>
+				<input style="font-size: var(--font-size-14);" id="category" type="text" name="system.category"
+					value="{{source.system.category}}" placeholder="{{localize 'LITM.Ui.name_category'}}" />
+			</div>
+		</div>
+	</header>
+
+
+
+	<!-- Description -->
+	<fieldset>
+		<legend>{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<!-- Tags -->
+	<fieldset>
+		<legend class="control flexrow gap-sm">
+			<span class="flex1">{{localize "LITM.Terms.tags"}}</span>
+			<button type="button" class="noflex" data-action="addStoryTag" data-tag-type="tag"
+				data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+				<i class="fa-solid fa-tag" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="noflex" data-action="addStoryTag" data-tag-type="status"
+				data-tooltip="{{localize 'LITM.Ui.add_status'}}" aria-label="{{localize 'LITM.Ui.add_status'}}">
+				<i class="fa-solid fa-heart" aria-hidden="true"></i>
+			</button>
+		</legend>
+		{{#if storyTags.length}}
+		<ul class="plain">
+			{{#each storyTags as |tag|}}
+			<li class="form-group{{#if tag.hidden}} litm--tag-hidden{{/if}}" style="gap: 8px; align-items: center; justify-content: space-between;">
+				<span class="litm--tag-name-wrapper litm-{{tag.type}}">
+					<input class="litm--tag-item-name" type="text"
+						name="effects.{{tag.id}}.name" value="{{tag.name}}"
+						placeholder="{{localize 'LITM.Ui.tag_name'}}" />
+				</span>
+				{{#if (eq tag.type "status")}}
+				<label style="max-width: fit-content; font-size: var(--font-size-14); text-align: right;">
+					{{localize "LITM.Ui.tier"}}
+				</label>
+				<input style="flex: 0;" type="number" name="effects.{{tag.id}}.system.tierValue"
+					value="{{tag.value}}" min="0" max="6" step="1" data-dtype="Number" />
+				{{else}}
+				<label class="litm--single-use-label"
+					data-tooltip="{{localize 'LITM.Terms.single_use'}}">
+					<input class="litm--single-use" type="checkbox"
+						name="effects.{{tag.id}}.system.isSingleUse"
+						{{#if tag.system.isSingleUse}}checked{{/if}} />
+					<i class="fa-solid fa-hourglass-half litm--single-use-indicator" aria-hidden="true"></i>
+				</label>
+				{{/if}}
+				{{#if ../isGM}}
+				<button type="button" style="flex: none;" data-action="toggleEffectVisibility" data-id="{{tag.id}}"
+					data-tooltip="{{localize (ifThen tag.hidden 'LITM.Ui.show' 'LITM.Ui.hide')}}"
+					aria-label="{{localize (ifThen tag.hidden 'LITM.Ui.show' 'LITM.Ui.hide')}}">
+					<i class="fa-solid {{ifThen tag.hidden 'fa-eye-slash' 'fa-eye'}}" aria-hidden="true"></i>
+				</button>
+				{{/if}}
+				<button type="button" style="flex: none;" data-action="removeEffect" data-id="{{tag.id}}"
+					data-tooltip="{{localize 'LITM.Ui.remove'}} {{tag.type}}"
+					aria-label="{{localize 'LITM.Ui.remove'}} {{tag.type}}">
+					<i class="fa-solid fa-trash" aria-hidden="true"></i>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.no_story_tags"}}</p>
+		{{/if}}
+	</fieldset>
+
+	<!-- General Consequences -->
+	<fieldset data-drop-zone="general-consequences">
+		<legend class="control flexrow gap-sm">
+			<span style="white-space:nowrap;">{{localize "LITM.Terms.general_consequences"}}</span>
+			{{#if generalConsequence}}
+			<button type="button" data-action="editVignette" data-item-id="{{generalConsequence._id}}"
+				data-tooltip="{{localize 'LITM.Ui.edit'}}" aria-label="{{localize 'LITM.Ui.edit'}}">
+				<i class="fa-solid fa-pen" aria-hidden="true"></i>
+			</button>
+			<button type="button" data-action="clearGeneralConsequence"
+				data-tooltip="{{localize 'LITM.Ui.remove_consequence'}}" aria-label="{{localize 'LITM.Ui.remove_consequence'}}">
+				<i class="fa-solid fa-trash" aria-hidden="true"></i>
+			</button>
+			{{/if}}
+		</legend>
+
+		{{#if generalConsequence}}
+		<ul>
+			{{#each generalConsequence.system.consequences as |consequence|}}
+			<li>{{{consequence}}}</li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p class="hint">{{localize "LITM.Ui.drop_general_consequence"}}</p>
+		{{/if}}
+	</fieldset>
+
+	<!-- Vignettes -->
+	<div class="flexrow gap-sm" style="align-items: center; justify-content: space-between;">
+		<h4 style="margin: 0;">{{localize "LITM.Terms.vignettes"}}</h4>
+		<button type="button" class="noflex" data-action="addVignette" data-tooltip="{{localize 'LITM.Ui.add_vignette'}}">
+			<i class="fa-solid fa-plus"></i>
+		</button>
+	</div>
+
+	{{#if displayVignettes.length}}
+	<div class="grid-2col" data-drop-zone="vignette">
+		{{#each displayVignettes as |vignette|}}
+		<fieldset class="vignette-card item draggable" data-item-id="{{vignette._id}}">
+			<legend class="flexrow gap-xs">
+				<span class="litm-banner vignette-card-label">{{vignette.name}}</span>
+				<button type="button" data-action="editVignette" data-item-id="{{vignette._id}}"
+					data-tooltip="{{localize 'LITM.Ui.edit'}}" aria-label="{{localize 'LITM.Ui.edit'}}">
+					<i class="fa-solid fa-pen" aria-hidden="true"></i>
+				</button>
+				<button type="button" data-action="removeVignette" data-item-id="{{vignette._id}}"
+					data-tooltip="{{localize 'LITM.Ui.remove'}}" aria-label="{{localize 'LITM.Ui.remove'}}">
+					<i class="fa-solid fa-trash" aria-hidden="true"></i>
+				</button>
+			</legend>
+
+			{{#unless vignette.system.isConsequenceOnly}}
+			{{#if vignette.system.threat}}
+			<div class="threat-text">{{{vignette.system.threat}}}</div>
+			{{/if}}
+			{{/unless}}
+
+			{{#if vignette.system.consequences.length}}
+			<ul class="consequences-list">
+				{{#each vignette.system.consequences as |consequence|}}
+				<li class="consequence-item">{{{consequence}}}</li>
+				{{/each}}
+			</ul>
+			{{/if}}
+		</fieldset>
+		{{/each}}
+	</div>
+	{{else}}
+	<p class="hint" data-drop-zone="vignette">{{localize "LITM.Ui.no_vignettes"}}</p>
+	{{/if}}
+</section>

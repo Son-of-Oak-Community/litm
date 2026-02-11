@@ -1,15 +1,3530 @@
-@import "./styles/root.css";
-@import "./styles/foundry.css";
-@import "./styles/components.css";
-@import "./styles/item/backpack.css";
-@import "./styles/item/theme.css";
-@import "./styles/item/threat.css";
-@import "./styles/actor/challenge.css";
-@import "./styles/actor/character.css";
-@import "./styles/apps/loot-dialog.css";
-@import "./styles/apps/roll-dialog.css";
-@import "./styles/apps/sidebar-buttons.css";
-@import "./styles/apps/story-tags.css";
-@import "./styles/chat/message.css";
-@import "./styles/popout.css";
-@import "./styles/dark.css";
+/* ========================================
+   Legends in the Mist
+   Custom Styles for Foundry VTT v14
+   ----------------------------------------
+   Table of Contents
+   ----------------------------------------
+    1.  Global .................. Font smoothing, pause screen, CSS variables
+    2.  Shared Base ............. Common overrides (enriched content, fieldsets)
+    3.  Utilities ............... Screen-reader helpers, gap, icon, grid, progress
+    4.  Tag & Badge System ...... Base :where() styles, colour variants, enrichers
+    5.  Theme Cards ............. Card layout, header, tracks, separator
+    6.  Play Mode — Shared ...... Profile image, tag rows, empty state
+    7.  Challenge Sheet ......... Limit labels, might, shields, outcomes
+    8.  Journey Sheet ........... Play tags, vignette cards, threats, consequences
+    9.  Roll Dialog ............. Dialog body, tags summary, theme groups
+   10.  Roll Dialog HUD ......... Overlay for tracking open roll dialogs
+   11.  Chat Messages ........... Roll results, outcome colors, spend-power cards
+   12.  Story Tags Manager ...... Tag items, burn indicators, tier boxes
+   13.  Spend Power Dialog ...... Header, options, entries, tag chips
+   14.  Welcome Overlay ......... Overlay shell, slides, wizard, hero creation
+   15.  Trope Sheet ............. Theme kit drop zone
+   16.  Theme Advancement ....... Image and button sizing
+   17.  Secret Blocks ........... ProseMirror secret reveal button
+   18.  Dark Mode ............... Theme overrides for dark interface
+======================================== */
+
+/* ========================================
+   1. Global
+   Font smoothing, pause screen, Foundry variable overrides.
+======================================== */
+
+/* Font smooth only on macOS */
+/* biome-ignore lint/correctness/noUnknownMediaFeatureName: It's used because this is specific to a certain browser/OS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	html {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+#pause.paused {
+	will-change: transform;
+	gap: 0px;
+
+	img {
+		opacity: 80%;
+		object-fit: contain;
+		width: 180px;
+		height: 180px;
+		left: calc(50% - 100px);
+		rotate: 39deg;
+		margin-block: -35px 0px;
+		position: absolute;
+	}
+
+	figcaption {
+		font-weight: 800;
+		color: inherit;
+		opacity: 100%;
+		padding: 0;
+		margin: 0;
+		bottom: 12px;
+		position: absolute;
+		font-family: var(--font-h4);
+	}
+}
+
+@media (prefers-reduced-motion) {
+	#pause.paused {
+		animation: none;
+	}
+}
+
+/* --- Foundry Variable Overrides --- */
+
+body {
+	--background-url: url("assets/media/sheet-background.webp");
+	--main-logo: url("assets/media/logo.svg");
+	--underline-url: url(assets/media/underline.webp) center / contain no-repeat;
+	--litm-scratch-filter: invert(1);
+	--color-litm-tag: #efd693;
+	--color-litm-status: #bcceb1;
+	--color-litm-limit: #d9b2a9;
+	--color-litm-weakness: #edbb89;
+	--color-litm-banner: #c4b5a8;
+	--font-blackletter:
+		Ysgarth, "Modesto Condensed", "Arial Narrow Bold", sans-serif;
+	--font-packard:
+		PackardAntique, "Garamond Premier Pro", "Palatino Linotype", Palatino, serif;
+	--font-luminari: Luminari, "Germania One", STFU, cursive;
+	--font-powell: PowellAntique, PackardAntiqu, serif;
+	--font-trattatello: Trattatello, AlchemyItalic, PackardAntique, cursive;
+	--font-serif:
+		Labrada, Fraunces, LibreCaslonText, "Book Antiqua", Palatino, serif;
+
+	/* Foundry Styles */
+	--font-h1: var(--font-blackletter);
+	--font-h2: var(--font-luminari);
+	--font-h3: var(--font-blackletter);
+	--font-h4: var(--font-powell);
+	--font-blockquote: var(--font-serif);
+}
+
+.litm .window-content {
+	--font-body: var(--font-serif);
+	font-family: var(--font-body);
+	font-size: var(--font-size-16);
+
+	input[type="number"] {
+		font-family: var(--font-monospace);
+	}
+}
+
+/* ========================================
+   2. Shared Base
+   Common overrides that apply across the whole system.
+======================================== */
+
+.litm .enriched-content h4 {
+	text-transform: uppercase;
+	font-size: var(--font-size-14);
+	margin-bottom: 0.5em;
+}
+
+.litm fieldset ul.plain {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	display: flex;
+	flex-flow: column;
+	gap: 0.25rem;
+}
+
+.litm blockquote {
+	padding: 0 0 0 20px;
+	border-left: 3px solid var(--color-tabs-border);
+	font-style: italic;
+	font-size: 1.1em;
+	font-weight: normal;
+	margin-block: 0.5em;
+}
+
+/* ========================================
+   3. Utilities
+   Screen-reader helpers, gap, icon sizes, grids, progress-box.
+======================================== */
+
+/* Screen-reader-only utility */
+.litm--sro {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Gap utilities */
+.gap-xs {
+	gap: 0.25rem;
+}
+
+.gap-sm {
+	gap: 0.5rem;
+}
+
+.gap-md {
+	gap: 1rem;
+}
+
+.gap-lg {
+	gap: 1.5rem;
+}
+
+/* Icon sizing utilities */
+.icon-xs {
+	width: 12px;
+	height: 12px;
+}
+
+.icon-sm {
+	width: 16px;
+	height: 16px;
+}
+
+.icon-md {
+	width: 24px;
+	height: 24px;
+}
+
+.icon-lg {
+	width: 32px;
+	height: 32px;
+}
+
+.icon-xl {
+	font-size: 3rem;
+	opacity: 0.3;
+}
+
+/* Responsive grid utilities - uses auto-fit to collapse based on container width */
+.grid-auto {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-2col {
+	display: grid;
+	gap: 16px;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	container-type: inline-size;
+}
+
+:is(.grid-2col > *) {
+	max-width: 100cqi;
+}
+
+.grid-3col {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+:is(.litm .progress-box) {
+	--button-size: 24px;
+	min-width: 20px;
+	background: none;
+	border: none;
+	padding: 4px;
+}
+
+:is(.litm .progress-box):hover {
+	background: var(--button-background-color);
+	border-radius: 4px;
+}
+
+:is(.litm .progress-box):active {
+	border: none;
+}
+
+:is(.litm .progress-box img) {
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+/* ========================================
+   4. Tag & Badge System
+   Base :where() styles, colour variants, enricher marks.
+======================================== */
+
+:where(.litm-tag),
+:where(.litm-status),
+:where(.litm-limit),
+:where(.litm-powerTag),
+:where(.litm-weaknessTag),
+:where(.litm-themeTag),
+:where(.litm-backpack),
+:where(.litm-relationshipTag) {
+	white-space: nowrap;
+	position: relative;
+	display: inline-flex;
+	isolation: isolate;
+	font-style: italic;
+	align-items: center;
+	font-family: var(--font-serif);
+	color: var(--color-text-primary);
+	gap: 0.25em;
+
+	&::before {
+		content: attr(data-text);
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		-webkit-text-stroke: 0.15em var(--tag-color, var(--color-cool-5));
+		color: transparent;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		z-index: -2;
+		left: 0em;
+		right: -0.1em;
+		top: 0.4em;
+		bottom: 0.2em;
+		background: var(--tag-color, var(--color-cool-5));
+		border-radius: 0px;
+	}
+}
+
+/* Story/power/theme tag badges */
+:is(
+		.litm-tag,
+		.litm-powerTag,
+		.litm-themeTag,
+		.litm-relationshipTag,
+		.litm-backpack
+	) {
+	--tag-color: var(--color-litm-tag);
+}
+
+/* Weakness tag */
+.litm-weaknessTag {
+	--tag-color: var(--color-litm-weakness);
+}
+
+/* Status card badge */
+.litm-status {
+	--tag-color: var(--color-litm-status);
+}
+
+/* Might icon (inline enricher) */
+.litm--might-icon {
+	display: inline;
+	height: 1.4em;
+	width: 1.4em;
+	vertical-align: middle;
+	padding-inline: 0.1em;
+}
+
+/* Limit badge */
+.litm-limit {
+	--tag-color: var(--color-litm-limit);
+}
+
+/* Banner — decorative plaque with notched corners */
+.litm-banner {
+	--banner-notch: 6px;
+	--banner-bg: var(--color-litm-banner);
+	display: inline-block;
+	background: var(--banner-bg);
+	padding: 0.2em 1em;
+	font-family: var(--font-serif);
+	font-style: normal;
+	font-size: 0.75em;
+	font-weight: 600;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--color-text-primary);
+	mask:
+		radial-gradient(
+			circle at 0 0,
+			transparent var(--banner-notch),
+			black calc(var(--banner-notch) + 0.5px)
+		)
+		top left,
+		radial-gradient(
+			circle at 100% 0,
+			transparent var(--banner-notch),
+			black calc(var(--banner-notch) + 0.5px)
+		)
+		top right,
+		radial-gradient(
+			circle at 0 100%,
+			transparent var(--banner-notch),
+			black calc(var(--banner-notch) + 0.5px)
+		)
+		bottom left,
+		radial-gradient(
+			circle at 100% 100%,
+			transparent var(--banner-notch),
+			black calc(var(--banner-notch) + 0.5px)
+		)
+		bottom right;
+	mask-size: 51% 51%;
+	mask-repeat: no-repeat;
+}
+
+/* Ingress — intro paragraph style for ProseMirror editor */
+.litm--ingress {
+	font-family: LuxuriousRoman, var(--font-serif);
+	font-weight: 600;
+	color: var(--color-text-subtle);
+}
+
+/* Theme name tags: larger, bold, uppercase */
+.litm-themeTag {
+	font-size: var(--font-size-20);
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+/* --- Enricher marks (inline tag references in enriched content) --- */
+:is(mark.litm--tag, mark.litm--status) {
+	color: var(--color-text-primary);
+	text-decoration: none;
+	padding: 0.2em 0.4em;
+	border-radius: 0.2em;
+	font-style: italic;
+}
+
+[data-action="scratchTag"] {
+	cursor: pointer;
+}
+
+/* ========================================
+   5. Theme Cards
+   Card layout, header, floating book label, tracks,
+   HR separator, and container query for the 2-column grid.
+======================================== */
+
+.litm .theme-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 0.75rem;
+}
+
+.litm .theme-card-header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding-bottom: 0.25rem;
+	border-bottom: none;
+}
+
+.litm .theme-card-header > .flexrow {
+	flex: 1 1 auto;
+	min-width: 0;
+	flex-wrap: nowrap;
+	overflow: hidden;
+}
+
+/* Floating themebook label above the card header */
+.litm .theme-card__book {
+	white-space: nowrap;
+}
+
+.litm .theme-card-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+:is(
+		.litm-tag,
+		.litm-powerTag,
+		.litm-themeTag,
+		.litm-relationshipTag,
+		.litm-backpack
+	).scratched {
+	text-decoration: line-through;
+}
+
+.litm .theme-card-tracks {
+	display: flex;
+	justify-content: space-around;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+	border-top: none;
+}
+
+.litm .theme-card-track {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+	min-width: 0;
+}
+
+.litm .theme-card-track label {
+	font-size: var(--font-size-11);
+	text-align: center;
+	font-weight: 600;
+	font-family: var(--font-packard);
+	text-transform: uppercase;
+}
+
+.litm .theme-card__quest {
+	margin: 0.8rem 0 0;
+	font-family: var(--font-trattatello);
+	font-style: normal;
+	font-size: var(--font-size-20);
+	color: var(--color-text-secondary);
+}
+
+/* Default: single column layout - show HR separators */
+.litm hr.theme-separator {
+	display: block;
+	margin: 0;
+}
+
+/* Container query: when grid is wide enough for 2+ columns - show borders, hide HR */
+@container (min-width: 716px) {
+	.litm hr.theme-separator {
+		display: none;
+	}
+}
+
+/* ========================================
+   6. Play Mode — Shared
+   Styles common to hero, challenge, and journey play sheets:
+   profile image, h1 reset, tag rows, relationship avatar,
+   special improvements list, empty state, progress display.
+======================================== */
+
+:is(.hero-play-mode, .challenge-play-mode, .journey-play-mode) h1 {
+	margin-block: 0.01em 0px;
+}
+
+:is(.hero-play-mode, .challenge-play-mode, .journey-play-mode)
+	fieldset
+	> .litm-banner {
+	font-size: var(--font-size-11);
+}
+
+:is(.challenge-play-mode, .journey-play-mode, .fellowship-play-mode)
+	.profile-img,
+.hero-play-mode .profile-img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+:is(.challenge-play-mode, .journey-play-mode, .fellowship-play-mode)
+	.profile-img:hover,
+.hero-play-mode .profile-img:hover {
+	transform: scale(1.05);
+}
+
+/* Hero name with decorative underline (play mode) */
+.hero-play-mode .litm--hero-name {
+	position: relative;
+	width: fit-content;
+	flex: 0;
+	min-width: 11ch;
+	margin: 0.07em 0px 0px;
+}
+
+.hero-play-mode .litm--hero-name::after {
+	content: "";
+	position: absolute;
+	left: -7%;
+	top: 106%;
+	transform: translateY(-53%);
+	width: 115%;
+	aspect-ratio: 3032 / 1235;
+	background: var(--underline-url);
+	pointer-events: none;
+	z-index: -1;
+}
+
+.litm .litm-tag-check,
+.litm .litm-tag-scratch {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+}
+
+.litm .is-inactive {
+	opacity: 0.4;
+}
+
+/* Clickable tags in play mode */
+.litm [data-action="selectTag"] {
+	cursor: pointer;
+}
+
+/* Tag / status list rows in all play sheets */
+.litm ul.plain li.form-group {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.hero-play-mode ul.plain li.form-group {
+	justify-content: space-between;
+}
+
+/* Relationship actor portrait */
+.litm .relationship-img {
+	width: 28px;
+	height: 28px;
+	border-radius: 4px;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+/* Special improvements list (theme-special-improvements partial) */
+.litm .special-improvements-list {
+	margin: 0;
+	padding-left: 0;
+}
+
+.litm .special-improvements-list li {
+	display: flex;
+	gap: 0.35rem;
+	align-items: flex-start;
+}
+
+.litm .special-improvements-list h5 {
+	margin: 0 0 0.15rem;
+}
+
+.litm .special-improvements-list .enriched-content,
+.litm .special-improvements-list p {
+	margin: 0;
+}
+
+/* Empty state (no themes, no backpack, etc.) */
+.litm .empty-state {
+	text-align: center;
+	padding: 2rem;
+}
+
+.litm .empty-state > img,
+.litm .empty-state > button > img {
+	display: block;
+	margin: 0 auto 0.75rem;
+	opacity: 0.4;
+}
+
+.litm .empty-state > button {
+	all: unset;
+	cursor: pointer;
+}
+
+/* ========================================
+   7. Challenge Sheet
+   Limit labels, might display, shields, outcomes, rating stars.
+======================================== */
+
+/* Challenge limit label overrides */
+.challenge-play-mode .limit-header .litm-limit {
+	font-size: var(--font-size-18);
+}
+
+.challenge-play-mode .limit-icon {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	right: -7px;
+	top: 1px;
+	z-index: -1;
+}
+
+.challenge-play-mode .limit-max {
+	font-style: normal;
+	font-size: var(--font-size-20);
+	font-weight: 600;
+	color: var(--color-light-2);
+	position: relative;
+	top: 0px;
+	left: -1px;
+}
+
+/* --- Challenge meta, category, play sections --- */
+
+.challenge-play-mode .challenge-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+:is(.challenge-play-mode, .journey-play-mode, .fellowship-play-mode) .category {
+	align-self: flex-start;
+	font-style: italic;
+	color: var(--color-text-secondary);
+	padding: 0.2rem 0.5rem;
+	background: var(--color-data-background);
+	border-radius: 3px;
+	font-size: var(--font-size-13);
+}
+
+:is(.journey-play-mode, .hero-play-mode, .fellowship-play-mode) .play-section {
+	margin-bottom: 1.5rem;
+}
+
+:is(.journey-play-mode, .hero-play-mode, .fellowship-play-mode)
+	.play-section
+	h3 {
+	font-size: var(--font-size-18);
+	margin: 0 0 0.5rem 0;
+	padding-bottom: 0.25rem;
+	border-bottom: 1px solid var(--color-border);
+	color: var(--color-text-primary);
+}
+
+:is(.challenge-play-mode, .journey-play-mode, .fellowship-play-mode)
+	.enriched-content
+	p:last-child {
+	margin-bottom: 0;
+}
+
+/* Might list in Play Mode */
+.challenge-play-mode .might-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.challenge-play-mode .limit-item {
+	padding: 0.5rem;
+	border-radius: 4px;
+	border: 1px solid var(--color-border);
+}
+
+.challenge-play-mode .limit-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0;
+}
+
+.challenge-play-mode .limit-header:has(+ .limit-outcome) {
+	margin-bottom: 0.5rem;
+}
+
+.challenge-play-mode .limit-controls {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.challenge-play-mode .limit-shields {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+
+.challenge-play-mode .limit-shield {
+	width: 22px;
+	height: 22px;
+}
+
+.challenge-play-mode .limit-shield.empty {
+	opacity: 0.2;
+}
+
+.challenge-play-mode .limit-impossible {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: var(--color-litm-limit);
+	opacity: 0.6;
+}
+
+.challenge-play-mode .limit-adjust {
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: var(--color-text-primary);
+	transition: all 0.2s;
+}
+
+.challenge-play-mode .limit-adjust:hover {
+	background: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+	border-color: var(--color-border);
+}
+
+:is(
+		.challenge-play-mode .limit-track,
+		.hero-play-mode .promise-display,
+		.hero-play-mode .progress-display,
+		.fellowship-play-mode .progress-display
+	) {
+	display: flex;
+}
+
+.challenge-play-mode .limit-outcome {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--color-border);
+	font-style: italic;
+	color: var(--color-text-secondary);
+}
+
+.challenge-play-mode .limit-outcome i {
+	color: var(--color-text-secondary);
+}
+
+/* Rating stars in Play Mode */
+.challenge-play-mode .rating-star.empty {
+	opacity: 0.2;
+}
+
+/* Might in Play Mode */
+
+.challenge-play-mode .might-entry {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.challenge-play-mode .might-icon {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+.challenge-play-mode .might-level {
+	color: var(--color-text-primary);
+	text-transform: capitalize;
+	flex-shrink: 0;
+}
+
+.challenge-play-mode .might-description {
+	color: var(--color-text-secondary);
+}
+
+/* ========================================
+   8. Journey Sheet
+   Play tags, vignette cards, threats, consequences.
+======================================== */
+
+.journey-play-mode .litm--play-tags {
+	font-size: var(--font-size-18);
+	text-align: center;
+	padding: 0.125em;
+}
+
+/* Vignette cards — mirrors .theme-card pattern */
+.litm .vignette-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 0.75rem;
+}
+
+.litm .vignette-card-label {
+	white-space: nowrap;
+}
+
+.litm .threat-text {
+	margin-bottom: 0.5rem;
+	color: var(--color-text-primary);
+	font-size: var(--font-size-18);
+	font-family: var(--font-luminari);
+}
+
+.litm .consequences-list {
+	list-style: none;
+	margin-block: 0px;
+}
+
+.litm .consequences-list li {
+	position: relative;
+	line-height: 1.4;
+}
+
+.litm .consequences-list li::before {
+	content: "";
+	position: absolute;
+	top: 4px;
+	left: -24px;
+	width: 16px;
+	height: 16px;
+	background: url("assets/media/icons/consequences.svg") no-repeat center;
+	background-size: contain;
+}
+
+.litm .consequence-item {
+	color: var(--color-text-secondary);
+	margin-bottom: 0.25rem;
+}
+
+.litm .consequence-item:last-child {
+	margin-bottom: 0;
+}
+
+/* ========================================
+   9. Roll Dialog
+   Dialog body, tags summary, theme groups, total power, tabs.
+======================================== */
+
+.litm--roll .window-content {
+	overflow: hidden;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.litm--roll-dialog-body {
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+.litm--roll-dialog-content {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.5rem;
+}
+
+.litm--roll-dialog-footer {
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.5rem;
+	border-top: 1px solid var(--color-border-light);
+}
+
+.litm--roll-dialog-total-power {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
+	font-weight: bold;
+}
+
+.litm--roll-dialog-total-power-value {
+	font-size: var(--font-size-20);
+	min-width: 1.5ch;
+	text-align: right;
+}
+
+.litm--roll-dialog-tags-summary {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.litm--roll-dialog-tag {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.litm fieldset ul.litm--roll-dialog-tags-summary {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 0.35rem 0.6rem;
+	align-items: center;
+}
+
+.litm--roll-dialog-tag:hover {
+	background: rgb(255 255 255 / 7%);
+}
+
+.litm--roll-dialog-tag.is-locked {
+	opacity: 0.6;
+	cursor: default;
+}
+
+.litm--roll-dialog-tag.is-locked:hover {
+	background: transparent;
+}
+
+.litm--roll-dialog-tag litm-super-checkbox {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	color: var(--color-text-primary);
+	--litm-color-accent: var(--color-dark-2);
+}
+
+.litm--roll-dialog-theme-group {
+	margin-top: 0.5rem;
+}
+
+.litm--roll-dialog-theme-group:first-child {
+	margin-top: 0;
+}
+
+.litm--roll-dialog-theme-label,
+.litm--roll-dialog-actor-label {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin: 0 0 0.25rem;
+	font-size: var(--font-size-11);
+	font-style: italic;
+	opacity: 0.75;
+}
+
+.litm--roll-dialog-actor-label img {
+	width: 14px;
+	height: 14px;
+	border-radius: 2px;
+	object-fit: cover;
+}
+
+.litm--roll-dialog-actor-label i {
+	font-size: var(--font-size-11);
+	width: 14px;
+	text-align: center;
+}
+
+.litm--roll-dialog-tag.is-selected .litm--roll-dialog-badge {
+	font-size: 1.05em;
+}
+
+/* Normalize themeTag inside roll dialog (it's large/bold on the sheet, not here) */
+.litm--roll-dialog-tag .litm-themeTag {
+	font-size: inherit;
+	font-weight: normal;
+	text-transform: none;
+}
+
+/* GM Viewer Tabs */
+.litm--roll-dialog-tabs {
+	margin-bottom: 0.25rem;
+}
+
+.litm--roll-dialog-tabs [data-tab] {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.3rem;
+}
+
+.litm--roll-dialog-tabs [data-tab].active span {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.litm--roll-dialog-tabs img {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid transparent;
+}
+
+.litm--roll-dialog-tabs [data-tab].active img {
+	border-color: var(--color-border);
+}
+
+/* ========================================
+  10. Roll Dialog HUD
+   Overlay for tracking open roll dialogs.
+======================================== */
+
+.litm-roll-dialog-hud {
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.litm-roll-dialog-hud.is-hidden {
+	display: none;
+}
+
+.litm-roll-dialog-hud__item {
+	pointer-events: all;
+	display: grid;
+	grid-template-columns: 36px 1fr;
+	gap: 0.5rem;
+	align-items: center;
+	padding: 6px 8px;
+	min-height: unset;
+	height: auto;
+	cursor: pointer;
+	text-align: left;
+	width: 100%;
+	font: inherit;
+	appearance: none;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+	background: var(--background-color);
+	color: var(--color-text-primary);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+}
+
+.litm-roll-dialog-hud__img {
+	width: 36px;
+	height: 36px;
+	border-radius: 6px;
+	object-fit: cover;
+}
+
+.litm-roll-dialog-hud__text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.litm-roll-dialog-hud__title {
+	font-weight: 600;
+	font-size: var(--font-size-14);
+	line-height: 1.1;
+}
+
+.litm-roll-dialog-hud__meta {
+	font-size: var(--font-size-12);
+	opacity: 0.85;
+}
+
+/* ========================================
+  11. Chat Messages
+   Roll results, outcome colors, spend-power cards.
+======================================== */
+
+.chat-message:has(.litm.dice-roll) {
+	padding: 0;
+}
+
+.chat-message:has(.litm.dice-roll) .message-header {
+	padding: 4px 10px;
+	border-bottom: var(--hr-border);
+}
+
+/* Base Structure */
+.litm.dice-roll {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	padding: 0px 16px;
+	border-radius: 0 0 6px 6px;
+	overflow: hidden;
+	margin: 0;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+}
+
+.litm.dice-roll .dice-flavor {
+	font-weight: 700;
+	font-size: var(--font-size-24);
+	letter-spacing: 0.05em;
+	flex: 1;
+	padding: 0.5rem 0;
+}
+
+.litm.dice-roll .dice-total-wrapper {
+	min-width: 32px;
+	height: 32px;
+	padding: 0 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	font-weight: 700;
+	font-size: var(--font-size-24);
+	line-height: 1;
+	flex: none;
+}
+
+.litm.dice-roll .dice-total {
+	border: none;
+	background: transparent;
+}
+
+.litm.dice-roll .dice-result-details {
+	width: 100%;
+}
+
+.litm.dice-roll .dice-header {
+	display: flex;
+	flex-direction: column;
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+	margin-inline: -16px;
+}
+
+.litm.dice-roll .dice-outcome-header {
+	display: flex;
+	gap: 0.5rem;
+	padding: 0.5rem 8px;
+	border-radius: 0;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: nowrap;
+	border-bottom: var(--hr-border);
+}
+
+.litm.dice-roll .outcome-image {
+	width: 32px;
+	height: 32px;
+	object-fit: contain;
+	flex: none;
+}
+
+.litm.dice-roll .outcome-label {
+	font-weight: 800;
+	font-size: var(--font-size-20);
+	text-transform: uppercase;
+	white-space: nowrap;
+	line-height: 1;
+	letter-spacing: 0.02em;
+}
+
+.litm.dice-roll .power-total {
+	font-weight: 700;
+	font-size: var(--font-size-20);
+	white-space: nowrap;
+	padding-inline: 16px;
+}
+
+.litm.dice-roll .dice-effect {
+	font-size: var(--font-size-14);
+	line-height: 1.5;
+}
+
+.litm.dice-roll .dice-effect p {
+	margin: 0.25rem 0;
+}
+
+.litm.dice-roll .dice-effect p em {
+	color: var(--color-text-subtle);
+}
+
+.litm.dice-roll .dice-tooltip-container {
+	border-radius: 4px;
+}
+
+.litm.dice-roll .dice-tooltip {
+	margin: 0;
+	padding: 0;
+	transition: all 0.25s ease;
+	border: none;
+	display: grid;
+	grid-template-rows: 0fr;
+}
+
+.litm.dice-roll .dice-tooltip > .wrapper {
+	overflow: hidden;
+}
+
+.litm.dice-roll.expanded .dice-tooltip {
+	grid-template-rows: 1fr;
+	padding: 0.5rem;
+	margin-block: 0.5rem 1rem;
+	border-radius: 4px;
+	background: rgba(255, 255, 255, 0.25);
+	border: 1px dashed var(--chat-message-border-color);
+}
+
+.litm.dice-roll .tooltip-part {
+	padding: 0.2rem 0;
+}
+
+.litm.dice-roll .tooltip-part:last-child {
+	border-bottom: none;
+}
+
+.litm.dice-roll .part-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: end;
+	font-size: var(--font-size-13);
+}
+
+.litm.dice-roll .part-total {
+	font-weight: 700;
+}
+
+.litm.dice-roll .dice-footer {
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+	margin-inline: -16px;
+	padding: 0.5rem 16px 0.75rem;
+	gap: 0.5rem;
+	border-top: var(--hr-border);
+	background: rgba(255, 255, 255, 0.25);
+}
+
+.litm.dice-roll button {
+	flex: 1;
+	font-size: var(--font-size-14);
+	font-weight: 700;
+	padding: 0.4rem 0.5rem;
+	height: auto;
+	line-height: 1.2;
+	border-radius: 3px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	transition: all 0.2s;
+	white-space: nowrap;
+	text-transform: uppercase;
+}
+
+.litm.dice-roll .litm--dice-roll-subtle {
+	font-size: var(--font-size-13);
+	font-style: italic;
+	margin-top: 0.5rem;
+	padding: 0.5rem;
+	border-radius: 4px;
+	line-height: 1.4;
+	background: rgba(255, 255, 255, 0.25);
+	border: 1px dashed var(--chat-message-border-color);
+}
+
+.litm.dice-roll .litm--dice-roll-subtle .reference {
+	font-size: 0.9em;
+}
+
+/* Outcome Colors - Bright & Vivid */
+.litm.dice-roll .dice-outcome-header.success .outcome-label {
+	color: var(--color-level-success);
+}
+
+.litm.dice-roll .dice-outcome-header.consequences .outcome-label {
+	color: var(--color-level-error);
+}
+
+.litm.dice-roll .dice-outcome-header.snc .outcome-label {
+	color: var(--color-level-warning);
+}
+
+/* --- Spend Power Chat Cards --- */
+
+.chat-message:has(.litm-spend-chat) {
+	padding: 0;
+}
+
+.chat-message:has(.litm-spend-chat) .message-header {
+	padding: 4px 10px;
+	border-bottom: var(--hr-border);
+}
+
+.litm-spend-chat {
+	padding: 0.5rem 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.litm-spend-chat__header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.litm-spend-chat__header img {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: 2px solid var(--color-border);
+	object-fit: cover;
+	flex: none;
+}
+
+.litm-spend-chat__header div {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.2;
+}
+
+.litm-spend-chat__name {
+	font-weight: 700;
+	font-size: var(--font-size-14);
+}
+
+.litm-spend-chat__action {
+	font-size: var(--font-size-14);
+	font-weight: 600;
+	font-family:
+		"Germania One", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.litm-spend-chat__body {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	font-size: var(--font-size-18);
+	line-height: 1.4;
+}
+
+.litm-spend-chat__cost {
+	font-size: var(--font-size-14);
+	font-style: italic;
+	color: var(--color-text-secondary);
+	border-top: 1px solid var(--color-border);
+	padding-top: 0.35rem;
+}
+
+/* ========================================
+  12. Story Tags Manager
+   Tag items, burn indicators, tier boxes, visibility toggles.
+======================================== */
+
+.litm--story-tags h3 {
+	font-size: var(--font-size-24);
+}
+
+/* Sidebar tab: fill the sidebar content area when active */
+.litm--story-tags.combat-sidebar.active {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Story Tags layout — matches Settings sidebar pattern:
+   container gap 1.5rem, section gap 0.5rem, h4.divider headers */
+.litm--story-tags form {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	gap: 2rem;
+	padding: 1rem 12px;
+	width: 100%;
+	scrollbar-gutter: stable;
+}
+
+.litm--story-tags form > section {
+	gap: 0.5rem;
+}
+
+.litm--story-tags .litm--section-header {
+	margin: 0;
+}
+
+.litm--story-tags ul.plain {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	margin-top: 0.25rem;
+	min-height: 2rem;
+}
+
+.litm--story-tags .litm--story-tags-wrapper {
+	flex: 1;
+	min-height: 0;
+}
+
+.litm--story-tags .litm--add-actor-btn {
+	margin: 0.5rem 8px;
+	flex: none;
+}
+
+/* Individual tag/status row */
+.litm--tag-item {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.1rem 0;
+	cursor: grab;
+}
+
+/* burn-spacer removed — layout is name-first; no longer needed */
+
+/* Burn/scratch toggle — hidden checkbox drives a styled indicator span */
+.litm--burn-label {
+	flex-shrink: 0;
+	line-height: 0;
+	cursor: pointer;
+}
+
+.litm--burn {
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	pointer-events: none;
+}
+
+.litm--burn-indicator {
+	display: block;
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+	opacity: 0.25;
+	transition: opacity 0.12s;
+}
+
+.litm--burn:checked ~ .litm--burn-indicator {
+	opacity: 1;
+}
+
+.litm--burn-label:has(.litm--burn:disabled) {
+	cursor: default;
+}
+
+.litm--burn-label:has(.litm--burn:disabled) .litm--burn-indicator {
+	opacity: 0.15;
+}
+
+/* Dim + strikethrough name when tag is scratched */
+.litm--tag-item:has(.litm--burn:checked) .litm--tag-item-name {
+	text-decoration: line-through;
+	opacity: 0.5;
+}
+
+/* Tag name wrapper — uses litm-tag/litm-status class for enhanced-text-matching style */
+.litm--tag-name-wrapper {
+	flex: 1;
+	min-width: 6rem;
+	white-space: normal;
+	display: flex;
+	align-items: stretch;
+
+	&::before {
+		display: none;
+		/* No text-stroke; the input provides the visible text */
+	}
+
+	&::after {
+		top: 0;
+		/* Full-height background to cover the input area */
+		bottom: 0;
+		right: 0;
+	}
+}
+
+/* Name input — transparent inside the styled wrapper */
+.litm--tag-item-name {
+	border: none;
+	border-radius: 0;
+	padding: 0px 0.3em;
+	font-style: italic;
+	font-family: var(--font-serif);
+	font-size: var(--font-size-14);
+	line-height: 1.4;
+	height: auto;
+	background: transparent;
+	box-shadow: none;
+	position: relative;
+	z-index: 1;
+	flex: 1;
+	min-width: 6rem;
+	width: 100%;
+
+	&:focus-visible {
+		outline: 1px solid var(--color-cool-5);
+	}
+
+	&:read-only {
+		cursor: grab;
+		pointer-events: none;
+	}
+}
+
+/* Status tier boxes — hidden checkbox drives a checkbox SVG image */
+.litm--tag-item-status {
+	display: flex;
+	gap: 2px;
+	flex-shrink: 0;
+	align-items: center;
+}
+
+.litm--tier-label {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.litm--tier-label input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+.litm--tier-label input[type="checkbox"]::before,
+.litm--tier-label input[type="checkbox"]::after {
+	display: none;
+}
+
+.litm--tier-box {
+	display: block;
+	width: 14px;
+	height: 14px;
+}
+
+.litm--tier-label:has(input[type="checkbox"]:disabled) {
+	cursor: default;
+}
+
+.litm--tier-label:has(input[type="checkbox"]:disabled) .litm--tier-box {
+	opacity: 0.5;
+}
+
+/* Hidden actor section — visible to GM only, dimmed */
+.litm--story-tags .litm--actor-hidden {
+	opacity: 0.4;
+}
+
+/* Hidden story tag row — visible to GM only, dimmed */
+.litm--story-tags .litm--tag-item.litm--tag-hidden {
+	opacity: 0.4;
+}
+
+/* Hidden tag/status row in actor sheets (play and edit mode) */
+.litm--tag-hidden {
+	opacity: 0.4;
+}
+
+/* Compact button style — shared by visibility toggles, add-tag, and any tag-row buttons */
+.litm--story-tags button:not(.litm--add-actor-btn),
+.litm--story-tags .litm--visibility-toggle {
+	padding: 0 0.35em;
+	min-height: unset;
+	height: 1.6em;
+	font-size: var(--font-size-11);
+	line-height: 1;
+	border-radius: 3px;
+	width: auto;
+	vertical-align: middle;
+	flex: none;
+}
+
+/* Section header — inline block layout */
+.litm--story-tags .litm--section-header {
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 3px;
+	align-items: center;
+}
+
+/* Single-use toggle — styled as a compact button matching visibility/remove buttons */
+.litm--single-use-label {
+	line-height: 0;
+	cursor: pointer;
+	position: relative;
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 0.35em;
+	min-height: unset;
+	height: 1.6em;
+	font-size: var(--font-size-11);
+	border-radius: 3px;
+	color: var(--color-text-primary);
+}
+
+.litm--single-use {
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.litm--single-use::before,
+.litm--single-use::after {
+	display: none;
+}
+
+.litm--single-use-indicator {
+	display: block;
+	font-size: var(--font-size-11);
+	transition: opacity 0.12s;
+	opacity: 0.35;
+}
+
+.litm--single-use:checked ~ .litm--single-use-indicator {
+	opacity: 1;
+}
+
+/* ========================================
+  13. Spend Power Dialog
+   Header, options, entries, tag chips, status items.
+======================================== */
+
+.litm-spend-power .window-content {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.litm-spend-power .standard-form {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.litm-spend-power .standard-form > fieldset {
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+}
+
+.litm-spend-power .form-footer {
+	flex: none;
+}
+
+/* --- Header --- */
+
+.litm-spend-power .litm-spend-power__header {
+	align-items: center;
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--color-border);
+	font-weight: bold;
+}
+
+.litm-spend-power .litm-spend-power__power-summary {
+	font-size: var(--font-size-20);
+	line-height: 1;
+	text-align: right;
+}
+
+.litm-spend-power .litm-spend-power__power-remaining {
+	font-weight: bold;
+}
+
+.litm-spend-power .litm-spend-power__power-remaining.is-over-budget {
+	color: var(--color-level-error);
+}
+
+/* --- Options list --- */
+
+.litm-spend-power .litm-spend-power__options {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.litm-spend-power .litm-spend-power__option {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 0.6rem 0.75rem;
+	border-left: 3px solid transparent;
+	border-bottom: 1px solid var(--color-border);
+	cursor: pointer;
+	transition:
+		border-color 0.15s ease,
+		background 0.15s ease;
+}
+
+.litm-spend-power .litm-spend-power__option:last-child {
+	border-bottom: none;
+}
+
+.litm-spend-power .litm-spend-power__option:hover {
+	background: rgb(255 255 255 / 5%);
+}
+
+.litm-spend-power .litm-spend-power__option:has(input:checked) {
+	border-left-color: var(--color-warm-2);
+	background: rgb(255 255 255 / 7%);
+}
+
+/* --- Option row --- */
+
+.litm-spend-power .litm-spend-power__option-row {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.litm-spend-power .litm-spend-power__option-label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex: 1;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.litm-spend-power .litm-spend-power__option-label input[type="checkbox"] {
+	display: none;
+}
+
+.litm-spend-power .litm-spend-power__cost {
+	flex: none;
+	font-size: var(--font-size-14);
+	font-style: italic;
+	color: var(--color-text-secondary);
+	white-space: nowrap;
+}
+
+.litm-spend-power .litm-spend-power__hint {
+	margin: 0;
+	font-style: italic;
+	color: var(--color-text-secondary);
+}
+
+/* --- Entries (tags, statuses, counters) --- */
+
+.litm-spend-power .litm-spend-power__tier {
+	margin: 0.15rem 0 0;
+}
+
+.litm-spend-power .litm-spend-power__tier input {
+	width: 4rem;
+	flex: none;
+}
+
+.litm-spend-power .litm-spend-power__entries {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin-top: 0.5rem;
+}
+
+.litm-spend-power .litm-spend-power__entries.is-hidden {
+	display: none;
+}
+
+.litm-spend-power .litm-spend-power__entry-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.litm-spend-power .litm-spend-power__entry {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.litm-spend-power .litm-spend-power__entry-name {
+	flex: 1;
+}
+
+.litm-spend-power .litm-spend-power__entry-tier {
+	width: 3.5rem;
+	flex: none;
+}
+
+.litm-spend-power .litm-spend-power__remove-entry {
+	flex: none;
+	padding: 0.2rem 0.4rem;
+	line-height: 1;
+	background: transparent;
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	color: var(--color-text-secondary);
+}
+
+.litm-spend-power .litm-spend-power__remove-entry:hover {
+	border-color: var(--color-warm-3);
+	color: var(--color-warm-3);
+}
+
+.litm-spend-power .litm-spend-power__add-entry {
+	align-self: flex-start;
+	padding: 0.25rem 0.6rem;
+	font-size: var(--font-size-14);
+	background: transparent;
+	border: 1px dashed var(--color-border);
+	border-radius: var(--border-radius);
+	cursor: pointer;
+	color: var(--color-text-secondary);
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+
+.litm-spend-power .litm-spend-power__add-entry:hover {
+	border-color: var(--color-warm-2);
+	color: var(--color-text-primary);
+}
+
+.litm-spend-power .litm-spend-power__counter {
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0;
+}
+
+.litm-spend-power .litm-spend-power__counter-value {
+	font-size: var(--font-size-18);
+	font-weight: bold;
+	min-width: 2rem;
+	text-align: center;
+}
+
+.litm-spend-power .litm-spend-power__counter-btn {
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	background: var(--background-color);
+	cursor: pointer;
+}
+
+.litm-spend-power .litm-spend-power__counter-btn:hover {
+	border-color: var(--color-warm-2);
+	color: var(--color-text-primary);
+}
+
+/* --- Tag chips & status pickers --- */
+
+.litm-spend-power .litm-spend-power__tag-chip-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.6rem;
+}
+
+.litm-spend-power .litm-spend-power__tag-chip {
+	cursor: pointer;
+	user-select: none;
+	opacity: 0.6;
+	transition: opacity 0.1s ease;
+}
+
+.litm-spend-power .litm-spend-power__tag-chip:hover {
+	opacity: 0.85;
+}
+
+.litm-spend-power .litm-spend-power__tag-chip.is-selected {
+	opacity: 1;
+}
+
+.litm-spend-power .litm-spend-power__status-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.litm-spend-power .litm-spend-power__status-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+}
+
+.litm-spend-power .litm-spend-power__status-name {
+	font-weight: bold;
+}
+
+.litm-spend-power .litm-spend-power__status-reduce {
+	align-items: center;
+	gap: 0.35rem;
+}
+
+/* ========================================
+  14. Welcome Overlay
+   Overlay shell, slides, wizard panels, tours, hero creation.
+======================================== */
+
+/* --- Overlay Shell --- */
+.litm--welcome-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1201;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.litm--welcome-overlay__bg {
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.9) 100%),
+		url("assets/media/vista.webp") center / cover no-repeat;
+}
+
+.litm--welcome-overlay__slides {
+	position: relative;
+	z-index: 1;
+	max-width: 900px;
+	max-height: 85vh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.litm--welcome-overlay__slide {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* --- Welcome Slide --- */
+.litm--welcome-overlay__welcome {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	padding: 1.5rem;
+}
+
+.litm--welcome-overlay__logo {
+	max-width: 480px;
+	width: 100%;
+	height: auto;
+	filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.5));
+}
+
+.litm--welcome-overlay__content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.25rem;
+	max-width: 560px;
+	width: 100%;
+}
+
+.litm--welcome-overlay__message {
+	font-size: var(--font-size-20, 1.25rem);
+	color: var(--color-light-2);
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+	line-height: 1.6;
+	text-align: center;
+	margin: 0;
+}
+
+/* --- CTA Grid --- */
+.litm--welcome-overlay__cta-row {
+	display: flex;
+	gap: 0.75rem;
+	width: 100%;
+	justify-content: center;
+}
+
+/* --- Buttons --- */
+.litm--welcome-overlay__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.25rem;
+	padding: 0.5rem;
+	height: var(--button-size);
+	min-height: var(--button-size);
+	background: var(--button-background-color);
+	border: 1px solid var(--button-border-color);
+	border-radius: 4px;
+	font-size: var(--font-size-14);
+	cursor: pointer;
+	transition: 0.5s;
+}
+
+.litm--welcome-overlay__btn i {
+	font-size: var(--font-size-20, 1.25rem);
+}
+
+.litm--welcome-overlay__btn:hover {
+	background: var(--button-hover-background-color);
+	color: var(--button-hover-text-color);
+	border-color: var(--button-hover-border-color);
+}
+
+.litm--welcome-overlay__btn--primary {
+	--button-background-color: var(--color-warm-1);
+	--button-border-color: var(--color-cool-5);
+	--button-text-color: var(--color-cool-5);
+	--button-hover-background-color: #fda948;
+	--button-hover-border-color: var(--color-warm-3);
+	--button-hover-text-color: #000000;
+}
+
+.litm--welcome-overlay__enabled-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.4rem 0.75rem;
+	background: rgba(100, 200, 100, 0.1);
+	border: 1px solid rgba(100, 200, 100, 0.2);
+	border-radius: 4px;
+	color: rgba(140, 210, 140, 0.9);
+	font-size: var(--font-size-13, 0.8125rem);
+}
+
+/* --- Settings toggles --- */
+.litm--welcome-overlay__settings {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	width: 100%;
+	max-width: 400px;
+}
+
+.litm--welcome-overlay__settings h3 {
+	font-size: var(--font-size-13, 0.8125rem);
+	color: var(--color-light-4);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin: 0;
+	text-align: center;
+}
+
+.litm--welcome-overlay__toggle {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	grid-template-rows: auto auto;
+	column-gap: 0.75rem;
+	row-gap: 0.1rem;
+	align-items: center;
+	padding: 0.5rem 0.75rem;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.litm--welcome-overlay__toggle:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.litm--welcome-overlay__toggle-label {
+	grid-column: 1;
+	grid-row: 1;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: var(--font-size-14, 0.875rem);
+	color: var(--color-light-2);
+}
+
+.litm--welcome-overlay__toggle-hint {
+	grid-column: 1;
+	grid-row: 2;
+	font-size: var(--font-size-11, 0.6875rem);
+	color: var(--color-light-5);
+	line-height: 1.3;
+}
+
+.litm--welcome-overlay__switch {
+	grid-column: 2;
+	grid-row: 1 / 3;
+	align-self: center;
+	position: relative;
+	width: 36px;
+	height: 20px;
+	background: rgba(255, 255, 255, 0.15);
+	border-radius: 10px;
+	transition: background 0.2s;
+}
+
+.litm--welcome-overlay__switch::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 16px;
+	height: 16px;
+	background: var(--color-light-4);
+	border-radius: 50%;
+	transition:
+		transform 0.2s,
+		background 0.2s;
+}
+
+.litm--welcome-overlay__switch.active {
+	background: var(--color-light-6);
+}
+
+.litm--welcome-overlay__switch.active::after {
+	transform: translateX(16px);
+	background: var(--color-light-1);
+}
+
+/* --- Tours --- */
+.litm--welcome-overlay__tours {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	width: 100%;
+}
+
+.litm--welcome-overlay__tours h3 {
+	font-size: var(--font-size-13, 0.8125rem);
+	font-weight: bold;
+	color: var(--color-form-label);
+	text-align: center;
+	margin: 0 0 0.25rem;
+}
+
+.litm--welcome-overlay__tour-btn {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
+	padding: 0.75rem;
+	height: auto;
+	min-height: auto;
+	flex: 1;
+	min-width: 0;
+	background: rgba(0, 0, 0, 0.35);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 4px;
+	color: var(--color-light-2);
+	cursor: pointer;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease;
+	text-align: center;
+}
+
+.litm--welcome-overlay__tour-btn:hover {
+	background: rgba(0, 0, 0, 0.5);
+	border-color: rgba(255, 255, 255, 0.25);
+}
+
+.litm--welcome-overlay__tour-btn .litm--welcome-overlay__tour-title {
+	font-size: var(--font-size-16, 1rem);
+	font-weight: 600;
+	color: var(--color-light-1);
+}
+
+.litm--welcome-overlay__tour-btn .litm--welcome-overlay__tour-desc {
+	font-size: var(--font-size-13, 0.8125rem);
+	color: rgba(255, 255, 255, 0.55);
+	line-height: 1.4;
+}
+
+/* --- Dismiss --- */
+.litm--welcome-overlay__dismiss {
+	background: none;
+	border: none;
+	height: auto;
+	min-height: auto;
+	color: var(--color-light-5);
+	font-size: var(--font-size-14);
+	cursor: pointer;
+	padding: 0.75rem 1rem;
+	margin-top: 0.5rem;
+	transition: color 0.2s ease;
+}
+
+.litm--welcome-overlay__dismiss:hover {
+	color: rgba(255, 255, 255, 0.7);
+	opacity: 1;
+}
+
+/* --- Wizard Panel (hero creation slides) --- */
+.litm--welcome-overlay__wizard {
+	max-width: 860px;
+	width: 100%;
+	height: 80vh;
+	display: flex;
+	flex-direction: column;
+	background: var(--color-cool-5-90);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	box-shadow: 0 0 10px #000;
+	overflow: hidden;
+}
+
+.litm--welcome-overlay__wizard-header {
+	padding: 0.75rem 1rem 0;
+	text-align: center;
+}
+
+.litm--welcome-overlay__wizard-header hr {
+	margin: 0.75rem 0 0;
+	border-color: var(--color-border);
+}
+
+.litm--welcome-overlay__wizard-header h2 {
+	margin: 0;
+	font-size: var(--font-size-20);
+	font-family: var(--font-h1);
+	color: var(--color-light-1);
+	font-weight: bold;
+}
+
+.litm--welcome-overlay__wizard-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	overflow-y: auto;
+	padding: 0.75rem 1rem;
+	min-height: 0;
+}
+
+.litm--welcome-overlay__wizard-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.75rem 1rem;
+	border-top: 1px solid var(--color-border);
+}
+
+/* Slides with short content should center vertically */
+.litm--welcome-overlay__wizard-body:has(.litm--welcome-overlay__mode-grid),
+.litm--welcome-overlay__wizard-body:has(.hero-creation__method-grid) {
+	justify-content: center;
+}
+
+/* --- Mode Select Cards --- */
+.litm--welcome-overlay__mode-grid {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 0;
+	align-items: stretch;
+	padding: 1rem 0;
+}
+
+.litm--welcome-overlay__mode-divider {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 1.5rem;
+}
+
+.litm--welcome-overlay__mode-divider span {
+	font-size: var(--font-size-14);
+	color: var(--color-light-5);
+	font-weight: 600;
+}
+
+.litm--welcome-overlay__mode-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1.5rem 1.25rem 1.25rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	cursor: pointer;
+	transition:
+		background 0.25s ease,
+		border-color 0.25s ease,
+		box-shadow 0.25s ease;
+	text-align: center;
+	color: var(--color-light-2);
+}
+
+.litm--welcome-overlay__mode-card:hover {
+	background: var(--color-cool-5-75);
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.litm--welcome-overlay__mode-card.active {
+	background: color-mix(in srgb, var(--color-warm-1) 10%, transparent);
+	border-color: var(--color-warm-1);
+	box-shadow: 0 0 10px #000;
+}
+
+.mode-card__icon {
+	width: 56px;
+	height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	margin-bottom: 0.25rem;
+	transition:
+		background 0.25s ease,
+		border-color 0.25s ease,
+		color 0.25s ease;
+}
+
+.mode-card__icon i {
+	font-size: var(--font-size-24, 1.5rem);
+	color: rgba(255, 255, 255, 0.4);
+	transition: color 0.25s ease;
+}
+
+.litm--welcome-overlay__mode-card:hover .mode-card__icon {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.litm--welcome-overlay__mode-card:hover .mode-card__icon i {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.litm--welcome-overlay__mode-card.active .mode-card__icon {
+	background: color-mix(in srgb, var(--color-warm-1) 15%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+}
+
+.litm--welcome-overlay__mode-card.active .mode-card__icon i {
+	color: var(--color-warm-1);
+}
+
+.litm--welcome-overlay__mode-card h3 {
+	margin: 0;
+	font-size: var(--font-size-20, 1.25rem);
+	font-weight: 700;
+	color: var(--color-light-1);
+}
+
+.litm--welcome-overlay__mode-card p {
+	margin: 0;
+	font-size: var(--font-size-14);
+	color: var(--color-form-label);
+	line-height: 1.5;
+	max-width: 22ch;
+}
+
+.mode-card__tag {
+	display: inline-block;
+	margin-top: 0.25rem;
+	padding: 0.2rem 0.75rem;
+	font-size: var(--font-size-11, 0.6875rem);
+	color: var(--color-light-5);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 100px;
+	font-weight: 600;
+}
+
+.litm--welcome-overlay__mode-card.active .mode-card__tag {
+	color: color-mix(in srgb, var(--color-warm-1) 70%, white);
+	border-color: color-mix(in srgb, var(--color-warm-1) 25%, transparent);
+}
+
+/* --- Wizard wide variant (review) --- */
+.litm--welcome-overlay__wizard--wide {
+	max-width: 940px;
+}
+
+/* --- Hero Created Slide --- */
+.litm--welcome-overlay__hero-created {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	padding: 2rem 1.5rem;
+	text-align: center;
+	background: var(--color-cool-5-90);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	box-shadow: 0 0 10px #000;
+}
+
+.litm--welcome-overlay__hero-created h2 {
+	font-size: var(--font-size-24);
+	color: var(--color-light-1);
+	font-family: var(--font-h1);
+	margin: 0;
+}
+
+.litm--welcome-overlay__hero-created p {
+	font-size: var(--font-size-18, 1.125rem);
+	color: var(--color-light-4);
+	margin: 0;
+	font-style: italic;
+}
+
+.hero-created__flourish {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	width: 100%;
+	max-width: 280px;
+}
+
+.hero-created__flourish i {
+	font-size: var(--font-size-12);
+	color: color-mix(in srgb, var(--color-warm-1) 50%, transparent);
+	flex-shrink: 0;
+}
+
+.hero-created__line {
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		color-mix(in srgb, var(--color-warm-1) 30%, transparent) 50%,
+		transparent
+	);
+}
+
+/* --- Hero Created: tours section --- */
+.hero-created__tours {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	width: 100%;
+	max-width: 560px;
+	margin-top: 0.5rem;
+}
+
+.hero-created__tours h3 {
+	font-size: var(--font-size-13, 0.8125rem);
+	font-weight: bold;
+	color: var(--color-form-label);
+	text-align: center;
+	margin: 0 0 0.25rem;
+}
+
+/* --- Review: hero identity --- */
+.review-hero-header {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+}
+
+.review-hero-portrait {
+	width: 64px;
+	height: 64px;
+	flex-shrink: 0;
+	object-fit: cover;
+	border-radius: 6px;
+	border: 1px solid var(--color-border);
+	cursor: pointer;
+}
+
+.review-hero-portrait:hover {
+	border-color: var(--color-warm-1);
+}
+
+.review-hero-header input,
+.review-hero-header textarea {
+	width: 100%;
+}
+
+/* --- Wizard Body Sub-styles (hero creation template structure) --- */
+.litm--welcome-overlay__wizard-body .hero-creation__split {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+	grid-template-rows: 1fr;
+	gap: 0.75rem;
+	min-height: 0;
+	flex: 1;
+	overflow: hidden;
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-height: 0;
+	flex: 1;
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__list-body {
+	min-height: 0;
+	flex: 1;
+	overflow: auto;
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__detail {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 1rem;
+	padding: 1rem 1.25rem;
+	min-height: 0;
+	flex: 1;
+	overflow: auto;
+}
+
+.litm--welcome-overlay__wizard-body h2,
+.litm--welcome-overlay__wizard-body h3,
+.litm--welcome-overlay__wizard-body h4 {
+	color: var(--color-light-2);
+	margin: 0.5rem 0 0.25rem;
+}
+
+.litm--welcome-overlay__wizard-body label {
+	color: var(--color-light-4);
+}
+
+.litm--welcome-overlay__wizard-body select,
+.litm--welcome-overlay__wizard-body input[type="text"] {
+	background: var(--input-background-color);
+	border: 1px solid var(--input-border-color);
+	border-radius: 4px;
+	color: var(--input-text-color);
+	padding: 0 0.5rem;
+	height: var(--input-height);
+	font-size: var(--font-size-14);
+}
+
+@keyframes overlayFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* --- Trope Select: trope buttons & detail --- */
+.litm--welcome-overlay__wizard-body .hero-creation__grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0.35rem;
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__group h4 {
+	font-size: var(--font-size-14);
+	font-weight: bold;
+	font-family: var(--font-h1);
+	color: var(--color-light-3);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin: 0;
+	padding: 0.5rem 0 0.25rem;
+	border-bottom: 1px solid
+		color-mix(in srgb, var(--color-border) 50%, transparent);
+}
+
+.litm--welcome-overlay__wizard-body
+	.hero-creation__group
+	+ .hero-creation__group {
+	margin-top: 0.5rem;
+}
+
+.hero-creation__trope-button {
+	display: flex;
+	align-items: center;
+	padding: 0.35rem 0.5rem;
+	height: auto;
+	min-height: auto;
+	background: transparent;
+	border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+	border-radius: 4px;
+	color: var(--color-light-2);
+	font-size: var(--font-size-13);
+	cursor: pointer;
+	transition:
+		background 0.2s,
+		border-color 0.2s,
+		color 0.2s;
+}
+
+.hero-creation__trope-button:hover {
+	background: color-mix(in srgb, var(--color-light-5) 10%, transparent);
+	border-color: var(--color-border);
+	color: var(--color-light-1);
+}
+
+.hero-creation__trope-button.active {
+	background: color-mix(in srgb, var(--color-warm-1) 12%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+	color: var(--color-light-1);
+	font-weight: 600;
+}
+
+/* Trope detail panel */
+.litm--welcome-overlay__wizard-body .hero-creation__detail h2 {
+	font-size: var(--font-size-24, 1.5rem);
+	color: var(--color-light-1);
+	font-family: var(--font-h1);
+	margin: 0;
+}
+
+.litm--welcome-overlay__wizard-body .themekit-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.litm--welcome-overlay__wizard-body .themekit-list li {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.625rem;
+	background: var(--color-cool-5-50);
+	border-radius: 4px;
+	color: var(--color-light-3);
+	font-size: var(--font-size-14);
+}
+
+.litm--welcome-overlay__wizard-body .themekit-list li img {
+	opacity: 0.7;
+}
+
+.litm--welcome-overlay__wizard-body .trope-optional-kit {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.625rem;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.litm--welcome-overlay__wizard-body .trope-optional-kit:hover {
+	background: var(--color-cool-5-75);
+}
+
+.litm--welcome-overlay__wizard-body .trope-optional-kit span {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--color-light-3);
+	font-size: var(--font-size-14);
+}
+
+.litm--welcome-overlay__wizard-body .trope-optional-kit img {
+	opacity: 0.7;
+}
+
+.litm--welcome-overlay__wizard-body .trope-optional-kit i {
+	color: var(--color-light-3);
+	opacity: 0.7;
+}
+
+/* --- Trope Themes: theme cards in wizard --- */
+.hero-creation__themes-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.litm--welcome-overlay__wizard-body .themes-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+}
+
+.litm--welcome-overlay__wizard-body .theme-card {
+	gap: 0.5rem;
+}
+
+.litm--welcome-overlay__wizard-body .theme-card-header .litm-tag {
+	text-transform: uppercase;
+	width: fit-content;
+	flex: none;
+}
+
+.litm--welcome-overlay__wizard-body .theme-card__check {
+	color: var(--color-positive);
+	margin-left: 0.25rem;
+}
+
+.litm--welcome-overlay__wizard-body .tag-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.litm--welcome-overlay__wizard-body .tag-section__label {
+	font-size: var(--font-size-12);
+	font-weight: bold;
+	color: var(--color-form-label);
+	margin: 0.25rem 0 0;
+}
+
+.litm--welcome-overlay__wizard-body .tag-checkbox {
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.litm--welcome-overlay__wizard-body .litm-tag-check {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+	filter: invert(1);
+}
+
+.tag-tooltip-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.tag-tooltip-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+
+.tag-tooltip-group > label {
+	display: block;
+	width: 100%;
+	margin-bottom: 0.25rem;
+	font-size: 10px;
+	font-weight: 700;
+	color: var(--color-warm-1);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-style: normal;
+	font-family: var(--font-body);
+}
+
+.litm--welcome-overlay__wizard-body .tag-checkbox input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+.litm--welcome-overlay__wizard-body .tag-checkbox .unselected {
+	opacity: 0.65;
+}
+
+.litm--welcome-overlay__wizard-body .tag-checkbox:hover .unselected {
+	opacity: 0.85;
+}
+
+/* --- Custom Themes: navigation & form --- */
+.hero-creation__theme-nav {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.35rem;
+	padding: 1rem 16px;
+}
+
+.hero-creation__custom-theme-btn {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	width: 100%;
+	padding: 0.5rem 0.625rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	color: var(--color-light-3);
+	font-size: var(--font-size-14);
+	cursor: pointer;
+	justify-content: start;
+	text-align: left;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.hero-creation__custom-theme-btn:hover {
+	background: var(--color-cool-5-75);
+	border-color: rgba(255, 255, 255, 0.15);
+}
+
+.hero-creation__custom-theme-btn.active {
+	background: color-mix(in srgb, var(--color-warm-1) 12%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+}
+
+.custom-theme-btn__num {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.08);
+	font-size: var(--font-size-12);
+	font-weight: 700;
+	color: var(--color-light-4);
+	flex-shrink: 0;
+}
+
+.hero-creation__custom-theme-btn.active .custom-theme-btn__num {
+	background: color-mix(in srgb, var(--color-warm-1) 25%, transparent);
+	color: var(--color-light-1);
+}
+
+.custom-theme-btn__info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+	min-width: 0;
+}
+
+.custom-theme-btn__type {
+	font-size: var(--font-size-11, 0.6875rem);
+	font-weight: bold;
+	color: var(--color-light-5);
+}
+
+.custom-theme-btn__name {
+	font-size: var(--font-size-13);
+	color: var(--color-light-2);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.custom-theme-btn__empty {
+	font-size: var(--font-size-13);
+	color: rgba(255, 255, 255, 0.3);
+	font-style: italic;
+}
+
+/* Backpack section in custom themes */
+.litm--welcome-overlay__wizard-body .backpack-section {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+.litm--welcome-overlay__wizard-body .backpack-inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+/* Method selection cards */
+.litm--welcome-overlay__wizard-body .hero-creation__method-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.75rem;
+}
+
+.litm--welcome-overlay__wizard-body .method-btn {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.75rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	color: var(--color-light-2);
+	cursor: pointer;
+	text-align: center;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.litm--welcome-overlay__wizard-body .method-btn:hover {
+	background: var(--color-cool-5-75);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.litm--welcome-overlay__wizard-body .method-btn strong {
+	font-size: var(--font-size-14);
+	color: var(--color-light-1);
+}
+
+.litm--welcome-overlay__wizard-body .method-btn span {
+	font-size: var(--font-size-12);
+	color: var(--color-form-label);
+	line-height: 1.4;
+}
+
+/* Method display badge + change button */
+.theme-method-display {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.method-badge {
+	display: inline-flex;
+	padding: 0.25rem 0.625rem;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	font-size: var(--font-size-13);
+	color: var(--color-light-2);
+	font-weight: 600;
+}
+
+.change-method-btn {
+	background: none;
+	border: none;
+	height: auto;
+	min-height: auto;
+	padding: 0.2rem 0.5rem;
+	color: rgba(255, 255, 255, 0.4);
+	font-size: var(--font-size-12);
+	cursor: pointer;
+	transition: color 0.15s ease;
+}
+
+.change-method-btn:hover {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* Themekit list in custom theme detail */
+.litm--welcome-overlay__wizard-body .custom-themekit-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.litm--welcome-overlay__wizard-body .custom-themekit-list .themekit-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	width: 100%;
+	padding: 0.5rem 0.625rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	color: var(--color-light-3);
+	font-size: var(--font-size-14);
+	cursor: pointer;
+	text-align: left;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+	text-decoration: none;
+}
+
+.litm--welcome-overlay__wizard-body .custom-themekit-list .themekit-link:hover {
+	background: var(--color-cool-5-75);
+	border-color: rgba(255, 255, 255, 0.15);
+}
+
+.litm--welcome-overlay__wizard-body
+	.custom-themekit-list
+	.themekit-link.active {
+	background: color-mix(in srgb, var(--color-warm-1) 12%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+	color: var(--color-light-1);
+}
+
+.litm--welcome-overlay__wizard-body .custom-themekit-list .themekit-link img {
+	opacity: 0.6;
+}
+
+.litm--welcome-overlay__wizard-body .custom-themekit-tags {
+	margin-block-start: 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+/* Stacked field layout */
+.litm--welcome-overlay__wizard-body .litm-field-stacked {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.litm--welcome-overlay__wizard-body .litm-field-stacked > label {
+	font-size: var(--font-size-12);
+	font-weight: bold;
+	color: var(--color-form-label);
+}
+
+/* Question + answer pair */
+.litm-question-answer {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.litm-question-answer select {
+	font-size: var(--font-size-13);
+}
+
+/* Tag inputs stacked */
+.litm--welcome-overlay__wizard-body .tag-inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+/* Empty state */
+.litm--welcome-overlay__wizard-body .hero-creation__empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	padding: 2rem;
+	color: rgba(255, 255, 255, 0.35);
+	text-align: center;
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__empty-state i {
+	font-size: var(--font-size-24);
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.litm--welcome-overlay__wizard-body .hero-creation__empty-state p {
+	margin: 0;
+	font-size: var(--font-size-14);
+}
+
+/* Search input in wizard */
+.litm--welcome-overlay__wizard-body input[type="search"] {
+	background: var(--input-background-color);
+	border: 1px solid var(--input-border-color);
+	border-radius: 4px;
+	color: var(--input-text-color);
+	padding: 0 0.5rem;
+	height: var(--input-height);
+	font-size: var(--font-size-14);
+	width: 100%;
+}
+
+/* Checkbox styling in wizard */
+.litm--welcome-overlay__wizard-body .checkbox {
+	font-size: var(--font-size-14);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.35rem 0.5rem;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.litm--welcome-overlay__wizard-body .checkbox:hover {
+	background: var(--color-cool-5-75);
+}
+
+.litm--welcome-overlay__wizard-body .checkbox input[type="radio"] {
+	accent-color: var(--color-warm-1);
+}
+
+/* --- Tag questions (themebook guiding questions) --- */
+.litm--welcome-overlay__wizard-body .tag-questions {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 0.25rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.litm--welcome-overlay__wizard-body .tag-questions li.hint {
+	padding-left: 0.5rem;
+	border-left: 2px solid
+		color-mix(in srgb, var(--color-warm-1) 30%, transparent);
+}
+
+/* --- Quest ideas pill buttons --- */
+.quest-ideas {
+	margin-bottom: 0.5rem;
+}
+
+.quest-ideas__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin-bottom: 0.5rem;
+}
+
+.quest-ideas__btn {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.2rem 0.625rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 100px;
+	color: var(--color-light-3);
+	font-size: var(--font-size-12);
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.quest-ideas__btn:hover {
+	background: color-mix(in srgb, var(--color-warm-1) 12%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+	color: var(--color-light-1);
+}
+
+/* --- General Store (backpack suggestions) --- */
+.general-store__nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin-top: 0.5rem;
+}
+
+.general-store__cat {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.15rem 0.5rem;
+	height: auto;
+	min-height: auto;
+	background: var(--color-cool-5-50);
+	border: 1px solid var(--color-border);
+	border-radius: 100px;
+	color: var(--color-light-4);
+	font-size: var(--font-size-11, 0.6875rem);
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.general-store__cat:hover {
+	background: var(--color-cool-5-75);
+	border-color: rgba(255, 255, 255, 0.15);
+}
+
+.general-store__cat.active {
+	background: color-mix(in srgb, var(--color-warm-1) 12%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 40%, transparent);
+	color: var(--color-light-1);
+}
+
+.general-store__items {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin-top: 0.35rem;
+}
+
+.general-store__tag {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.15rem 0.5rem;
+	height: auto;
+	min-height: auto;
+	background: transparent;
+	border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+	border-radius: 4px;
+	color: var(--color-light-3);
+	font-size: var(--font-size-12);
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+}
+
+.general-store__tag:hover {
+	background: color-mix(in srgb, var(--color-warm-1) 8%, transparent);
+	border-color: color-mix(in srgb, var(--color-warm-1) 30%, transparent);
+	color: var(--color-light-1);
+}
+
+/* --- Review: trope subtitle --- */
+.review-trope-subtitle {
+	margin: 0.25rem 0 0;
+	font-size: var(--font-size-14);
+	color: var(--color-light-4);
+}
+
+/* --- Review: level badge in legend --- */
+.review-level-badge {
+	font-size: var(--font-size-11, 0.6875rem);
+	font-weight: normal;
+	color: var(--color-light-5);
+	margin-left: 0.25rem;
+}
+
+@media (prefers-reduced-transparency) {
+	.litm--welcome-overlay__wizard,
+	.litm--welcome-overlay__hero-created {
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+}
+
+/* ========================================
+  15. Trope Sheet
+   Theme kit drag-and-drop zone.
+======================================== */
+
+.litm-trope-sheet .theme-kit-drop {
+	border: 1px dashed var(--color-border);
+	border-radius: 6px;
+	padding: 0.75rem;
+	text-align: center;
+	background: var(--color-data-background);
+	transition:
+		border-color 0.15s ease,
+		background 0.15s ease;
+}
+
+.litm-trope-sheet .theme-kit-drop.is-dragover {
+	border-color: var(--color-cool-5);
+	background: var(--color-light-3);
+}
+
+/* ========================================
+  16. Theme Advancement Dialog
+   Image sizing and button overrides.
+======================================== */
+
+.litm-theme-advancement .img-name img {
+	width: 64px;
+	height: 64px;
+	object-fit: cover;
+	border-radius: var(--border-radius);
+}
+
+.litm-theme-advancement .form-group button {
+	flex: 0 0 auto;
+	width: auto;
+}
+
+/* ========================================
+  17. Secret Blocks
+   ProseMirror secret reveal button styling.
+======================================== */
+
+.litm section.secret > button.reveal {
+	border: none;
+	background: url("assets/media/icons/torch.svg") no-repeat center / contain;
+	width: 26px;
+	height: 26px;
+	margin-left: -10px;
+	font-size: 0;
+	line-height: 1;
+	opacity: 0.7;
+	transition:
+		opacity 0.2s ease,
+		filter 0.2s ease;
+	float: left;
+	padding: 0px;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.litm section.secret.revealed > button.reveal {
+	opacity: 1;
+	filter: drop-shadow(0 0 4px #d4911a) drop-shadow(0 0 8px #d4911a55);
+}
+
+/* ========================================
+  18. Dark Mode
+   Theme overrides for dark interface and chat cards.
+======================================== */
+
+/* Dark Theme Overrides — matches both body.theme-dark (Applications: Dark)
+   and .themed.theme-dark on interface elements (Interface: Dark) */
+:is(body, .themed).theme-dark {
+	--underline-url:
+		url(assets/media/underline-w.webp) center / contain no-repeat;
+	--litm-scratch-filter: none;
+	--color-litm-tag: #88621c;
+	--color-litm-status: #3f5a3f;
+	--color-litm-limit: #7a3e34;
+	--color-litm-weakness: #8d4320;
+	--color-litm-banner: #4a403a;
+
+	& .hint img {
+		filter: invert(1) sepia(1) saturate(5) hue-rotate(305deg);
+	}
+
+	& .hint img[data-color="white"] {
+		filter: sepia(1) saturate(5) hue-rotate(305deg);
+	}
+
+	/* Chat message container override */
+	& .chat-message:has(.litm.dice-roll) {
+		--color-scheme: dark;
+		--chat-message-border-color: var(--color-cool-4);
+		background: var(--color-cool-5);
+		color: var(--color-light-2);
+		color-scheme: var(--color-scheme);
+	}
+
+	& .chat-message:has(.litm.dice-roll) .message-header {
+		border-bottom: 1px solid var(--color-cool-4);
+		text-shadow: 0 0 2px black;
+		color: var(--color-light-2);
+	}
+
+	& .litm.dice-roll .dice-flavor {
+		text-shadow: 0 0 2px black;
+	}
+
+	& .litm.dice-roll .dice-total-wrapper {
+		background: transparent;
+		border: 1px solid var(--color-cool-4);
+	}
+
+	& .litm.dice-roll .dice-outcome-header {
+		background: transparent;
+		border-bottom: 1px solid var(--color-cool-4);
+	}
+
+	& .litm.dice-roll .outcome-label {
+		color: var(--color-light-5);
+	}
+
+	& .litm.dice-roll .power-total {
+		color: var(--color-light-5);
+	}
+
+	& .litm.dice-roll .dice-effect {
+		color: var(--color-light-5);
+	}
+
+	& .litm.dice-roll .dice-effect p em {
+		color: var(--color-light-3);
+	}
+
+	& .litm.dice-roll .dice-tooltip {
+		background: transparent;
+		color: var(--color-light-5);
+	}
+
+	& .litm.dice-roll.expanded .dice-tooltip {
+		background: rgba(0, 0, 0, 0.4);
+		border: 1px dashed var(--color-cool-4);
+	}
+
+	& .litm.dice-roll .part-flavor {
+		color: hsl(75.88 48.31% 42.3%);
+	}
+
+	& .litm.dice-roll .part-header {
+		color: var(--color-light-3);
+		border-bottom-style: dashed;
+		border-bottom-color: var(--color-cool-4);
+	}
+
+	& .litm.dice-roll .part-formula {
+		color: var(--color-light-4);
+	}
+
+	& .litm.dice-roll .part-total {
+		color: var(--color-light-5);
+		border: none;
+	}
+
+	/* Footer & Buttons */
+	& .litm.dice-roll .dice-footer {
+		background: rgba(255, 255, 255, 0.03);
+		border-top: 1px solid var(--color-cool-4);
+	}
+
+	& .litm.dice-roll button {
+		border: 1px solid var(--color-light-5);
+		background: transparent;
+		color: var(--color-light-5);
+	}
+
+	& .litm.dice-roll button:hover {
+		background: rgba(238, 155, 58, 0.1);
+		border-color: #ee9b3a;
+		color: #fff;
+		box-shadow: 0 0 8px rgba(238, 155, 58, 0.25);
+	}
+
+	/* UI Hints */
+	& .litm.dice-roll .litm--dice-roll-subtle {
+		color: var(--color-light-5);
+		border: 1px dashed var(--color-light-5);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	& .litm.dice-roll .litm--dice-roll-subtle .reference {
+		background: transparent;
+		color: var(--color-light-5);
+		border: 0.5px solid var(--color-light-5);
+	}
+
+	/* Spend Power Chat Cards */
+	& .chat-message:has(.litm-spend-chat) {
+		--color-scheme: dark;
+		--chat-message-border-color: var(--color-cool-4);
+		--color-text-primary: var(--color-light-2);
+		background: var(--color-cool-5);
+		color: var(--color-light-2);
+		color-scheme: var(--color-scheme);
+	}
+
+	& .chat-message:has(.litm-spend-chat) .message-header {
+		border-bottom: 1px solid var(--color-cool-4);
+		text-shadow: 0 0 2px black;
+		color: var(--color-light-2);
+	}
+
+	& .litm-spend-chat__header img {
+		border-color: var(--color-cool-4);
+	}
+
+	& .litm-spend-chat__name {
+		color: var(--color-light-5);
+	}
+
+	& .litm-spend-chat__action {
+		color: var(--color-light-2);
+	}
+
+	& .litm-spend-chat__body {
+		color: var(--color-light-5);
+	}
+
+	& .litm-spend-chat__cost {
+		color: var(--color-light-2);
+		border-top-color: var(--color-cool-4);
+	}
+
+	/* Invert black checkbox SVGs to white in dark mode */
+	& .litm-tag-check,
+	& .progress-box img,
+	& .litm--tier-box {
+		filter: invert(1);
+	}
+}

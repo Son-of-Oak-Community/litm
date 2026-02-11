@@ -1,0 +1,32 @@
+{
+	"port": 30001,
+	"upnp": false,
+	"fullscreen": false,
+	"hostname": null,
+	"localHostname": null,
+	"routePrefix": null,
+	"sslCert": null,
+	"sslKey": null,
+	"awsConfig": null,
+	"passwordSalt": null,
+	"proxySSL": false,
+	"proxyPort": null,
+	"serviceConfig": null,
+	"updateChannel": "development",
+	"language": "en.core",
+	"upnpLeaseDuration": null,
+	"compressStatic": true,
+	"world": null,
+	"protocol": null,
+	"compressSocket": true,
+	"cssTheme": "dark",
+	"deleteNEDB": false,
+	"hotReload": false,
+	"telemetry": false,
+	"tempDir": null,
+	"demo": {
+		"worldName": "litm-test",
+		"sourceZip": "../../source/litm-test.zip",
+		"resetSeconds": 3600
+	}
+}

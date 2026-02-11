@@ -1,0 +1,337 @@
+<section class="standard-form scrollable">
+	<!-- Header -->
+	<div class="flexrow gap-md" style="align-items: stretch;">
+		<img class="profile-img draggable noflex" data-edit="img" src="{{document.img}}" data-action="editImage"
+			data-tooltip="{{localize 'LITM.Ui.edit_image'}}"
+			style="width: 100px; height: 100px; border-radius: 4px; object-fit: cover;" />
+
+		<div class="flex1 flexcol gap-sm">
+			<input type="text" name="name" value="{{document.name}}" placeholder="{{localize 'LITM.Ui.hero_name'}}"
+				style="font-size: var(--font-size-20); font-weight: bold;" />
+
+			<div class="flexrow gap-sm" style="align-items: center;">
+				<label for="{{document._id}}-system-promise" class="flex3"
+					style="font-weight: bold; text-align: right;">{{localize
+					"LITM.Hero.promise"}}</label>
+				<div class="noflex">
+					<input type="number" id="{{document._id}}-system-promise" name="system.promise"
+						value="{{source.system.promise}}" min="0" max="5" step="1" data-dtype="Number" />
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<!-- Description Section -->
+	<fieldset>
+		<legend class="litm-banner theme-card__book">{{localize "LITM.Terms.description"}}</legend>
+		<prose-mirror class="journal-entry-content" name="system.description" data-document-uuid="{{document.uuid}}"
+			value="{{source.system.description}}" compact>
+			{{{ enriched.description }}}
+		</prose-mirror>
+	</fieldset>
+
+	<div class="grid-2col">
+		<!-- Moment of Fulfillment -->
+		{{#if (gte source.system.promise 5)}}
+		<fieldset>
+			<legend class="control flexrow gap-sm">
+				<span class="litm-banner theme-card__book">{{localize "LITM.Hero.moment_of_fulfillment"}}</span>
+				<button type="button" class="noflex" data-action="addMomentOfFulfillment"
+					data-tooltip="{{localize 'LITM.Terms.add'}} {{localize 'LITM.Hero.moment_of_fulfillment'}}"
+					aria-label="{{localize 'LITM.Terms.add'}} {{localize 'LITM.Hero.moment_of_fulfillment'}}">
+					<i class="fa-solid fa-plus" aria-hidden="true"></i>
+				</button>
+			</legend>
+
+			{{#if momentsOfFulfillment.length}}
+			<ul class="plain" style="gap: 0px;">
+				{{#each momentOfFulfillmentEntries as |moment|}}
+				<li class="flexcol gap-sm" style="margin-bottom: 0.5rem;">
+					<div class="form-group stacked">
+						<label>{{localize "LITM.Terms.name"}}</label>
+						<input type="text" name="system.mof.{{@index}}.name" value="{{moment.name}}" />
+					</div>
+					<div class="form-group stacked">
+						<label>{{localize "LITM.Terms.description"}}</label>
+						<prose-mirror class="journal-entry-content" name="system.mof.{{@index}}.description"
+							data-document-uuid="{{document.uuid}}" value="{{moment.description}}" compact>
+							{{{ moment.enrichedDescription }}}
+						</prose-mirror>
+					</div>
+					<div class="flexrow" style="justify-content: flex-end;">
+						<button type="button" class="noflex" data-action="removeMomentOfFulfillment" data-index="{{@index}}"
+							data-tooltip="{{localize 'LITM.Ui.remove'}}" aria-label="{{localize 'LITM.Ui.remove'}}">
+							<i class="fa-solid fa-trash" aria-hidden="true"></i>
+						</button>
+					</div>
+				</li>
+				{{#unless @last}}
+				<hr />
+				{{/unless}}
+				{{/each}}
+			</ul>
+			{{else}}
+			<p class="hint">{{localize "LITM.Ui.no_moments_of_fulfillment"}}</p>
+			{{/if}}
+		</fieldset>
+		{{/if}}
+
+		<!-- Relationship Tags & Fellowship -->
+		<fieldset data-tour="fellowship-section">
+			<legend class="control flexrow gap-sm">
+				<span class="litm-banner theme-card__book">{{localize "LITM.Terms.fellowship"}}</span>
+				<button type="button" data-action="viewActor" data-actor-id="{{fellowship.actorId}}"
+					data-tooltip="{{localize 'LITM.Ui.click_to_edit_fellowship'}}"
+					aria-label="{{localize 'LITM.Ui.click_to_edit_fellowship'}}">
+					<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+				</button>
+			</legend>
+
+			{{#if fellowship.hasTheme}}
+			<div data-fellowship-actor-id="{{fellowship.actorId}}">
+				<div class="theme-card item" data-id="{{fellowship._id}}">
+					<div class="theme-card-header">
+						<div class="flexrow noflex gap-sm">
+							<img class="noflex icon-md" src="{{fellowship.img}}"
+								data-tooltip="{{localize (concat 'LITM.Terms.' fellowship.system.level)}}" />
+							{{> systems/litm/templates/partials/play-tag.html fellowship.themeTag
+						action="toggleTagActive"
+						tooltip=(localize "LITM.Ui.click_to_scratch_tag")
+						}}
+						</div>
+						<div class="noflex flexrow gap-xs">
+						</div>
+					</div>
+
+					{{> systems/litm/templates/partials/edit-theme-tags-activatable.html fellowship}}
+					{{> systems/litm/templates/partials/theme-special-improvements.html fellowship}}
+					{{> systems/litm/templates/partials/edit-theme-tracks.html fellowship}}
+
+					<div class="flexcol" style="gap: 0.15rem;">
+						<blockquote style="margin: 0;">
+							{{fellowship.system.quest.description}}
+						</blockquote>
+					</div>
+
+					<div>{{{ fellowship.system.description }}}</div>
+				</div>
+			</div>
+			{{else}}
+			<p class="flexrow gap-sm hint">
+				<svg class="noflex" width="20" height="20" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<g fill="currentColor">
+						<path
+							d="M19.5124 94.032L26.3133 96.7785L33.4352 98.6839L38.4891 100.777L57.1537 93.1643L52.2603 90.6594L45.2633 88.4229L38.4356 85.748L31.7772 82.6169L24.7624 80.4073L17.9437 77.6787L13.6474 79.5841L11.2764 86.8751L12.7204 91.2678L19.5124 94.032Z" />
+						<path
+							d="M113.531 115.154L106.739 112.389L99.84 109.911L93.0747 107.075L86.3451 104.15L84.7585 104.069L76.9504 106.467L74.6952 106.1L86.4966 102.038L93.1905 99.0059L100.179 96.7603L106.775 93.4772L113.567 90.7217L115.59 86.7318L112.925 79.5571L108.441 77.3832L101.712 80.3534L94.7237 82.6346L88.1277 85.9088L81.202 88.3243L74.3655 90.9812L67.6269 93.8976L60.7903 96.5457L53.7844 98.7553L47.0548 101.69L40.1469 104.132L33.1855 106.458L26.6252 109.831L19.5123 111.745L12.7024 114.473L11 119.018L13.7453 126.166L17.7475 127.606L24.8871 125.701L31.8039 123.241L38.3463 119.823L45.486 117.962L52.0463 114.563L59.0967 112.47L63.6426 110.671L67.6536 111.825L74.2674 115.055L81.0861 117.748L87.994 120.226L94.9732 122.525L101.667 125.567L108.593 128L113.13 126.309L116 119.215L113.531 115.154Z" />
+						<path
+							d="M35.3156 68.5537L40.5745 71.9979L45.5304 75.9162L51.6449 79.2889L58.0448 82.1964L63.9543 85.6406L70.2294 82.9032L76.2816 79.3784L81.4692 75.9431L86.3627 72.141L92.0673 66.9076L96.5864 60.6184L99.7774 50.8047L100.071 45.1061L99.0732 39.4701L94.8571 32.9037L89.001 27.7686L83.4569 24.6197L77.8325 21.6942L72.4399 18.7153L68.42 14.1975C68.42 14.1975 66.3521 7.76527 65.3092 5.77915C64.4803 4.21359 61.2001 3.31215e-05 61.2001 3.31215e-05C61.2001 3.31215e-05 61.004 6.28918 60.2464 8.22149C59.4887 10.1807 55.2994 15.0294 55.2994 15.0294L50.9586 23.9934L52.777 33.4493L59.8096 39.0228C59.8096 39.0228 65.844 42.4401 66.8958 44.3993C67.6802 45.8665 67.3237 51.0641 67.3237 51.0641L62.3589 55.4208L55.7897 55.2777C55.7897 55.2777 51.8678 51.8513 51.1013 50.3305C50.0673 48.2551 49.5324 41.1788 49.5324 41.1788L45.6997 35.3727L38.9701 33.1541C38.9701 33.1541 39.1216 39.3179 38.364 41.1788C37.4905 43.3078 32.4454 48.1834 32.4454 48.1834L29.6377 54.6426L31.7146 63.3828L35.3156 68.5537Z" />
+						<path
+							d="M40.5031 23.0804L43.293 16.6482L42.3303 15.1274L38.5243 12.2199L37.0803 14.3849L35.2353 17.2566L35.1372 28.0991L37.2497 25.5317L40.5031 23.0804Z" />
+						<path
+							d="M77.5919 10.9321L81.0414 9.70642L81.0593 7.0406L81.6386 4.32096L76.9145 1.2704L74.4366 5.07247L74.2939 6.62003L75.5151 7.69355L77.5919 10.9321Z" />
+					</g>
+				</svg><span>{{localize "LITM.Ui.fellowship_no_theme_edit"}}</span>
+			</p>
+			{{/if}}
+			<hr style="margin:0;" />
+			{{#if relationshipEntries.length}}
+			<ul class="plain">
+				{{#each relationshipEntries as |relationship|}}
+				<li class="form-group" style="gap: 8px; align-items: center; justify-content: space-between;">
+					<span style="flex: 2;">{{relationship.name}}</span>
+					<input type="hidden" name="system.relationships.{{@index}}.actorId" value="{{relationship.actorId}}" />
+					<input style="flex: 3;" type="text" name="system.relationships.{{@index}}.tag" value="{{relationship.tag}}"
+						placeholder="{{localize 'LITM.Ui.name_tag'}}" />
+				</li>
+				{{/each}}
+			</ul>
+			{{else}}
+			<p class="hint">{{localize "LITM.Ui.no_relationship_tags"}}</p>
+			{{/if}}
+		</fieldset>
+	</div>
+
+	<!-- Themes -->
+	{{#if themes.length}}
+	<div class="grid-2col">
+		{{#each themes as |theme|}}
+		<fieldset class="theme-card item draggable" data-item-id="{{theme._id}}">
+			<legend class="flexrow gap-xs"><span class="litm-banner theme-card__book">{{theme.system.themebook}}</span>
+				<button type="button" data-action="editItem" data-item-id="{{theme._id}}"
+					data-tooltip="{{localize 'LITM.Ui.click_to_edit_theme'}}"
+					aria-label="{{localize 'LITM.Ui.click_to_edit_theme'}}">
+					<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+				</button>
+				<button type="button" data-action="removeItem" data-item-id="{{theme._id}}"
+					data-tooltip="{{localize 'LITM.Ui.remove_theme'}}" aria-label="{{localize 'LITM.Ui.remove_theme'}}">
+					<i class="fa-solid fa-trash" aria-hidden="true"></i>
+				</button>
+			</legend>
+			<div class="theme-card-header">
+				<div class="flexrow noflex gap-sm">
+					<img class="noflex icon-md" src="{{theme.img}}"
+						data-tooltip="{{localize (concat 'LITM.Terms.' theme.system.level)}}" />
+					{{> systems/litm/templates/partials/play-tag.html theme.themeTag
+				action="toggleTagActive"
+				tooltip=(localize "LITM.Ui.click_to_scratch_tag")
+				}}
+				</div>
+
+			</div>
+
+			{{> systems/litm/templates/partials/edit-theme-tags-activatable.html theme}}
+
+			{{> systems/litm/templates/partials/edit-theme-tracks.html theme}}
+
+			<blockquote style="margin: 0;">
+				{{theme.system.quest.description}}
+			</blockquote>
+
+			{{{ theme.system.description }}}
+
+			{{> systems/litm/templates/partials/theme-special-improvements.html theme}}
+
+		</fieldset>
+		{{/each}}
+	</div>
+	{{else}}
+	<div style="text-align: center; padding: 2rem;">
+		<i class="fa-solid fa-book icon-xl"></i>
+		<p class="hint">{{localize "LITM.Ui.no_themes"}}</p>
+	</div>
+	{{/if}}
+
+	<!-- Story Themes -->
+	{{#if storyThemes.length}}
+	<fieldset>
+		<legend class="litm-banner theme-card__book">{{localize "LITM.Terms.story_themes"}}</legend>
+		<div class="grid-2col">
+			{{#each storyThemes as |theme|}}
+			<div class="theme-card item draggable" data-item-id="{{theme._id}}">
+				<div class="theme-card-header">
+					<div class="flexrow noflex gap-sm">
+						{{> systems/litm/templates/partials/play-tag.html theme.themeTag
+					action="toggleTagActive"
+					tooltip=(localize "LITM.Ui.click_to_scratch_tag")
+					}}
+					</div>
+					{{#unless theme.isFellowship}}
+					<div class="noflex flexrow gap-xs">
+						<button type="button" data-action="editItem" data-item-id="{{theme._id}}"
+							data-tooltip="{{localize 'LITM.Ui.click_to_edit_story_theme'}}"
+							aria-label="{{localize 'LITM.Ui.click_to_edit_story_theme'}}">
+							<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+						</button>
+						<button type="button" data-action="removeItem" data-item-id="{{theme._id}}"
+							data-tooltip="{{localize 'LITM.Ui.remove_story_theme'}}"
+							aria-label="{{localize 'LITM.Ui.remove_story_theme'}}">
+							<i class="fa-solid fa-trash" aria-hidden="true"></i>
+						</button>
+					</div>
+					{{/unless}}
+				</div>
+
+				{{> systems/litm/templates/partials/edit-theme-tags-activatable.html theme}}
+
+				<div>
+					{{{ theme.system.description }}}
+				</div>
+			</div>
+			{{#unless @last}}
+			<hr class="theme-separator" />
+			{{/unless}}
+			{{/each}}
+		</div>
+	</fieldset>
+	{{/if}}
+
+	<div class="grid-2col">
+		<!-- Backpack -->
+		{{#if backpack}}
+		<fieldset>
+			<legend class="control flexrow gap-sm">
+				<span class="litm-banner theme-card__book">{{backpack.name}}</span>
+				<button type="button" class="noflex" data-action="editItem" data-item-id="{{backpack.id}}"
+					data-tooltip="{{localize 'LITM.Ui.edit_backpack'}}" aria-label="{{localize 'LITM.Ui.edit_backpack'}}">
+					<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+				</button>
+			</legend>
+
+			{{#if backpack.contents.length}}
+			<div class="theme-card-tags" data-item-id="{{backpack.id}}">
+				{{#each backpack.contents as |tag|}}
+				{{> systems/litm/templates/partials/play-tag.html tag
+				action="toggleTagActive"
+				tooltip=(localize "LITM.Ui.click_to_toggle_tag")
+				extraClass=(ifThen tag.isActive "" "is-inactive")
+				}}
+				{{/each}}
+			</div>
+			{{else}}
+			<p class="hint">{{localize "LITM.Ui.backpack_empty"}}</p>
+			{{/if}}
+		</fieldset>
+		{{else}}
+		<div style="text-align: center; padding: 2rem;">
+			<i class="fa-solid fa-bag-shopping icon-xl"></i>
+			<p class="hint">{{localize "LITM.Ui.no_backpack"}}</p>
+		</div>
+		{{/if}}
+
+		<!-- Story Tags & Statuses -->
+		<fieldset>
+			<legend class="control flexrow gap-sm">
+				<span class="litm-banner theme-card__book">{{localize "LITM.Terms.story_tags_statuses"}}</span>
+				<button type="button" class="noflex" data-action="addStoryTag" data-tag-type="tag"
+					data-tooltip="{{localize 'LITM.Ui.add_tag'}}" aria-label="{{localize 'LITM.Ui.add_tag'}}">
+					<i class="fa-solid fa-tag" aria-hidden="true"></i>
+				</button>
+				<button type="button" class="noflex" data-action="addStoryTag" data-tag-type="status"
+					data-tooltip="{{localize 'LITM.Ui.add_status'}}" aria-label="{{localize 'LITM.Ui.add_status'}}">
+					<i class="fa-solid fa-heart" aria-hidden="true"></i>
+				</button>
+			</legend>
+
+			{{#if storyTags.length}}
+			<ul class="plain">
+				{{#each storyTags as |tag|}}
+				<li class="form-group {{tag.type}}" style="gap: 8px; align-items: center;justify-content: space-between;">
+					<!-- Name input -->
+					<span class="litm--tag-name-wrapper litm-{{tag.type}}">
+						<input class="litm--tag-item-name" type="text" name="effects.{{tag.id}}.name" value="{{tag.name}}"
+							placeholder="{{localize 'LITM.Ui.tag_name'}}" />
+					</span>
+
+					<!-- Tier input for status cards -->
+					{{#if (eq tag.type "status")}}
+					<label style="max-width: fit-content; font-size: var(--font-size-14); text-align: right;">
+						{{localize "LITM.Ui.tier"}}
+					</label>
+					<input style="width: fit-content;flex:0 0 auto;" type="number" name="effects.{{tag.id}}.system.tierValue"
+						value="{{tag.value}}" min="0" max="6" step="1" data-dtype="Number" />
+					{{else}}
+					<label class="litm--single-use-label" data-tooltip="{{localize 'LITM.Terms.single_use'}}">
+						<input class="litm--single-use" type="checkbox" name="effects.{{tag.id}}.system.isSingleUse" {{#if
+							tag.system.isSingleUse}}checked{{/if}} />
+						<i class="fa-solid fa-hourglass-half litm--single-use-indicator" aria-hidden="true"></i>
+					</label>
+					{{/if}}
+
+					<!-- Delete button -->
+					<button type="button" style="flex:none;" data-action="removeEffect" data-id="{{tag.id}}"
+						data-tooltip="{{localize 'LITM.Ui.remove'}} {{tag.type}}"
+						aria-label="{{localize 'LITM.Ui.remove'}} {{tag.type}}">
+						<i class="fa-solid fa-trash" aria-hidden="true"></i>
+					</button>
+				</li>
+				{{/each}}
+			</ul>
+			{{else}}
+			<p class="hint">{{localize "LITM.Ui.no_story_tags"}}</p>
+			{{/if}}
+		</fieldset>
+	</div>
+</section>
