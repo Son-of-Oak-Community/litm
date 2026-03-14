@@ -1,5 +1,7 @@
 import { error, info } from "../logger.js";
 import { sleep, localize as t } from "../utils.js";
+import { runMigrations } from "./migration.js";
+import { LitmSettings } from "./settings.js";
 import { Sockets } from "./sockets.js";
 
 export class LitmHooks {
@@ -22,6 +24,8 @@ export class LitmHooks {
 		LitmHooks.#addStoryTagsToControls();
 		LitmHooks.#popOutCompatiblity();
 		LitmHooks.#rendeWelcomeScreen();
+		LitmHooks.#showDeprecationNotice();
+		LitmHooks.#runMigrations();
 	}
 
 	static #addLinkPreloadsToHead() {
@@ -772,5 +776,47 @@ export class LitmHooks {
 			await Scene.updateDocuments(updates);
 			game.journal.getName("Tinderbox Demo Rules").sheet.render(true);
 		});
+	}
+
+	static #showDeprecationNotice() {
+		Hooks.once("ready", async () => {
+			// Show a permanent notification for all users
+			ui.notifications.warn(
+				game.i18n.localize("Litm.ui.deprecated-notice-short"),
+				{ permanent: true },
+			);
+
+			// Show a full dialog for GMs only, once
+			if (!game.user.isGM) return;
+			if (LitmSettings.deprecationAcknowledged) return;
+
+			const content = game.i18n.localize("Litm.ui.deprecated-notice");
+			new Dialog(
+				{
+					title: game.i18n.localize("Litm.ui.deprecated-title"),
+					content: /* html */ `
+					<div class="litm--deprecation-notice">
+						${content}
+					</div>
+				`,
+					buttons: {
+						ok: {
+							icon: '<i class="fas fa-check"></i>',
+							label: game.i18n.localize("Litm.ui.deprecated-acknowledge"),
+							callback: () => LitmSettings.setDeprecationAcknowledged(true),
+						},
+					},
+					default: "ok",
+				},
+				{
+					width: 520,
+					classes: ["litm", "litm--deprecation-dialog"],
+				},
+			).render(true);
+		});
+	}
+
+	static #runMigrations() {
+		Hooks.once("ready", runMigrations);
 	}
 }

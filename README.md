@@ -1,8 +1,13 @@
-> [!WARNING]
-> This system will eventually be removed from Foundry. Please use: https://github.com/taragnor/city-of-mist
+> [!CAUTION]
+> **This system is archived and no longer maintained.**
+>
+> Please use one of the following successor systems:
+>
+> - [Mist Engine](https://github.com/MrTheBino/mist-engine-fvtt) — The official community-maintained system for Mist Engine games on Foundry VTT.
+> - [Legend in the Mist v2](https://github.com/Son-of-Oak-Community/litmv2) — A spiritual successor rebuilt from the ground up by the original author.
 
 <div align="center"><img src="./assets/media/litm_splash.webp" /></div>
-<h1 align="center">⚜️<a href="https://www.kickstarter.com/projects/sonofoak/legend-in-the-mist-rpg" rel="noreferrer" target="_blank">Legend in the Mist Demo</a>⚜</h1>
+<h1 align="center">⚜️<a href="https://www.kickstarter.com/projects/sonofoak/legend-in-the-mist-rpg" rel="noreferrer" target="_blank">Legend in the Mist Demo</a> (Archived)⚜️</h1>
 <div align="center"><strong><em>For Foundry Virtual Tabletop</em></strong></div>
 <div align="center"><img width="30px" src="https://foundryvtt.com/static/assets/icons/fvtt.png" /></div>
 
@@ -14,17 +19,9 @@
 
 This is a system for playing the game **Legend in the Mist** in Foundry Virtual Tabletop.
 
-## Installation
+**This system is no longer under active development.** It will remain available for existing worlds but will not receive updates or bug fixes. Please see the successor systems listed above.
 
-Thank you for wanting to try out this system! It is not under development anymore. https://github.com/taragnor/city-of-mist
-
-**To install the system in Foundry Virtual Tabletop:**
-
-1. Find the system called "Legend in the Mist" in the systems list in the setup menu.
-
-2. Create a new world using the "Legend in the Mist" system.
-
-\*_This system is published with express permission from **Son of Oak**_
+_This system was published with express permission from **Son of Oak**_
 
 # Special Thanks
 
@@ -40,4 +37,4 @@ This project already has some contributors, help and good vibes!
 
 - Thanks to the _**City of Mist**_ Discord for contributing feedback, bug reports and generally being awesome about me barging in the door like I did.
 
-_If you feel like you could contribute something don't hesitate with contacting me @aMediocreDad._
+_If you feel you want to improve this system or take over development, don't hesitate to contact me @aMediocreDad._

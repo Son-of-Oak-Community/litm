@@ -251,7 +251,11 @@
 			"warn-no-effect-found": "The game is misconfigured. The selected effect was not found.",
 			"warn-not-owner": "You are not the owner of this actor. You cannot edit it.",
 			"warn-not-supported": "Not supported by current actor.",
-			"warn-theme-limit": "You have reached the maximum number of themes. Please remove a theme before adding another."
+			"warn-theme-limit": "You have reached the maximum number of themes. Please remove a theme before adding another.",
+		"deprecated-title": "Legend in the Mist — Archived",
+		"deprecated-acknowledge": "I understand",
+		"deprecated-notice-short": "Legend in the Mist is no longer maintained. See the GM notification for details on successor systems.",
+		"deprecated-notice": "<h2>This system has been archived</h2><p><strong>Legend in the Mist</strong> is no longer under active development and will not receive further updates or bug fixes.</p><p>If you are looking for a Foundry VTT system to play <em>Legends in the Mist</em> or similar games, please consider one of the following successors:</p><h3>Mist Engine</h3><p>The official community-maintained system for Mist Engine games on Foundry VTT.</p><p><a href='https://github.com/MrTheBino/mist-engine-fvtt'>github.com/MrTheBino/mist-engine-fvtt</a></p><h3>Legend in the Mist v2</h3><p>A spiritual successor by the original author of this system, rebuilt from the ground up.</p><p><a href='https://github.com/Son-of-Oak-Community/litmv2'>github.com/Son-of-Oak-Community/litmv2</a></p><hr><p><em>This system will remain available for existing worlds but should be considered frozen at this version. Thank you to everyone who contributed and played!</em></p>"
 		}
 	},
 	"Notes": "Notes",

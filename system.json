@@ -1,10 +1,10 @@
 {
 	"$schema": "https://json.schemastore.org/foundryvtt-system-manifest.json",
 	"id": "litm",
-	"version": 29,
+	"version": 30,
 	"license": "LICENSE",
-	"title": "Legend in the Mist Demo",
-	"description": "A <strong>Rustic Fantasy</strong> Game for Foundry Virtual Tabletop.",
+	"title": "Legend in the Mist: Demo",
+	"description": "A <strong>Rustic Fantasy</strong> Game for Foundry Virtual Tabletop. <em>This system is archived and no longer maintained.</em> See <a href=\"https://github.com/MrTheBino/mist-engine-fvtt\">Mist Engine</a> or <a href=\"https://github.com/Son-of-Oak-Community/litmv2\">LitM v2</a> for active successors.",
 	"authors": [
 		{
 			"name": "Filip Ambrosius",
@@ -112,9 +112,9 @@
 		]
 	},
 	"background": "systems/litm/assets/media/litm_splash.webp",
-	"url": "https://github.com/aMediocreDad/litm",
-	"bugs": "https://github.com/aMediocreDad/litm/issues?q=is:issue+is:open+sort:updated-desc",
-	"manifest": "https://raw.githubusercontent.com/aMediocreDad/litm/main/system.json",
-	"download": "https://github.com/aMediocreDad/litm/archive/refs/tags/v29.zip",
-	"readme": "https://github.com/aMediocreDad/litm/blob/main/README.md"
+	"url": "https://github.com/Son-of-Oak-Community/litm",
+	"bugs": "https://github.com/Son-of-Oak-Community/litm/issues?q=is:issue+is:open+sort:updated-desc",
+	"manifest": "https://raw.githubusercontent.com/Son-of-Oak-Community/litm/main/system.json",
+	"download": "https://github.com/Son-of-Oak-Community/litm/archive/refs/tags/v30.zip",
+	"readme": "https://github.com/Son-of-Oak-Community/litm/blob/main/README.md"
 }

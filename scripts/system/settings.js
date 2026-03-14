@@ -1,5 +1,43 @@
 export class LitmSettings {
+	static get systemMigrationVersion() {
+		return game.settings.get("litm", "systemMigrationVersion");
+	}
+
+	static async setSystemMigrationVersion(version) {
+		await game.settings.set("litm", "systemMigrationVersion", version);
+	}
+
+	static get welcomed() {
+		return game.settings.get("litm", "welcomed");
+	}
+
+	static get deprecationAcknowledged() {
+		return game.settings.get("litm", "deprecationAcknowledged");
+	}
+
+	static async setDeprecationAcknowledged(value) {
+		await game.settings.set("litm", "deprecationAcknowledged", value);
+	}
+
 	static register() {
+		game.settings.register("litm", "systemMigrationVersion", {
+			name: "System Migration Version",
+			hint: "Records the last migration version applied to this world.",
+			scope: "world",
+			config: false,
+			type: Number,
+			default: -1,
+		});
+
+		game.settings.register("litm", "deprecationAcknowledged", {
+			name: "Deprecation Notice Acknowledged",
+			hint: "Whether the GM has acknowledged the deprecation notice.",
+			scope: "world",
+			config: false,
+			type: Boolean,
+			default: false,
+		});
+
 		game.settings.register("litm", "welcomed", {
 			name: "Welcome Screen",
 			hint: "Welcome Scene, Message, and Journal Entry has been created and displayed.",
